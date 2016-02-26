@@ -52,7 +52,7 @@ Use your plugin manager of choice.
 By default, ThesaurusQueryReplaceCurrentWord is mapped to `<LocalLeader>cs`.
 
 ```
-    nnoremap <unique> <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
+    nnoremap <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
 ```
 
 This routine check the synonyms of  the word under cursor and replace it with
@@ -60,12 +60,17 @@ the candidate chosen by user. The corresponding non-replacing routine is
 defined as `ThesaurusQueryLookupCurrentWord`. User may choose to use it if you
 prefer the split buffer display of result over the word replacement routine.
 
-Another might be useful routine is to look up for words covered in visual
-mode, this routine don't offer replacement by default.
+Another might-be-useful routine is the one to look up for words covered in
+visual mode,
 
 ```
-    vnoremap <unique> <LocalLeader>cs y:Thesaurus <C-r>"<CR>
+    vnoremap <LocalLeader>cs y:Thesaurus <C-r>"<CR>
 ```
+
+this routine don't offer replacement by default. Because my current replacement
+script is a simple one liner, it couldn't deal with many flexible situations as
+yet.
+
 
 ## Known Issues
 
@@ -75,4 +80,15 @@ mode, this routine don't offer replacement by default.
 2. synonym candidate list is currently displayed in the form of echoed message
    rather than buffer. This could temporary disrupt the window arrangment,
    especially when the synonym list is very long. I am currently thinking about
-   how to improve the experience.
+   how to improve the user experience or use some better meathods altogether.
+
+
+## TODO List
+1. Package the python code better. I was learning the basics of the vim-python
+   API when writing the plugin, so currently the variables related to this
+   project is a bit all over the place. The next few days(or weeks if I'm
+   busy), I'll try to gather them together so it won't take too much general
+   name space.
+2. Try to absolve the Known Issues.
+3. Add option to truncate the synonym list when its length is over a certain
+   threashhold.
