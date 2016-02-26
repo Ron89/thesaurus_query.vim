@@ -32,7 +32,7 @@ python import vim
 python sys.path.append(vim.eval('expand("<sfile>:h")'))
 python import thesaurus_query
 
-function! g:Thesaurus_Query#init()
+function! g:Thesaurus_Query_Init()
 python<<endOfPython
 thesaurus_query_framework = thesaurus_query.Thesaurus_Query_Handler()
 endOfPython
@@ -42,7 +42,7 @@ endfunction
 " a:replace     flag:
 "                       0 - don't replace word under cursor
 "                       1 - replace word under cursor
-function! g:Thesaurus_Query#Lookup(word, replace)
+function! g:Thesaurus_Query_Lookup(word, replace)
     let l:replace = a:replace
     let l:trimmed_word = s:Trim(a:word)
     let l:word = substitute(tolower(l:trimmed_word), '"', '', 'g')
@@ -59,10 +59,10 @@ if vim.eval('l:replace') != '0' and not not synonym_result:
         thesaurus_wait_list = thesaurus_wait_list+syno_case[1]
         syno_result_prompt.append([syno_case[0],[]])
         for word_curr in syno_case[1]:
-            syno_result_temp[-1][1].append("({}){}".format(word_ID, word_curr))
+            syno_result_prompt[-1][1].append("({}){}".format(word_ID, word_curr))
             word_ID+=1
 
-    for case in synonym_result_prompt:
+    for case in syno_result_prompt:
         print 'Definition: {}'.format(case[0])
         print 'Synonyms: {}\n'.format(", ".join(case[1]))
 
@@ -73,7 +73,7 @@ if vim.eval('l:replace') != '0' and not not synonym_result:
         vim.command("normal bcw{}".format(thesaurus_wait_list[thesaurus_user_choice]))
 
 if not not synonym_result:
-    vim.command("echom 'No synonym found for \"{}\".'".format{vim.eval("l:word")}).
+    vim.command("echom 'No synonym found for \"{}\".'".format(vim.eval("l:word")))
 endOfPython
 
 if (l:replace==0)+g:thesaurus_query#display_list_all_time
@@ -121,23 +121,23 @@ if !exists("g:thesaurus_query#map_keys")
     let g:thesaurus_query#map_keys = 1
 endif
 
-call Thesaurus_Query#init()
+call Thesaurus_Query_Init()
 
 
 " --------------------------------
 "  Expose our commands to the user
 " --------------------------------
-command! ThesaurusQueryReplaceCurrentWord :call <SID>Thesaurus_Query#Lookup(expand('<cword>', 1))
-command! ThesaurusQueryLookupCurrentWord :call <SID>Thesaurus_Query#Lookup(expand('<cword>', 0))
-command! -nargs=1 Thesaurus :call <SID>Thesaurus_Query#Lookup(<q-args>, 0)
+command! ThesaurusQueryReplaceCurrentWord :call Thesaurus_Query_Lookup(expand('<cword>'), 1)
+command! ThesaurusQueryLookupCurrentWord :call Thesaurus_Query_Lookup(expand('<cword>'), 0)
+command! -nargs=1 Thesaurus :call Thesaurus_Query_Lookup(<q-args>, 0)
 
 
 " --------------------------------
 "  Map keys
 " --------------------------------
 if g:thesaurus_query#map_keys  
-    nnoremap <unique> <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
-    vnoremap <unique> <LocalLeader>cs y:Thesaurus <C-r>"<CR>
+    nnoremap <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
+    vnoremap <LocalLeader>cs y:Thesaurus <C-r>"<CR>
 endif
 
 let &cpo = s:save_cpo

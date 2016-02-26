@@ -1,4 +1,4 @@
-# Thesaurus Query/Replacement Plugin
+# Thesaurus Query/Replacement Plugin(Still Buggy)
 
 This is a plugin for user to lookup synonyms of any word under cursor and
 replace it with an user chosen synonym. It also accept word covered in visual
