@@ -1,0 +1,70 @@
+*thesaurus_query.txt* A short multi line description of your plugin
+
+===============================================================================
+CONTENTS                                                     *thesaurus_query*
+
+    1. Intro ......................................... |thesaurus_query-intro|
+    2. Requirements ............................ |thesaurus_query-requirements|
+    3. Usage ......................................... |thesaurus_query-usage|
+    4. Customization ......................... |thesaurus_query-Customization|
+    5. Licence ..................................... |thesaurus_query-licence|
+===============================================================================
+1. Intro                                               *thesaurus_query-intro*
+
+This is a plugin for user to lookup synonyms of any word under cursor and
+replace it with an user chosen synonym. It also accept word covered in visual
+mode or manual input. But for the latter two cases, auto-replacement function
+isn't activated by default. 
+
+Default source of synonyms is [Thesaurus.com](http://thesaurus.com/), so
+internet connection is required for it's functionality.
+
+
+2. Requirements                                 *thesaurus_query-requirements*
+
+Since the plugin is written in python, the vim should have +python support.
+
+3. Usage                                               *thesaurus_query-usage*
+
+The plugin provides three ways of using.
+
+:ThesaurusQueryReplaceCurrentWord         |:ThesaurusQueryReplaceCurrentWord|
+    This command checkup the word under cursor and attempt to replace it with
+    use chosen candidate.
+
+:ThesaurusQueryLookupCurrentWord           |:ThesaurusQueryLookupCurrentWord|
+    This command checkup the word under cursor and list all found synonyms in
+    a split buffer.
+
+:Thesaurus                                                        |:Thesaurus|
+    This routine take one argument as target word and then query its synonyms.
+    Query result would be displayed in a split buffer.
+    
+
+The functionalities are also mapped to key-bindings 
+    nnoremap <unique> <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
+    vnoremap <unique> <LocalLeader>cs y:Thesaurus <C-r>"<CR>
+
+5. Customization                                |thesaurus_query-Customization|
+
+Currently there are two global variables used to customize the behavior.
+
+g:thesaurus_query#display_list_all_time|g:thesaurus_query#display_list_all_time|
+    Determine if a minibuffer is still used when user decided to use the
+    replacement routine. 
+            0: do not display split buffer if replace routine is used
+            1: display split buffer at all time
+                                                        |default=0|
+
+g:thesaurus_query#map_keys                        |g:thesaurus_query#map_keys|
+Decide if default keymapping is used.
+            0: use default mapped keys
+            1: do not use default mapped keys.
+                                                        |default=1|
+
+
+4. Licence                                           *thesaurus_query-licence*
+
+This is open source make sure to include a licence
+
+vim:ft=help
