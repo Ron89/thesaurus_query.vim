@@ -28,8 +28,10 @@ class Thesaurus_Query_Handler:
         if state == -1:
             print "WARNING: query backend reports error. Please check on thesaurus source."
             return []
-        self.word_list[word]=synonym_list
-        if len(self.word_list_keys) > self.wordlist_size_max:
-            dumped_item=self.word_list.pop(self.word_list_keys.pop(0))
-            del dumped_item
+        if state == 0:  # save to word_list buffer only when synonym is found
+            self.word_list[word]=synonym_list
+            self.word_list_keys.append(word)
+            if len(self.word_list_keys) > self.wordlist_size_max:
+                dumped_item=self.word_list.pop(self.word_list_keys.pop(0))
+                del dumped_item
         return synonym_list
