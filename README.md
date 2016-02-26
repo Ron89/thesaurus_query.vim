@@ -8,7 +8,8 @@ isn't activated by default.
 ![](https://github.com/ron89/thesaurus_query.vim/raw/master/synonym_candidate.png)
 
 Default source of synonyms is [Thesaurus.com](http://thesaurus.com/), so
-internet connection is required for it's functionality.
+internet connection is required for it's functionality. Also, since the plugin
+is written in python, `+python` support version of Vim is required.
 
 
 ## Motivation
