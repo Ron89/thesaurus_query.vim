@@ -62,11 +62,11 @@ if vim.eval('l:replace') != '0' and not not synonym_result:
         for word_curr in syno_case[1]:
             syno_result_prompt[-1][1].append("({}){}".format(word_ID, word_curr))
             word_ID+=1
-    print "In line \"{}\"".format(vim.current.line)
-    print "Synonym for \"{}\"".format(vim.eval("l:word"))
+    vim.command("echon \"In line: ... \"|echohl Keyword|echon \"{}\"|echohl None |echon \" ...\n\"".format(vim.current.line))
+    vim.command("echon \"Synonym for \"|echohl Special|echon\"{}\n\"|echohl None".format(vim.eval("l:word")))
     for case in syno_result_prompt:
-        print 'Definition: {}'.format(case[0])
-        print 'Synonyms: {}\n'.format(", ".join(case[1]))
+        vim.command('echohl Keyword | echon "Definition: "|echohl None|echon "{}\n"'.format(case[0]))
+        vim.command('echohl Keyword | echon "Synonyms: "|echohl None|echon "{}\n"'.format(", ".join(case[1])))
 
     thesaurus_user_choice = int(vim.eval("input('Choose from wordlist(type -1 to cancel): ')"))
     while thesaurus_user_choice>=word_ID or thesaurus_user_choice<-1:
