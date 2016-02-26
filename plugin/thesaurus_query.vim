@@ -32,7 +32,7 @@ python import vim
 python sys.path.append(vim.eval('expand("<sfile>:h")'))
 python import thesaurus_query
 
-function! g:thesaurus_query#init()
+function! g:Thesaurus_Query#init()
 python<<endOfPython
 thesaurus_query_framework = thesaurus_query.Thesaurus_Query_Handler()
 endOfPython
@@ -42,7 +42,7 @@ endfunction
 " a:replace     flag:
 "                       0 - don't replace word under cursor
 "                       1 - replace word under cursor
-function! g:thesaurus_query#Lookup(word, replace)
+function! g:Thesaurus_Query#Lookup(word, replace)
     let l:replace = a:replace
     let l:trimmed_word = s:Trim(a:word)
     let l:word = substitute(tolower(l:trimmed_word), '"', '', 'g')
@@ -121,15 +121,15 @@ if !exists("g:thesaurus_query#map_keys")
     let g:thesaurus_query#map_keys = 1
 endif
 
-call thesaurus_query#init()
+call Thesaurus_Query#init()
 
 
 " --------------------------------
 "  Expose our commands to the user
 " --------------------------------
-command! ThesaurusQueryReplaceCurrentWord :call <SID>thesaurus_query#Lookup(expand('<cword>', 1))
-command! ThesaurusQueryLookupCurrentWord :call <SID>thesaurus_query#Lookup(expand('<cword>', 0))
-command! -nargs=1 Thesaurus :call <SID>thesaurus_query#Lookup(<q-args>, 0)
+command! ThesaurusQueryReplaceCurrentWord :call <SID>Thesaurus_Query#Lookup(expand('<cword>', 1))
+command! ThesaurusQueryLookupCurrentWord :call <SID>Thesaurus_Query#Lookup(expand('<cword>', 0))
+command! -nargs=1 Thesaurus :call <SID>Thesaurus_Query#Lookup(<q-args>, 0)
 
 
 " --------------------------------
