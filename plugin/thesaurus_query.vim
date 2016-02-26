@@ -1,6 +1,6 @@
 " An thesaurus query & replacing framework written in python.
 " Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
-" Version:      0.0.1
+" Version:      0.0.2
 " part of the code and default online thesaurus lookup routine:
 "       Anton Beloglazov <http://beloglazov.info/>
 
@@ -35,6 +35,10 @@ python import thesaurus_query
 function! g:Thesaurus_Query_Init()
 python<<endOfPython
 thesaurus_query_framework = thesaurus_query.Thesaurus_Query_Handler()
+thesaurus_query_framework.query_backend.truncation_on_relavance = int(vim.eval("g:thesaurus_query#truncation_on_relavance"))
+thesaurus_query_framework.truncate_definition = int(vim.eval("g:thesaurus_query#truncation_on_definition_num"))
+thesaurus_query_framework.truncate_syno_list = int(vim.eval("g:thesaurus_query#truncation_on_syno_list_size"))
+
 endOfPython
 endfunction
 
@@ -123,6 +127,27 @@ endif
 
 if !exists("g:thesaurus_query#map_keys")
     let g:thesaurus_query#map_keys = 1
+endif
+
+" This variable is for default query routine, if according to thesaurus.com,
+" the found synonym's relavance is smaller or equal to this value, it is
+" neglected
+if !exists("g:thesaurus_query#truncation_on_relavance")
+    let g:thesaurus_query#truncation_on_relavance = 0
+endif
+
+" This variable is for core query handler. If value is -1, no truncate of
+" output is made upon number of definitions. Else, if number is n, only
+" synonyms of the first n word definitions were retained.
+if !exists("g:thesaurus_query#truncation_on_definition_num")
+    let g:thesaurus_query#truncation_on_definition_num = -1
+endif
+
+" This variable is for core query handler. If value is -1, no truncate of
+" output is made upon number of synonyms from a single definition. Else, if
+" number is n, only first n synonyms of that definition will be retained.
+if !exists("g:thesaurus_query#truncation_on_syno_list_size")
+    let g:thesaurus_query#truncation_on_syno_list_size = -1
 endif
 
 call Thesaurus_Query_Init()

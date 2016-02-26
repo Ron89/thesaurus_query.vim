@@ -1,7 +1,7 @@
 # Python backend for looking up words in an online thesaurus. Idea from
 # project vim-online_thesaurus by Anton Beloglazov <http://beloglazov.info/>.
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
-# Version:      0.0.1
+# Version:      0.0.2
 # Original idea: Anton Beloglazov <http://beloglazov.info/>
 
 class Thesaurus_Query_Handler:
@@ -19,6 +19,8 @@ class Thesaurus_Query_Handler:
         self.query_source_cmd = ''
         from online_query_handler import word_query_handler_thesaurus_lookup
         self.query_backend = word_query_handler_thesaurus_lookup()
+        self.truncate_definition = -1  # number of definitions retained in output
+        self.truncate_syno_list = -1   # number of synonyms retained for each definition in output
 
     def query(self, word):
         if word in self.word_list:
@@ -34,4 +36,13 @@ class Thesaurus_Query_Handler:
             if len(self.word_list_keys) > self.wordlist_size_max:
                 dumped_item=self.word_list.pop(self.word_list_keys.pop(0))
                 del dumped_item
-        return synonym_list
+        output_buffer = []
+        output_buffer_temp = (synonym_list if self.truncate_definition==-1 else synonym_list[:self.truncate_definition])
+        for definition in output_buffer_temp:
+            if self.truncate_syno_list==-1:
+                output_buffer.append(definition)
+            else:
+                output_buffer.append([definition[0],definition[1][:self.truncate_syno_list]])
+
+        del output_buffer_temp
+        return output_buffer

@@ -1,6 +1,6 @@
 # Online Thesaurus Lookup routine. Find synonyms of a target word from www.thesaurus.com
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
-# Version:      0.0.1
+# Version:      0.0.2
 # Ported from shell script by Anton Beloglazov <http://beloglazov.info/>
 
 import urllib2

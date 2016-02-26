@@ -1,7 +1,7 @@
 # Handler for Online Thesaurus Lookup routine =online_thesaurus_lookup.py=, structurize
 # the result with the general word query framework.
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
-# Version:      0.0.1
+# Version:      0.0.2
 
 from online_thesaurus_lookup import online_thesaurus_lookup
 try:
@@ -11,7 +11,7 @@ except ImportError:
 
 class word_query_handler_thesaurus_lookup:
     '''
-    handler for lookup method: "thesaurus_lookup.sh". When query_from_source is called, return:
+    handler for lookup method: "online_thesaurus_lookup.py". When query_from_source is called, return:
         [int status, dict syno_list]
     status:
         0: normal,  synonym found, list will be returned as a dictionary
@@ -28,6 +28,7 @@ class word_query_handler_thesaurus_lookup:
         self.header_length=11    # length of "Definition:", current header of definition
         self.relavent_val_pos=9
         self.syno_pos=11
+        self.truncation_on_relavance=0 # default: no truncation
 
     def query_cmd_handler(self, word):
         self.syno_list=[]
@@ -53,6 +54,8 @@ class word_query_handler_thesaurus_lookup:
             else:
                 word_dic[self.line_curr[self.relavent_val_pos]]=[self.line_curr[self.syno_pos:]]
         for key in sorted(word_dic, reverse=True):
+            if key <= self.truncation_on_relavance:
+                continue
             syno_list_curr=syno_list_curr+word_dic[key]     # sorted
         del word_dic
         return [not not syno_list_curr, syno_list_curr]
