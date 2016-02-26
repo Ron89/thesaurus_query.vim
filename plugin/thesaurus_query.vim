@@ -62,6 +62,7 @@ if vim.eval('l:replace') != '0' and not not synonym_result:
         for word_curr in syno_case[1]:
             syno_result_prompt[-1][1].append("({}){}".format(word_ID, word_curr))
             word_ID+=1
+    print "In line \"{}\"".format(vim.current.line)
     print "Synonym for \"{}\"".format(vim.eval("l:word"))
     for case in syno_result_prompt:
         print 'Definition: {}'.format(case[0])
