@@ -114,11 +114,11 @@ endfunction
 "  Setting up default values & Initialize
 " --------------------------------
 if !exists("g:thesaurus_query#display_list_all_time")
-    g:thesaurus_query#display_list_all_time = 0
+    let g:thesaurus_query#display_list_all_time = 0
 endif
 
 if !exists("g:thesaurus_query#map_keys")
-    g:thesaurus_query#map_keys = 1
+    let g:thesaurus_query#map_keys = 1
 endif
 
 call thesaurus_query#init()
@@ -135,7 +135,7 @@ command! -nargs=1 Thesaurus :call <SID>thesaurus_query#Lookup(<q-args>, 0)
 " --------------------------------
 "  Map keys
 " --------------------------------
-if g:thesaurus_query#map_keys 
+if g:thesaurus_query#map_keys  
     nnoremap <unique> <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
     vnoremap <unique> <LocalLeader>cs y:Thesaurus <C-r>"<CR>
 endif
