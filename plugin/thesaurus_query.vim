@@ -12,7 +12,7 @@ let g:loaded_thesaurus_query = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
-" environment setup
+" environs setup
 if !has("python")
     echoerr 'thesaurus_query framework require vim with python support.'
 endif
@@ -21,9 +21,9 @@ endif
 "  Function(s)
 " --------------------------------
 
-" Trim input_string before query 
+" Trim input_string before query
 function! s:Trim(input_string)
-    let l:str = substitute(a:input_string, '[\r\n]', '', '')
+    let l:str = substitute(a:input_string, '[\r\n:]', '', '')
     return substitute(l:str, '^\s*\(.\{-}\)\s*$', '\1', '')
 endfunction
 
@@ -47,6 +47,7 @@ function! g:Thesaurus_Query_Lookup(word, replace)
     let l:trimmed_word = s:Trim(a:word)
     let l:word = substitute(tolower(l:trimmed_word), '"', '', 'g')
     let l:word_fname = fnameescape(l:word)
+    let l:syno_found = 1  " initialize the value
 
 " query word and prompt user to choose word after populating the list
 python<<endOfPython
@@ -61,22 +62,22 @@ if vim.eval('l:replace') != '0' and not not synonym_result:
         for word_curr in syno_case[1]:
             syno_result_prompt[-1][1].append("({}){}".format(word_ID, word_curr))
             word_ID+=1
-
+    print "Synonym for \"{}\"".format(vim.eval("l:word"))
     for case in syno_result_prompt:
         print 'Definition: {}'.format(case[0])
         print 'Synonyms: {}\n'.format(", ".join(case[1]))
 
-    thesaurus_user_choice = int(vim.eval("input('Choose from wordlist: (type -1 to cancel)')"))
-    while thesaurus_user_choice>word_ID or thesaurus_user_choice<-1:
-        thesaurus_user_choice = int(vim.eval("input('Invalid input, choose again: (type -1 to cancel)')"))
+    thesaurus_user_choice = int(vim.eval("input('Choose from wordlist(type -1 to cancel): ')"))
+    while thesaurus_user_choice>=word_ID or thesaurus_user_choice<-1:
+        thesaurus_user_choice = int(vim.eval("input('Invalid input, choose again(type -1 to cancel): ')"))
     if thesaurus_user_choice!=-1:
-        vim.command("normal bcw{}".format(thesaurus_wait_list[thesaurus_user_choice]))
-
-if not not synonym_result:
+        vim.command("normal wbcw{}".format(thesaurus_wait_list[thesaurus_user_choice]))
+tq_current_buffer = vim.current.buffer.name
+if not synonym_result:
     vim.command("echom 'No synonym found for \"{}\".'".format(vim.eval("l:word")))
+    vim.command("let l:syno_found=0")
 endOfPython
-
-if (l:replace==0)+g:thesaurus_query#display_list_all_time
+if ((l:replace==0)+g:thesaurus_query#display_list_all_time)*l:syno_found
 " create new buffer to display thesaurus query result and go to it
     silent! let l:thesaurus_window = bufwinnr('^thesaurus: ')
     if l:thesaurus_window > -1
@@ -87,22 +88,24 @@ if (l:replace==0)+g:thesaurus_query#display_list_all_time
     exec ":silent file thesaurus:\\ " . l:word_fname
 
     setlocal noswapfile nobuflisted nospell nowrap modifiable
-    setlocal buftype=nofile 
+    setlocal buftype=nofile
 
 python<<endOfPython
 thesaurus_buffer = vim.current.buffer
 del thesaurus_buffer[:]
-line_count=1
+line_count=0
 for case in synonym_result:
     thesaurus_buffer[line_count:line_count+2]=['Definition: {}'.format(case[0]),
             'Synonyms: {}'.format(", ".join(case[1]))]
     line_count+=2
 vim.command("setlocal bufhidden=")
 vim.command("silent g/^Synonyms:/ normal! 0Vgq")
-vim.command("exec 'resize ' . (line('$') + 1)")
+vim.command("exec 'resize ' . (line('$') - 1)")
 vim.command("nnoremap <silent> <buffer> q :q<CR>")
 vim.command("setlocal filetype=thesaurus")
 vim.command("normal! gg")
+tq_current_buffer_goto = vim.eval('bufwinnr("{}")'.format(tq_current_buffer))
+vim.command('exec {} . "wincmd w"'.format(tq_current_buffer_goto))
 endOfPython
 
 endif
@@ -135,7 +138,7 @@ command! -nargs=1 Thesaurus :call Thesaurus_Query_Lookup(<q-args>, 0)
 " --------------------------------
 "  Map keys
 " --------------------------------
-if g:thesaurus_query#map_keys  
+if g:thesaurus_query#map_keys
     nnoremap <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
     vnoremap <LocalLeader>cs y:Thesaurus <C-r>"<CR>
 endif

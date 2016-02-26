@@ -65,7 +65,6 @@ class word_query_handler_thesaurus_lookup:
                 self.line_curr=self.line_curr.rstrip('\n')
                 definition_curr = self.line_curr[self.header_length+1:]
                 self.syno_list.append([definition_curr, []])
-                print self.line_curr[self.header_length+1:]
                 [status, self.syno_list[-1][1]] = self.syno_populating()
             else:
                 self.line_curr=self.query_result.readline()

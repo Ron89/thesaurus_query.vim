@@ -12,8 +12,14 @@ except ImportError:
 
 def online_thesaurus_lookup(target):
     output = ""
-    response = urllib2.urlopen('http://www.thesaurus.com/browse/{}'.format(target))
-    parser = StringIO(response.read())
+    try:
+        response = urllib2.urlopen('http://www.thesaurus.com/browse/{}'.format(target))
+        parser = StringIO(response.read())
+    except urllib2.HTTPError, error:
+        output = "The word \"{}\" has not been found on thesaurus.com!\n".format(target)
+        return output
+
+
 
     end_tag_count=2
     while True:
@@ -35,7 +41,7 @@ def online_thesaurus_lookup(target):
                 continue
             elif len(fields)<10:
                 if "txt" in fields[1]:
-                    output+="\nDefinition: {}: ".format(fields[2])
+                    output+="\nDefinition: {}. ".format(fields[2])
                     continue
                 elif "ttl" in fields[1]:
                     output+="{}\nSynonyms:\n".format(fields[2])

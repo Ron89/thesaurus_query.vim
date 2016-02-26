@@ -1,15 +1,15 @@
-# Thesaurus Query/Replacement Plugin(Still Buggy)
+# Thesaurus Query/Replacement Plugin
 
 This is a plugin for user to lookup synonyms of any word under cursor and
 replace it with an user chosen synonym. It also accept word covered in visual
 mode or manual input. But for the latter two cases, auto-replacement function
-isn't activated by default. 
+isn't activated by default.
 
 Default source of synonyms is [Thesaurus.com](http://thesaurus.com/), so
 internet connection is required for it's functionality.
 
 
-## Motivation 
+## Motivation
 
 After searching on Github for quite a while, I realized that comparing to
 emacs, very few vim plugins for thesaurus query is satisfactory. Among the
@@ -58,3 +58,12 @@ mode, this routine don't offer replacement by default.
 
     vnoremap <unique> <LocalLeader>cs y:Thesaurus <C-r>"<CR>
 
+## Known Issues
+
+1. on NeoVim, display synonym list on split buffer raise out_of_range
+   exception. It could be caused by the change of python API. The function
+   works on Vim just fine.
+2. synonym candidate list is currently displayed in the form of echoed message
+   rather than buffer. This could temporary disrupt the window arrangment,
+   especially when the synonym list is very long. I am currently thinking about
+   how to improve the experience.

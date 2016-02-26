@@ -1,5 +1,5 @@
 # Python backend for looking up words in an online thesaurus. Idea from
-# project vim-online_thesaurus by Anton Beloglazov <http://beloglazov.info/>. 
+# project vim-online_thesaurus by Anton Beloglazov <http://beloglazov.info/>.
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
 # Version:      0.0.1
 # Original idea: Anton Beloglazov <http://beloglazov.info/>
@@ -13,7 +13,7 @@ class Thesaurus_Query_Handler:
 
     def __init__(self, cache_size_max=10000):
         self.word_list = {}  # hold wordlist obtained in previous query
-        self.word_list_keys = []  # hold all keys for wordlist 
+        self.word_list_keys = []  # hold all keys for wordlist
                                   # in old->new order
         self.wordlist_size_max = cache_size_max
         self.query_source_cmd = ''

@@ -1,4 +1,6 @@
 " Vim plugin for looking up words in an online thesaurus
+" Maintainer:   HE Chong [[chong.he.1989@gmail.com][e-mail]]
+" Based on script written by:
 " Author:       Anton Beloglazov <http://beloglazov.info/>
 " Version:      0.3.2
 " Original idea and code: Nick Coleman <http://www.nickcoleman.org/>
@@ -15,7 +17,7 @@ setlocal iskeyword+=:
 syntax match thesMainEntry /Main entry: */ contained
 syntax keyword thesDefinition Definition:
 syntax keyword thesSynonyms Synonyms:
-syntax keyword thesPartOfSpeech noun pron verb adj adv prep conj interj
+syntax keyword thesPartOfSpeech noun. pron. verb. adj. adv. prep. conj. interj.
 
 " Entry contents rules
 syntax region thesMainWord start=/Main entry:/  end=/$/ contains=CONTAINED keepend
