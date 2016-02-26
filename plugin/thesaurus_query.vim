@@ -135,7 +135,7 @@ command! -nargs=1 Thesaurus :call <SID>thesaurus_query#Lookup(<q-args>, 0)
 " --------------------------------
 "  Map keys
 " --------------------------------
-if g:online_thesaurus_map_keys 
+if g:thesaurus_query#map_keys 
     nnoremap <unique> <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
     vnoremap <unique> <LocalLeader>cs y:Thesaurus <C-r>"<CR>
 endif
