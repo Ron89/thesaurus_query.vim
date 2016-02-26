@@ -77,11 +77,6 @@ yet.
 1. on NeoVim, display synonym list on split buffer raise out_of_range
    exception. It could be caused by the change of python API. The function
    works on Vim just fine.
-2. synonym candidate list is currently displayed in the form of echoed message
-   rather than buffer. This could temporary disrupt the window arrangment,
-   especially when the synonym list is very long. I am currently thinking about
-   how to improve the user experience or use some better meathods altogether.
-
 
 ## TODO List
 1. Package the python code better. I was learning the basics of the vim-python
