@@ -45,7 +45,7 @@ The plugin provides three ways of using.
     This command checkup the word under cursor and list all found synonyms in
     a split buffer.
 
-:Thesaurus                                                        |:Thesaurus|
+:Thesaurus                                                       |:Thesaurus|
     This routine take one argument as target word and then query its synonyms.
     Query result would be displayed in a split buffer.
 
