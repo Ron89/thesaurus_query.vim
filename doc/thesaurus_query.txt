@@ -4,11 +4,19 @@
 CONTENTS                                                     *thesaurus_query*
 
     1. Intro ......................................... |thesaurus_query-intro|
-    2. Requirements ............................ |thesaurus_query-requirements|
+    2. Requirements ........................... |thesaurus_query-requirements|
     3. Usage ......................................... |thesaurus_query-usage|
     4. Customization ......................... |thesaurus_query-Customization|
+        |g:thesaurus_query#display_list_all_time|
+        |g:thesaurus_query#map_keys|
+        |g:thesaurus_query#truncation_on_relavance|
+        |g:thesaurus_query#truncation_on_definition_num|
+        |g:thesaurus_query#truncation_on_syno_list_size|
+    4.5
     5. Licence ..................................... |thesaurus_query-licence|
 ===============================================================================
+
+
 1. Intro                                               *thesaurus_query-intro*
 
 This is a plugin for user to lookup synonyms of any word under cursor and
@@ -23,6 +31,7 @@ internet connection is required for it's functionality.
 2. Requirements                                 *thesaurus_query-requirements*
 
 Since the plugin is written in python, the vim should have +python support.
+
 
 3. Usage                                               *thesaurus_query-usage*
 
@@ -39,32 +48,50 @@ The plugin provides three ways of using.
 :Thesaurus                                                        |:Thesaurus|
     This routine take one argument as target word and then query its synonyms.
     Query result would be displayed in a split buffer.
-    
 
 The functionalities are also mapped to key-bindings 
     nnoremap <unique> <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
     vnoremap <unique> <LocalLeader>cs y:Thesaurus <C-r>"<CR>
 
-5. Customization                                |thesaurus_query-Customization|
 
-Currently there are two global variables used to customize the behavior.
+4. Customization                                |thesaurus_query-Customization|
 
-g:thesaurus_query#display_list_all_time|g:thesaurus_query#display_list_all_time|
+Currently there are 5 global variables used to customize the behavior.
+
+*g:thesaurus_query#display_list_all_time*
     Determine if a minibuffer is still used when user decided to use the
     replacement routine. 
             0: do not display split buffer if replace routine is used
             1: display split buffer at all time
-                                                        |default=0|
+                                                        default=0
 
-g:thesaurus_query#map_keys                        |g:thesaurus_query#map_keys|
-Decide if default keymapping is used.
+*g:thesaurus_query#map_keys*
+    Decide if default keymapping is used.
             0: use default mapped keys
             1: do not use default mapped keys.
-                                                        |default=1|
+                                                        default=1
+
+*g:thesaurus_query#truncation_on_relavance*
+    This variable is for default query routine, if according to thesaurus.com,
+    the found synonym's relavance is smaller or equal to this value, it is
+    neglected
+                                                        default=0
+
+*g:thesaurus_query#truncation_on_definition_num*
+    This variable is for core query handler. If value is -1, no truncate of
+    output is made upon number of definitions. Else, if number is n, only
+    synonyms of the first n word definitions were retained.
+                                                        default=-1
+
+*g:thesaurus_query#truncation_on_syno_list_size*
+    This variable is for core query handler. If value is -1, no truncate of
+    output is made upon number of synonyms from a single definition. Else, if
+    number is n, only first n synonyms of that definition will be retained.
+                                                        default=-1
 
 
-4. Licence                                           *thesaurus_query-licence*
+5. Licence                                           *thesaurus_query-licence*
 
-This is open source make sure to include a licence
+See LICENCE in root folder of this plugin.
 
 vim:ft=help

@@ -79,11 +79,7 @@ yet.
    works on Vim just fine.
 
 ## TODO List
-1. Package the python code better. I was learning the basics of the vim-python
-   API when writing the plugin, so currently the variables related to this
-   project is a bit all over the place. The next few days(or weeks if I'm
-   busy), I'll try to gather them together so it won't take too much general
-   name space.
-2. Try to absolve the Known Issues.
-3. Add option to truncate the synonym list when its length is over a certain
-   threashhold.
+
+1. Try to absolve the Known Issue.
+2. Add option to truncate the synonym list when its length is over a certain
+   threashhold(need more feedback to decide parameters).
