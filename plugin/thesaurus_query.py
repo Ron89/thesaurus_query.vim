@@ -109,7 +109,7 @@ def tq_generate_thesaurus_buffer(candidates):
         line_count+=2
     tq_vim_api.command("setlocal bufhidden=")
     tq_vim_api.command("silent g/^Synonyms:/ normal! 0Vgq")
-    tq_vim_api.command("exec 'resize ' . (line('$') - 1)")
+    tq_vim_api.command("exec 'resize ' . (line('$'))")
     tq_vim_api.command("nnoremap <silent> <buffer> q :q<CR>")
     tq_vim_api.command("setlocal filetype=thesaurus")
     tq_vim_api.command("normal! gg")
