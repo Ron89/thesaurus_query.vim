@@ -83,3 +83,4 @@ yet.
 1. Try to absolve the Known Issue.
 2. Add option to truncate the synonym list when its length is over a certain
    threashhold(need more feedback to decide parameters).
+3. Add optional support for mthesaur.txt.
