@@ -65,11 +65,11 @@ def tq_replace_cursor_word_from_candidates(candidates):
         for word_curr in syno_case[1]:
             syno_result_prompt[-1][1].append("({}){}".format(word_ID, word_curr))
             word_ID+=1
-    tq_vim_api.command("call TQ_echo_HL(\"None|In line: ... |Keyword|{}|None| ...\n\")".format(tq_vim_api.current.line))
-    tq_vim_api.command("call TQ_echo_HL(\"None|Synonym for |Special|{}\n|None\")".format(tq_vim_api.eval("l:word")))
+    tq_vim_api.command("echon \"In line: ... \"|echohl Keyword|echon \"{}\"|echohl None |echon \" ...\n\"".format(tq_vim_api.current.line.replace('\\','\\\\').replace('"','\\"')))
+    tq_vim_api.command("call TQ_echo_HL(\"None|Synonym for |Special|{}\\n|None\")".format(tq_vim_api.eval("l:word")))
     for case in syno_result_prompt:
-        tq_vim_api.command('call TQ_echo_HL("Keyword|Definition: |None|{}\n")'.format(case[0]))
-        tq_vim_api.command('call TQ_echo_HL("Keyword|Synonyms: |None|{}\n")'.format(", ".join(case[1])))
+        tq_vim_api.command('call TQ_echo_HL("Keyword|Definition: |None|{}\\n")'.format(case[0]))
+        tq_vim_api.command('call TQ_echo_HL("Keyword|Synonyms: |None|{}\\n")'.format(", ".join(case[1])))
     try:
         thesaurus_user_choice = int(tq_vim_api.eval("input('Choose from wordlist(type -1 to cancel): ')"))
     except ValueError:

@@ -136,8 +136,8 @@ command! -nargs=1 Thesaurus :call Thesaurus_Query_Lookup(<q-args>, 0)
 "  Map keys
 " --------------------------------
 if g:thesaurus_query#map_keys
-    nnoremap <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
-    vnoremap <LocalLeader>cs y:Thesaurus <C-r>"<CR>
+    nnoremap <unique> <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
+    vnoremap <unique> <LocalLeader>cs y:Thesaurus <C-r>"<CR>
 endif
 
 let &cpo = s:save_cpo
