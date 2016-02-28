@@ -121,15 +121,15 @@ if !exists("g:thesaurus_query#truncation_on_syno_list_size")
     let g:thesaurus_query#truncation_on_syno_list_size = -1
 endif
 
-call Thesaurus_Query_Init()
+call g:Thesaurus_Query_Init()
 
 
 " --------------------------------
 "  Expose our commands to the user
 " --------------------------------
-command! ThesaurusQueryReplaceCurrentWord :call Thesaurus_Query_Lookup(expand('<cword>'), 1)
-command! ThesaurusQueryLookupCurrentWord :call Thesaurus_Query_Lookup(expand('<cword>'), 0)
-command! -nargs=1 Thesaurus :call Thesaurus_Query_Lookup(<q-args>, 0)
+command! ThesaurusQueryReplaceCurrentWord :call g:Thesaurus_Query_Lookup(expand('<cword>'), 1)
+command! ThesaurusQueryLookupCurrentWord :call g:Thesaurus_Query_Lookup(expand('<cword>'), 0)
+command! -nargs=1 Thesaurus :call g:Thesaurus_Query_Lookup(<q-args>, 0)
 
 
 " --------------------------------
