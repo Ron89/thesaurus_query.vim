@@ -12,15 +12,14 @@ except ImportError:
 class word_query_handler_thesaurus_lookup:
     '''
     handler for lookup method: "online_thesaurus_lookup.py". When query_from_source is called, return:
-        [int status, dict syno_list]
+       [status, [[def_0, [synonym_0, synonym_1, ...]],  [def_1, [synonym_0, synonym_1, ...]], ...]]
     status:
-        0: normal,  synonym found, list will be returned as a dictionary
-        1: normal, synonym not found, return empty syno_list
-        -1: unexpected result from query, return empty syno_list
-    syno_list:
-        list [def, list wordlist]
-        def('str'): definition
-        wordlist: list of words belonging to a same definition
+        0: normal,  synonym found, list will be returned as 
+        1: normal, synonym not found, return empty synonym list
+        -1: unexpected result from query, return empty synonym list
+    synonym list = [def, list wordlist]
+        def('str'): definition the synonyms belong to
+        wordlist = [synonym_0, synonym_1, ...]: list of words belonging to a same definition
     '''
 
     def __init__(self):
