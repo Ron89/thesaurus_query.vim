@@ -72,15 +72,8 @@ script is a simple one liner, it couldn't deal with many flexible situations as
 yet.
 
 
-## Known Issues
-
-1. on NeoVim, display synonym list on split buffer raise out_of_range
-   exception. It could be caused by the change of python API. The function
-   works on Vim just fine.
-
 ## TODO List
 
-1. Try to absolve the Known Issue.
-2. Add option to truncate the synonym list when its length is over a certain
+1. Add option to truncate the synonym list when its length is over a certain
    threashhold(need more feedback to decide parameters).
-3. Add optional support for mthesaur.txt.
+2. Add optional support for mthesaur.txt.

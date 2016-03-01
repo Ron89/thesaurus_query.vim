@@ -105,6 +105,7 @@ def tq_generate_thesaurus_buffer(candidates):
     del tq_thesaurus_buffer[:]
     line_count=0
     for case in candidates:
+        tq_thesaurus_buffer.append([""])
         tq_thesaurus_buffer[line_count:line_count+2]=['Definition: {}'.format(case[0]), 'Synonyms: {}'.format(", ".join(case[1]))]
         line_count+=2
     tq_vim_api.command("setlocal bufhidden=")
