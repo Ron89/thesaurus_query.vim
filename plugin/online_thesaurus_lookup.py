@@ -19,8 +19,6 @@ def online_thesaurus_lookup(target):
         output = "The word \"{}\" has not been found on thesaurus.com!\n".format(target)
         return output
 
-
-
     end_tag_count=2
     while True:
         line_curr = parser.readline()
