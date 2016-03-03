@@ -3,6 +3,7 @@
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
 # Version:      0.0.3
 
+import vim
 from online_thesaurus_lookup import online_thesaurus_lookup
 try:
     from StringIO import StringIO
@@ -14,7 +15,7 @@ class word_query_handler_thesaurus_lookup:
     handler for lookup method: "online_thesaurus_lookup.py". When query_from_source is called, return:
        [status, [[def_0, [synonym_0, synonym_1, ...]],  [def_1, [synonym_0, synonym_1, ...]], ...]]
     status:
-        0: normal,  synonym found, list will be returned as 
+        0: normal,  synonym found, list will be returned as
         1: normal, synonym not found, return empty synonym list
         -1: unexpected result from query, return empty synonym list
     synonym list = [def, list wordlist]
@@ -24,10 +25,11 @@ class word_query_handler_thesaurus_lookup:
 
     def __init__(self):
 #        self.query_source_cmd = os.path.dirname(os.path.realpath(__file__))+"/online_thesaurus_lookup.sh"
+        self.identifier="online_thesaurus_default"
         self.header_length=11    # length of "Definition:", current header of definition
         self.relavent_val_pos=9
         self.syno_pos=11
-        self.truncation_on_relavance=0 # default: no truncation
+        self.truncation_on_relavance=int(vim.eval("g:thesaurus_query#truncation_on_relavance")) # truncate on which relavance level?
 
     def query_cmd_handler(self, word):
         self.syno_list=[]
@@ -79,4 +81,4 @@ class word_query_handler_thesaurus_lookup:
             return [1, self.syno_list]
         if self.process_query_result():
             return [0, self.syno_list]
-        return [-1, {}]
+        return [-1, []]

@@ -41,25 +41,24 @@ function! g:TQ_echo_HL(message_for_echo)
 endfunction
 
 python import sys as tq_sys_api
+python import os as tq_os_api
 python import vim as tq_vim_api
 python tq_sys_api.path.append(tq_vim_api.eval('expand("<sfile>:h")'))
 python import thesaurus_query
 
+
+
 function! g:Thesaurus_Query_Init()
 python<<endOfPython
 tq_framework = thesaurus_query.Thesaurus_Query_Handler()
-tq_framework.query_backend.truncation_on_relavance = int(tq_vim_api.eval("g:thesaurus_query#truncation_on_relavance"))
-tq_framework.truncate_definition = int(tq_vim_api.eval("g:thesaurus_query#truncation_on_definition_num"))
-tq_framework.truncate_syno_list = int(tq_vim_api.eval("g:thesaurus_query#truncation_on_syno_list_size"))
-
 endOfPython
 endfunction
 
+function! g:Thesaurus_Query_Lookup(word, replace)
 " a:word        word to be looked up
 " a:replace     flag:
 "                       0 - don't replace word under cursor
 "                       1 - replace word under cursor
-function! g:Thesaurus_Query_Lookup(word, replace)
     let l:replace = a:replace
     let l:trimmed_word = s:Trim(a:word)
     let l:word = substitute(tolower(l:trimmed_word), '"', '', 'g')
@@ -76,7 +75,7 @@ if not tq_synonym_result:
     tq_vim_api.command("let l:syno_found=0")
 # if replace flag is on, prompt user to choose after populating candidate list
 elif tq_vim_api.eval('l:replace') != '0':
-    thesaurus_query.tq_replace_cursor_word_from_candidates(tq_synonym_result)    
+    thesaurus_query.tq_replace_cursor_word_from_candidates(tq_synonym_result)
 endOfPython
 
 " exit function if no candidate is found
@@ -119,6 +118,30 @@ endif
 " number is n, only first n synonyms of that definition will be retained.
 if !exists("g:thesaurus_query#truncation_on_syno_list_size")
     let g:thesaurus_query#truncation_on_syno_list_size = -1
+endif
+
+" This variable is used when initiating core query handler
+" If value is 0, default thesaurus backend
+" `online_query_handler.word_query_handler_thesaurus_lookup` is used.
+" If value is 1, 'tq_local_mthesaur_lookup.word_query_mthesaur_lookup' is
+" used first, but if no result is found, fallback to online routine again.
+if !exists("g:thesaurus_query#local_thesaurus_source_as_primary")
+    let g:thesaurus_query#use_local_thesaurus_source_as_primary = 0
+endif
+
+" This variable is used when initiating core query handler
+" When default query backend return empty or error, this variable will decide:
+"   value: 0    -> don't use alternative backend
+"   value: 1    -> use alternative backend
+if !exists("g:thesaurus_query#use_alternative_backend")
+    let g:thesaurus_query#use_alternative_backend=1
+endif
+
+" this variable is offered by tq_local_mthesaur_lookup, to determine the
+" location of mthesaurus file. File located by this variable will be first
+" verified before verifying &thesaurus.
+if !exists("g:thesaurus_query#mthesaur_file")
+    let g:thesaurus_query#mthesaur_file="~/.vim/thesaurus/mthesaur.txt"
 endif
 
 call g:Thesaurus_Query_Init()
