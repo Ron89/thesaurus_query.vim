@@ -1,3 +1,8 @@
+g:thesaurus_query#display_list_all_time	thesaurus_query.txt	/*g:thesaurus_query#display_list_all_time*
+g:thesaurus_query#map_keys	thesaurus_query.txt	/*g:thesaurus_query#map_keys*
+g:thesaurus_query#truncation_on_definition_num	thesaurus_query.txt	/*g:thesaurus_query#truncation_on_definition_num*
+g:thesaurus_query#truncation_on_relavance	thesaurus_query.txt	/*g:thesaurus_query#truncation_on_relavance*
+g:thesaurus_query#truncation_on_syno_list_size	thesaurus_query.txt	/*g:thesaurus_query#truncation_on_syno_list_size*
 thesaurus_query	thesaurus_query.txt	/*thesaurus_query*
 thesaurus_query-intro	thesaurus_query.txt	/*thesaurus_query-intro*
 thesaurus_query-licence	thesaurus_query.txt	/*thesaurus_query-licence*

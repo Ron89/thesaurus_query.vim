@@ -106,25 +106,28 @@ if !exists("g:thesaurus_query#truncation_on_relavance")
     let g:thesaurus_query#truncation_on_relavance = 0
 endif
 
-" This variable is for core query handler. If value is -1, no truncate of
-" output is made upon number of definitions. Else, if number is n, only
-" synonyms of the first n word definitions were retained.
+" This variable is for replacing candidate display. If value is -1, no
+" truncate of output is made upon number of definitions. Else, if number is n,
+" only synonyms of the first n word definitions were retained.
 if !exists("g:thesaurus_query#truncation_on_definition_num")
     let g:thesaurus_query#truncation_on_definition_num = -1
 endif
 
-" This variable is for core query handler. If value is -1, no truncate of
-" output is made upon number of synonyms from a single definition. Else, if
-" number is n, only first n synonyms of that definition will be retained.
+" This variable is for replacing candidate display. If value is -1, no
+" truncate of output is made upon number of synonyms from a single definition.
+" Else, if number is n, only first n synonyms of that definition will be
+" retained.
 if !exists("g:thesaurus_query#truncation_on_syno_list_size")
     let g:thesaurus_query#truncation_on_syno_list_size = -1
 endif
 
-" This variable is used when initiating core query handler
-" If value is 0, default thesaurus backend
-" `online_query_handler.word_query_handler_thesaurus_lookup` is used.
-" If value is 1, 'tq_local_mthesaur_lookup.word_query_mthesaur_lookup' is
-" used first, but if no result is found, fallback to online routine again.
+" This variable is used when initiating core query handler.  It determine
+" the priority between online thesaurus backend(based on Thesaurus.com) and
+" local thesaurus backend(based on mthesaur.txt). If
+" value is
+"     0:      query with online backend first.
+"     1:      query with local backend first.
+"                                                     default=0
 if !exists("g:thesaurus_query#local_thesaurus_source_as_primary")
     let g:thesaurus_query#use_local_thesaurus_source_as_primary = 0
 endif

@@ -12,7 +12,9 @@ CONTENTS                                                     *thesaurus_query*
         |g:thesaurus_query#truncation_on_relavance|
         |g:thesaurus_query#truncation_on_definition_num|
         |g:thesaurus_query#truncation_on_syno_list_size|
-    4.5
+        |g:thesaurus_query#local_thesaurus_source_as_primary|
+        |g:thesaurus_query#use_alternative_backend|
+        |g:thesaurus_query#mthesaur_file|
     5. Licence ..................................... |thesaurus_query-licence|
 ===============================================================================
 
@@ -22,15 +24,27 @@ CONTENTS                                                     *thesaurus_query*
 This is a plugin for user to lookup synonyms of any word under cursor and
 replace it with an user chosen synonym. It also accept word covered in visual
 mode or manual input. But for the latter two cases, auto-replacement function
-isn't activated by default. 
+is not activated by default.
 
-Default source of synonyms is [Thesaurus.com](http://thesaurus.com/), so
-internet connection is required for it's functionality.
-
+Two backends are used for this plugin:
+    *   Online backend querys from [Thesaurus.com](http://thesaurus.com/) for
+        synonym, so internet connection is required for this backend's
+        functionality.
+    *   Local backend querys from `mthesaur.txt`. For this backend to work,
+        be sure to download the file from
+        [gutenberg.org](http://www.gutenberg.org/files/3202/files/) and place
+        it under "~/.vim/thesaurus". If you place the file elsewhere, change
+        global variable |g:thesaurus_query#mthesaur_file| to
+        point to the file you downloaded, eg. put the following line
+      let g:thesaurus_query#mthesaurus="~/.config/nvim/thesaurus/mthesaur.txt"
+        into your `.vimrc` file if your `mthesaur.txt` is placed in folder
+        "~/.config/nvim/thesaurus/".
 
 2. Requirements                                 *thesaurus_query-requirements*
 
 Since the plugin is written in python, the vim should have +python support.
+Internet is required for online query backend to be functional;
+`mthesaur.txt` is required for local query backend to be functional.
 
 
 3. Usage                                               *thesaurus_query-usage*
@@ -49,7 +63,7 @@ The plugin provides three ways of using.
     This routine take one argument as target word and then query its synonyms.
     Query result would be displayed in a split buffer.
 
-The functionalities are also mapped to key-bindings 
+The functionalities are also mapped to key-bindings
     nnoremap <unique> <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
     vnoremap <unique> <LocalLeader>cs y:Thesaurus <C-r>"<CR>
 
@@ -60,7 +74,7 @@ Currently there are 5 global variables used to customize the behavior.
 
 *g:thesaurus_query#display_list_all_time*
     Determine if a minibuffer is still used when user decided to use the
-    replacement routine. 
+    replacement routine.
             0: do not display split buffer if replace routine is used
             1: display split buffer at all time
                                                         default=0
@@ -75,20 +89,48 @@ Currently there are 5 global variables used to customize the behavior.
     This variable is for default query routine, if according to thesaurus.com,
     the found synonym's relavance is smaller or equal to this value, it is
     neglected
+    * Note that this truncation will truncate the wordlist for BOTH replacing
+      candidate interface and thesaurus split won't be truncated.
                                                         default=0
 
 *g:thesaurus_query#truncation_on_definition_num*
-    This variable is for core query handler. If value is -1, no truncate of
-    output is made upon number of definitions. Else, if number is n, only
-    synonyms of the first n word definitions were retained.
+    This variable is for replacing candidate display. If value is
+        -1:     no truncate of output is made upon number of definitions.
+        n:      only synonyms of the first n word definitions were retained.
+    * Note that this truncation will only affect the replacing candidate
+      interface, thesaurus split will NOT be truncated.
                                                         default=-1
 
 *g:thesaurus_query#truncation_on_syno_list_size*
-    This variable is for core query handler. If value is -1, no truncate of
-    output is made upon number of synonyms from a single definition. Else, if
-    number is n, only first n synonyms of that definition will be retained.
+    This variable is for replacing candidate display. If value is
+        -1:     no truncate of output is made upon number of synonyms from a
+                single definition.
+        n:      only first n synonyms of that definition will be retained.
+    * Note that this truncation will only affect the replacing candidate
+      interface, thesaurus split will NOT be truncated.
                                                         default=-1
 
+*g:thesaurus_query#local_thesaurus_source_as_primary*
+    This variable is used when initiating core query handler.  It determine
+    the priority between online thesaurus backend(based on Thesaurus.com) and
+    local thesaurus backend(based on mthesaur.txt). If
+    value is
+        0:      query with online backend first.
+        1:      query with local backend first.
+                                                        default=0
+
+*g:thesaurus_query#use_alternative_backend*
+    This variable is used when initiating core query handler. When default
+    query backend return empty or error, this variable will decide:
+        0:      don't use alternative backend
+        1:      use alternative backend
+                                                        default=1
+
+*g:thesaurus_query#mthesaur_file*
+    this variable is offered by tq_local_mthesaur_lookup. Used to determine
+    locate `mthesaur.txt` file from your computer. If no `mthesaur.txt`is
+    found at this location, location specified in &thesaurus will be checked.
+                            default="~/.vim/thesaurus/mthesaur.txt"
 
 5. Licence                                           *thesaurus_query-licence*
 
