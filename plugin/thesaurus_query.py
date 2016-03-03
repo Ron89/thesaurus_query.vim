@@ -81,7 +81,7 @@ def truncate_synonym_list(synonym_list):
         if truncate_syno_list==-1:
             output_buffer.append(definition)
         else:
-            if truncate_syno_list<=len(definition[1]):
+            if truncate_syno_list<len(definition[1]):
                 truncated_flag = 1
             output_buffer.append([definition[0],definition[1][:truncate_syno_list]])
 
@@ -120,15 +120,25 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
     [candidate_num, thesaurus_wait_list, syno_result_prompt] = tq_candidate_list_populate(candidates)
 
     vim.command("echon \"In line: ... \"|echohl Keyword|echon \"{}\"|echohl None |echon \" ...\n\"".format(vim.current.line.replace('\\','\\\\').replace('"','\\"')))
-    vim.command("call g:TQ_echo_HL(\"None|Candidates for |WarningMSG|{}\\n|None\")".format(vim.eval("l:word")))
+    vim.command("call g:TQ_echo_HL(\"None|Candidates for |WarningMSG|{}\\n|None\")".format(vim.eval("l:trimmed_word")))
     for case in syno_result_prompt:
         if case[0] != "":
             vim.command('call g:TQ_echo_HL("Keyword|Definition: |None|{}\\n")'.format(case[0]))
-        vim.command('call g:TQ_echo_HL("Keyword|Synonyms: |None|{}\\n")'.format(", ".join(case[1])))
+        vim.command('call g:TQ_echo_HL("Keyword|Synonyms: |None|\\n")')
+        col_count = 10
+        col_count_max = 80
+        for synonym_i in case[1]:
+            if col_count+len(synonym_i)+1<col_count_max:
+                vim.command('echon "{} "'.format(synonym_i))
+                col_count += len(synonym_i)+1
+            else:
+                vim.command('echon "\n{} "'.format(synonym_i))
+                col_count = len(synonym_i)+1
+        vim.command('echon "\n"')
     if truncated_flag==0:
         thesaurus_user_choice = vim.eval("input('Type number and <Enter> (empty cancels): ')")
     else:
-        thesaurus_user_choice = vim.eval("input('Type number and <Enter> (results truncated, Type `A<Enter>` to browse all results in split; empty cancels): ')")
+        thesaurus_user_choice = vim.eval("input('Type number and <Enter> (results truncated, Type `A<Enter>` to browse all results\nin split; empty cancels): ')")
     if not thesaurus_user_choice:
         return
     if thesaurus_user_choice == "A":
