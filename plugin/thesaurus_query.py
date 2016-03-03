@@ -94,12 +94,16 @@ def tq_candidate_list_populate(candidates):
     '''
     thesaurus_wait_list = []
     syno_result_prompt = []
+    wordOriginal = vim.eval('l:trimmed_word')
     word_ID = 0
     for syno_case in candidates:
         thesaurus_wait_list = thesaurus_wait_list+syno_case[1]
         syno_result_prompt.append([syno_case[0],[]])
         for word_curr in syno_case[1]:
-            syno_result_prompt[-1][1].append("({}){}".format(word_ID, word_curr))
+            if wordOriginal.isupper():
+                syno_result_prompt[-1][1].append("({}){}".format(word_ID, word_curr.upper()))
+            elif wordOriginal[0].isupper():
+                syno_result_prompt[-1][1].append("({}){}".format(word_ID, word_curr[0].upper()+word_curr[1:]))
             word_ID+=1
     return [word_ID, thesaurus_wait_list, syno_result_prompt]
 
