@@ -1,7 +1,7 @@
 # Python backend for looking up words in an online thesaurus. Idea from
 # project vim-online_thesaurus by Anton Beloglazov <http://beloglazov.info/>.
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
-# Version:      0.0.3
+# Version:      0.1.0
 # Original idea: Anton Beloglazov <http://beloglazov.info/>
 
 import vim

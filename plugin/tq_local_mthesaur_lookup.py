@@ -1,6 +1,6 @@
 # Thesaurus Lookup routine for local mthesaur.txt file.
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
-# Version:      0.0.3
+# Version:      0.1.0
 
 import vim
 import os
@@ -10,7 +10,7 @@ class word_query_mthesaur_lookup:
     Lookup routine for local mthesaur.txt file. When query_from_source is called, return:
        [status, [[def_0, [synonym_0, synonym_1, ...]],  [def_1, [synonym_0, synonym_1, ...]], ...]]
     status:
-        0: normal,  synonym found, list will be returned as 
+        0: normal,  synonym found, list will be returned as
         1: normal, synonym not found, return empty synonym list
         -1: unexpected result from query, return empty synonym list
     synonym list = [def, list wordlist]

@@ -1,7 +1,7 @@
 # Handler for Online Thesaurus Lookup routine =online_thesaurus_lookup.py=, structurize
 # the result with the general word query framework.
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
-# Version:      0.0.3
+# Version:      0.1.0
 
 import vim
 from online_thesaurus_lookup import online_thesaurus_lookup
