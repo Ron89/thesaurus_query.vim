@@ -12,7 +12,7 @@ CONTENTS                                                     *thesaurus_query*
         |g:thesaurus_query#truncation_on_relavance|
         |g:thesaurus_query#truncation_on_definition_num|
         |g:thesaurus_query#truncation_on_syno_list_size|
-        |g:thesaurus_query#local_thesaurus_source_as_primary|
+        |g:thesaurus_query#use_local_thesaurus_source_as_primary|
         |g:thesaurus_query#use_alternative_backend|
         |g:thesaurus_query#mthesaur_file|
     5. Licence ..................................... |thesaurus_query-licence|
@@ -110,7 +110,7 @@ Currently there are 5 global variables used to customize the behavior.
       interface, thesaurus split will NOT be truncated.
                                                         default=-1
 
-*g:thesaurus_query#local_thesaurus_source_as_primary*
+*g:thesaurus_query#use_local_thesaurus_source_as_primary*
     This variable is used when initiating core query handler.  It determine
     the priority between online thesaurus backend(based on Thesaurus.com) and
     local thesaurus backend(based on mthesaur.txt). If

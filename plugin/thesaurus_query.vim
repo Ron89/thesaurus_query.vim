@@ -128,7 +128,7 @@ endif
 "     0:      query with online backend first.
 "     1:      query with local backend first.
 "                                                     default=0
-if !exists("g:thesaurus_query#local_thesaurus_source_as_primary")
+if !exists("g:thesaurus_query#use_local_thesaurus_source_as_primary")
     let g:thesaurus_query#use_local_thesaurus_source_as_primary = 0
 endif
 
