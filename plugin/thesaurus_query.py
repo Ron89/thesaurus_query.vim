@@ -104,6 +104,8 @@ def tq_candidate_list_populate(candidates):
                 syno_result_prompt[-1][1].append("({}){}".format(word_ID, word_curr.upper()))
             elif wordOriginal[0].isupper():
                 syno_result_prompt[-1][1].append("({}){}".format(word_ID, word_curr[0].upper()+word_curr[1:]))
+            else:
+                syno_result_prompt[-1][1].append("({}){}".format(word_ID, word_curr))
             word_ID+=1
     return [word_ID, thesaurus_wait_list, syno_result_prompt]
 
