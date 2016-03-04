@@ -128,9 +128,9 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
             vim.command('call g:TQ_echo_HL("Keyword|Definition: |None|{}\\n")'.format(case[0]))
         vim.command('call g:TQ_echo_HL("Keyword|Synonyms: |None|")')
         col_count = 10
-        col_count_max = vim.eval("&columns")
+        col_count_max = int(vim.eval("&columns"))
         for synonym_i in case[1]:
-            if col_count+len(synonym_i)+1<col_count_max:
+            if (col_count+len(synonym_i)+1)<col_count_max:
                 vim.command('echon "{} "'.format(synonym_i))
                 col_count += len(synonym_i)+1
             else:
