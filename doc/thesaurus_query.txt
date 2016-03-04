@@ -9,12 +9,13 @@ CONTENTS                                                     *thesaurus_query*
     4. Customization ......................... |thesaurus_query-Customization|
         |g:thesaurus_query#display_list_all_time|
         |g:thesaurus_query#map_keys|
-        |g:thesaurus_query#truncation_on_relavance|
-        |g:thesaurus_query#truncation_on_definition_num|
-        |g:thesaurus_query#truncation_on_syno_list_size|
         |g:thesaurus_query#use_local_thesaurus_source_as_primary|
         |g:thesaurus_query#use_alternative_backend|
         |g:thesaurus_query#mthesaur_file|
+        |g:raise_backend_priority_if_synonym_found|
+        |g:thesaurus_query#truncation_on_relavance|
+        |g:thesaurus_query#truncation_on_definition_num|
+        |g:thesaurus_query#truncation_on_syno_list_size|
     5. Licence ..................................... |thesaurus_query-licence|
 ===============================================================================
 
@@ -85,6 +86,34 @@ Currently there are 5 global variables used to customize the behavior.
             1: do not use default mapped keys.
                                                         default=1
 
+*g:thesaurus_query#use_local_thesaurus_source_as_primary*
+    This variable is used when initiating core query handler.  It determine
+    the priority between online thesaurus backend(based on Thesaurus.com) and
+    local thesaurus backend(based on mthesaur.txt). If
+    value is
+        0:      query with online backend first.
+        1:      query with local backend first.
+                                                        default=0
+
+*g:thesaurus_query#use_alternative_backend*
+    This variable is used when initiating core query handler. When default
+    query backend return empty or error, this variable will decide:
+        0:      don't use alternative backend
+        1:      use alternative backend
+                                                        default=1
+
+*g:thesaurus_query#mthesaur_file*
+    this variable is offered by tq_local_mthesaur_lookup. Used to determine
+    locate `mthesaur.txt` file from your computer. If no `mthesaur.txt`is
+    found at this location, location specified in &thesaurus will be checked.
+                                    default="~/.vim/thesaurus/mthesaur.txt"
+
+*g:raise_backend_priority_if_synonym_found*
+    this variable is offered by core query handler, if value is
+          0:    priority of the backend that find the synonyms will be topped
+          1:    backend priority won't be affected by synonym findings
+                                                        default=0
+
 *g:thesaurus_query#truncation_on_relavance*
     This variable is for default query routine, if according to thesaurus.com,
     the found synonym's relavance is smaller or equal to this value, it is
@@ -110,27 +139,6 @@ Currently there are 5 global variables used to customize the behavior.
       interface, thesaurus split will NOT be truncated.
                                                         default=-1
 
-*g:thesaurus_query#use_local_thesaurus_source_as_primary*
-    This variable is used when initiating core query handler.  It determine
-    the priority between online thesaurus backend(based on Thesaurus.com) and
-    local thesaurus backend(based on mthesaur.txt). If
-    value is
-        0:      query with online backend first.
-        1:      query with local backend first.
-                                                        default=0
-
-*g:thesaurus_query#use_alternative_backend*
-    This variable is used when initiating core query handler. When default
-    query backend return empty or error, this variable will decide:
-        0:      don't use alternative backend
-        1:      use alternative backend
-                                                        default=1
-
-*g:thesaurus_query#mthesaur_file*
-    this variable is offered by tq_local_mthesaur_lookup. Used to determine
-    locate `mthesaur.txt` file from your computer. If no `mthesaur.txt`is
-    found at this location, location specified in &thesaurus will be checked.
-                            default="~/.vim/thesaurus/mthesaur.txt"
 
 5. Licence                                           *thesaurus_query-licence*
 

@@ -13,13 +13,14 @@ class Thesaurus_Query_Handler:
     routine when word is not already in the wordlist.
     '''
 
-    def __init__(self, cache_size_max=10000):
+    def __init__(self, cache_size_max=100):
         self.word_list = {}  # hold wordlist obtained in previous query
         self.word_list_keys = []  # hold all keys for wordlist
                                   # in old->new order
         self.wordlist_size_max = cache_size_max
         self.query_source_cmd = ''
         self.query_backend_define()
+#        self.raise_backend_priority_if_synonym_found =
 #        self.truncate_definition = -1  # number of definitions retained in output
 #        self.truncate_syno_list = -1   # number of synonyms retained for each definition in output
 
@@ -49,6 +50,7 @@ class Thesaurus_Query_Handler:
             return self.word_list[word]
 
         error_encountered = 0
+        good_backends=[]
         faulty_backends=[]
         for query_backend_curr in self.query_backends:  # query each of the backend list till found
             [state, synonym_list]=query_backend_curr.query(word)
@@ -57,12 +59,17 @@ class Thesaurus_Query_Handler:
                 faulty_backends.append(query_backend_curr)
                 continue
             if state == 0:
+                good_backends.append(query_backend_curr)
                 break
         for faulty in faulty_backends:
             self.query_backends.remove(faulty)
         self.query_backends+=faulty_backends
+        if int(vim.eval("g:raise_backend_priority_if_synonym_found")) == 1:
+            for good in good_backends:
+                self.query_backends.remove(good)
+            self.query_backends=good_backends+self.query_backends
         if error_encountered == 1:
-            print "WARNING: one or more query backends report error. Please check on thesaurus source."
+            vim.command('echohl WarningMSG | echon "WARNING: " | echohl None | echon "one or more query backends report error. Please check on thesaurus source(s).\n"')
         if state == 0:  # save to word_list buffer only when synonym is found
             self.word_list[word]=synonym_list
             self.word_list_keys.append(word)

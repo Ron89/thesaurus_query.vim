@@ -23,9 +23,12 @@ Two backends are used for this plugin, they function independently.
     into your `.vimrc` file if your `mthesaur.txt` is placed in folder
     "~/.config/nvim/thesaurus/".
 
-By default, online query backend will be used first. So it'll still work
-properly if user neglects configuring for `mthesaur.txt`, as long as internet
-is available.
+**By default, online query backend will be used first(higher priority).** So
+it'll still work properly if user neglects configuring for `mthesaur.txt`, as
+long as internet is available.
+
+To ensure the best user experience, **the backend that reports error during
+query will have its priority lowered.**
 
 ## Motivation
 

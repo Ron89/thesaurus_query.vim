@@ -147,6 +147,13 @@ if !exists("g:thesaurus_query#mthesaur_file")
     let g:thesaurus_query#mthesaur_file="~/.vim/thesaurus/mthesaur.txt"
 endif
 
+" this variable is offered by core query handler, if value is
+"       0:      priority of the backend that find the synonyms will be topped
+"       1:      backend priority won't be affected by synonym findings
+if !exists("g:raise_backend_priority_if_synonym_found")
+    let g:raise_backend_priority_if_synonym_found=0
+endif
+
 call g:Thesaurus_Query_Init()
 
 
