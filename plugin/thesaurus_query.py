@@ -97,15 +97,17 @@ def tq_candidate_list_populate(candidates):
     wordOriginal = vim.eval('l:trimmed_word')
     word_ID = 0
     for syno_case in candidates:
-        thesaurus_wait_list = thesaurus_wait_list+syno_case[1]
         syno_result_prompt.append([syno_case[0],[]])
         for word_curr in syno_case[1]:
             if wordOriginal.isupper():
                 syno_result_prompt[-1][1].append("({}){}".format(word_ID, word_curr.upper()))
+                thesaurus_wait_list.append("{}".format(word_curr.upper()))
             elif wordOriginal[0].isupper():
                 syno_result_prompt[-1][1].append("({}){}".format(word_ID, word_curr[0].upper()+word_curr[1:]))
+                thesaurus_wait_list.append("{}".format(word_curr[0].upper()+word_curr[1:]))
             else:
                 syno_result_prompt[-1][1].append("({}){}".format(word_ID, word_curr))
+                thesaurus_wait_list.append("{}".format(word_curr))
             word_ID+=1
     return [word_ID, thesaurus_wait_list, syno_result_prompt]
 
@@ -124,9 +126,9 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
     for case in syno_result_prompt:
         if case[0] != "":
             vim.command('call g:TQ_echo_HL("Keyword|Definition: |None|{}\\n")'.format(case[0]))
-        vim.command('call g:TQ_echo_HL("Keyword|Synonyms: |None|\\n")')
+        vim.command('call g:TQ_echo_HL("Keyword|Synonyms: |None|")')
         col_count = 10
-        col_count_max = 80
+        col_count_max = vim.eval("&columns")
         for synonym_i in case[1]:
             if col_count+len(synonym_i)+1<col_count_max:
                 vim.command('echon "{} "'.format(synonym_i))
