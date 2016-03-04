@@ -134,8 +134,8 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
                 vim.command('echon "{} "'.format(synonym_i))
                 col_count += len(synonym_i)+1
             else:
-                vim.command('echon "\n{} "'.format(synonym_i))
-                col_count = len(synonym_i)+1
+                vim.command('echon "\n          {} "'.format(synonym_i))
+                col_count = 10 + len(synonym_i)+1
         vim.command('echon "\n"')
     if truncated_flag==0:
         thesaurus_user_choice = vim.eval("input('Type number and <Enter> (empty cancels): ')")
