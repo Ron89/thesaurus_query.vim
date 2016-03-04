@@ -49,13 +49,18 @@ class Thesaurus_Query_Handler:
             return self.word_list[word]
 
         error_encountered = 0
+        faulty_backends=[]
         for query_backend_curr in self.query_backends:  # query each of the backend list till found
             [state, synonym_list]=query_backend_curr.query(word)
             if state == -1:
                 error_encountered = 1
+                faulty_backends.append(query_backend_curr)
                 continue
             if state == 0:
                 break
+        for faulty in faulty_backends:
+            self.query_backends.remove(faulty)
+        self.query_backends+=faulty_backends
         if error_encountered == 1:
             print "WARNING: one or more query backends report error. Please check on thesaurus source."
         if state == 0:  # save to word_list buffer only when synonym is found

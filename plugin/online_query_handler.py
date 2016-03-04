@@ -3,8 +3,10 @@
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
 # Version:      0.1.0
 
+import urllib2
+import re
 import vim
-from online_thesaurus_lookup import online_thesaurus_lookup
+#from online_thesaurus_lookup import online_thesaurus_lookup
 try:
     from StringIO import StringIO
 except ImportError:
@@ -33,13 +35,19 @@ class word_query_handler_thesaurus_lookup:
 
     def query_cmd_handler(self, word):
         self.syno_list=[]
-        self.query_result=StringIO(online_thesaurus_lookup(word))
+        query_result_raw = online_thesaurus_lookup(word)
+        self.query_result = StringIO(query_result_raw)
+
 
     def synonym_found(self):
-        if self.query_result.readline() != '\n':
+        first_line = self.query_result.readline()
+        if first_line != '\n':
+            if "Internet Error." in first_line:
+                self.query_result.close()
+                return -1
             self.query_result.close()
-            return False
-        return True
+            return 1
+        return 0
 
     def syno_populating(self):
         word_dic={}
@@ -77,8 +85,52 @@ class word_query_handler_thesaurus_lookup:
 
     def query(self,word):
         self.query_cmd_handler(word)
-        if not self.synonym_found():
-            return [1, self.syno_list]
+        query_status = self.synonym_found()
+        if query_status!=0:
+            return [query_status, self.syno_list]
         if self.process_query_result():
             return [0, self.syno_list]
         return [-1, []]
+
+
+def online_thesaurus_lookup(target):
+    output = ""
+    try:
+        response = urllib2.urlopen('http://www.thesaurus.com/browse/{}'.format(target))
+        parser = StringIO(response.read())
+    except urllib2.HTTPError, error:
+        output = "The word \"{}\" has not been found on dictionary.com!\n".format(target)
+        return output
+    except urllib2.URLError, error:
+        output = "Internet Error. The word \"{}\" has not been found on dictionary.com!\n".format(target)
+        return output
+
+    end_tag_count=2
+    while True:
+        line_curr = parser.readline()
+        if not line_curr:
+            break
+        if "no thesaurus results" in line_curr:
+            output = "The word \"{}\" has not been found on thesaurus.com!\n".format(target)
+            break
+        if "synonym-description" in line_curr:
+            end_tag_count=0
+            continue
+        elif end_tag_count<2:
+            if "</div>" in line_curr:
+                end_tag_count+=1
+                continue
+            fields = re.split("<|>|&quot;", line_curr)
+            if len(fields)<3:
+                continue
+            elif len(fields)<10:
+                if "txt" in fields[1]:
+                    output+="\nDefinition: {}. ".format(fields[2])
+                    continue
+                elif "ttl" in fields[1]:
+                    output+="{}\nSynonyms:\n".format(fields[2])
+                    continue
+            elif "www.thesaurus.com" in fields[3]:
+                output+="{} {}\n".format(fields[6], fields[14])
+    parser.close()
+    return output
