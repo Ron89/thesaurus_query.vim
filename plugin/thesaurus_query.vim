@@ -54,7 +54,7 @@ tq_framework = thesaurus_query.Thesaurus_Query_Handler()
 endOfPython
 endfunction
 
-function! g:Thesaurus_Query_Lookup(word, replace)
+function! s:Thesaurus_Query_Lookup(word, replace)
 " a:word        word to be looked up
 " a:replace     flag:
 "                       0 - don't replace word under cursor
@@ -160,8 +160,8 @@ call g:Thesaurus_Query_Init()
 " --------------------------------
 "  Expose our commands to the user
 " --------------------------------
-command! ThesaurusQueryReplaceCurrentWord :call g:Thesaurus_Query_Lookup(expand('<cword>'), 1)
-command! ThesaurusQueryLookupCurrentWord :call g:Thesaurus_Query_Lookup(expand('<cword>'), 0)
+command! ThesaurusQueryReplaceCurrentWord :call <SID>Thesaurus_Query_Lookup(expand('<cword>'), 1)
+command! ThesaurusQueryLookupCurrentWord :call <SID>Thesaurus_Query_Lookup(expand('<cword>'), 0)
 command! -nargs=1 Thesaurus :call g:Thesaurus_Query_Lookup(<q-args>, 0)
 
 
@@ -169,8 +169,8 @@ command! -nargs=1 Thesaurus :call g:Thesaurus_Query_Lookup(<q-args>, 0)
 "  Map keys
 " --------------------------------
 if g:thesaurus_query#map_keys
-    nnoremap <unique> <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
-    vnoremap <unique> <LocalLeader>cs y:Thesaurus <C-r>"<CR>
+    nnoremap <unique><silent> <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
+    vnoremap <unique><silent> <LocalLeader>cs y:Thesaurus <C-r>"<CR>
 endif
 
 let &cpo = s:save_cpo
