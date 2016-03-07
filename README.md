@@ -5,7 +5,7 @@ replace it with an user chosen synonym. It also accept word covered in visual
 mode or manual input. But for the latter two cases, auto-replacement function
 isn't activated by default.
 
-![](https://github.com/ron89/thesaurus_query.vim/raw/master/synonym_candidate.png)
+![](http://imgur.com/LJpdBwD)
 
 Two backends are used for this plugin, they function independently.
 
@@ -40,7 +40,7 @@ However, even his plugin doesn't support word replacement functionality. On top
 of that, since his code relies heavily on vim script and regexp, to expand its
 functionality is really difficult.
 
-![](https://github.com/ron89/thesaurus_query.vim/raw/master/split_window.png)
+![](http://imgur.com/3B1i8Di)
 
 So I decided to create another thesaurus query plugin built upon python
 backend. Currently the performance is similar to Anton's plugin, and the only
@@ -114,7 +114,7 @@ has any complain about the current layout or otherwise, please draft an issue
 to let me know. Currently, I have drafted two variables to help reducing the
 candidate list when the number of synonym is too overwhelming.
 
-![](https://github.com/ron89/thesaurus_query.vim/raw/master/synonym_candidate_truncate.png)
+![](http://imgur.com/1nBNcoL)
 
 #### Synonym group truncate
 Synonyms are grouped by definitions. If there are too many groups to your
