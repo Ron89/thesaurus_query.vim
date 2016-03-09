@@ -1,3 +1,7 @@
+# NOTICE
+
+The repository is under trimming(with BFG). It will be finished before March, 12. Please refrain from cloning(installing with plugin manager) before then. This notice will be removed after trimming is finished.
+
 # Thesaurus Query/Replacement Plugin
 
 This is a plugin for user to lookup synonyms of any word under cursor and
