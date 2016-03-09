@@ -162,7 +162,7 @@ call g:Thesaurus_Query_Init()
 " --------------------------------
 command! ThesaurusQueryReplaceCurrentWord :call <SID>Thesaurus_Query_Lookup(expand('<cword>'), 1)
 command! ThesaurusQueryLookupCurrentWord :call <SID>Thesaurus_Query_Lookup(expand('<cword>'), 0)
-command! -nargs=1 Thesaurus :call g:Thesaurus_Query_Lookup(<q-args>, 0)
+command! -nargs=1 Thesaurus :call <SID>Thesaurus_Query_Lookup(<q-args>, 0)
 
 
 " --------------------------------
