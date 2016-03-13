@@ -1,6 +1,5 @@
 " An thesaurus query & replacing framework written in python.
 " Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
-" Version:      0.1.0
 " part of the code and default online thesaurus lookup routine:
 "       Anton Beloglazov <http://beloglazov.info/>
 

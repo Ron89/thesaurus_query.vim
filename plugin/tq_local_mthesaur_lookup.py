@@ -1,6 +1,5 @@
 # Thesaurus Lookup routine for local mthesaur.txt file.
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
-# Version:      0.1.0
 
 import vim
 import os

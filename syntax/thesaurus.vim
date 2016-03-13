@@ -2,7 +2,6 @@
 " Maintainer:   HE Chong [[chong.he.1989@gmail.com][e-mail]]
 " Based on script written by:
 " Author:       Anton Beloglazov <http://beloglazov.info/>
-" Version:      0.1.0
 " Original idea and code: Nick Coleman <http://www.nickcoleman.org/>
 
 if exists("b:current_syntax")
