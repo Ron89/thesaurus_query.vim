@@ -9,11 +9,11 @@ isn't activated by default.
 
 Two backends are used for this plugin, they function independently.
 
-*   **Online query backend** querys from [Thesaurus.com](http://thesaurus.com/) for
+*   **Online query backend** queries from [Thesaurus.com](http://thesaurus.com/) for
     synonym, so internet connection is required for this backend's
     functionality.
 
-*   **Local query backend** querys from `mthesaur.txt`. For this backend to work,
+*   **Local query backend** queries from `mthesaur.txt`. For this backend to work,
     be sure to download the file from
     [gutenberg.org](http://www.gutenberg.org/files/3202/files/) and place
     it under "~/.vim/thesaurus". If you place the file elsewhere, change
