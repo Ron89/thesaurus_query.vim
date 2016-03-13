@@ -1,0 +1,17 @@
+
+* Changelog
+  All notable changes to this project will be documented in this file.
+
+  This log is kept according to the [[http://keepachangelog.com/][Keep a CHANGELOG]] manifesto
+
+** v0.1.1										 :released:
+   - add feature: lowering query priority of mal-functional backend;
+   - add feature: recognize case(all upper case | first letter upper case | all
+     lower case) of phrase to be replaced, and adjust candidate list
+     accordingly;
+   - refined synonym replacing interface: smart line wrap based on current window
+     width.
+   - fixed on-demand query(`:Thesaurus [your_word]`);
+   - cleaned global scope variables;
+** v0.1.0
+   - initial release
