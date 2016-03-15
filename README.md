@@ -1,5 +1,9 @@
 # Thesaurus Query/Replacement Plugin
 
+*Notice*: 蔡老师推荐来的师弟师妹们:我写这个插件主要是想方便英语非第一语言的朋友写作时选用更合适语境和需要的同义词。希望蔡老师帮忙推广是觉得大家写论文和英文为语言的报告用这个应该会很方便。有同学感兴趣我很开心但是*点星真不是必须的*。我很欢迎使用vim的同学下载试用这个插件，但仅在你们真心觉得这个插件不错的时候再点星吧，谢谢。
+
+喵~
+
 This is a plugin for user to lookup synonyms of any word under cursor and
 replace it with an user chosen synonym. It also accept word covered in visual
 mode or manual input. But for the latter two cases, auto-replacement function
