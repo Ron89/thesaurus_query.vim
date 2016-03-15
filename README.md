@@ -1,6 +1,6 @@
 # Thesaurus Query/Replacement Plugin
 
-*Notice*: 蔡老师推荐来的师弟师妹们:我写这个插件主要是想方便英语非第一语言的朋友写作时选用更合适语境和需要的同义词。希望蔡老师帮忙推广是觉得大家写论文和英文为语言的报告用这个应该会很方便。有同学感兴趣我很开心但是*点星真不是必须的*。我很欢迎使用vim的同学下载试用这个插件，但仅在你们真心觉得这个插件不错的时候再点星吧，谢谢。
+**Notice**: 蔡老师推荐来的师弟师妹们:我写这个插件主要是想方便英语非第一语言的朋友写作时选用更合适语境和需要的同义词。希望蔡老师帮忙推广一来确实是希望增加使用用户，二来也是觉得大家写论文和英文为语言的报告用这个应该会很方便。有很多同学感兴趣我确实很开心但是**点星真不是必须的**。我很欢迎使用vim的同学下载试用这个插件，但请仅在你们真心觉得这个插件不错的时候再点星吧，谢谢。
 
 喵~
 
@@ -13,11 +13,11 @@ isn't activated by default.
 
 Two backends are used for this plugin, they function independently.
 
-*   **Online query backend** querys from [Thesaurus.com](http://thesaurus.com/) for
+*   **Online query backend** queries from [Thesaurus.com](http://thesaurus.com/) for
     synonym, so internet connection is required for this backend's
     functionality.
 
-*   **Local query backend** querys from `mthesaur.txt`. For this backend to work,
+*   **Local query backend** queries from `mthesaur.txt`. For this backend to work,
     be sure to download the file from
     [gutenberg.org](http://www.gutenberg.org/files/3202/files/) and place
     it under "~/.vim/thesaurus". If you place the file elsewhere, change
