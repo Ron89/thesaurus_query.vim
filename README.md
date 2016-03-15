@@ -1,13 +1,10 @@
 # Thesaurus Query/Replacement Plugin
 
-**Notice**：蔡老师推荐来的师弟师妹们:我写这个插件主要是想方便英语非第一语言的朋友写作时选用更合适语境和需要的同义词。希望蔡老师帮忙推广一来确实是希望增加使用用户，二来也是觉得大家写论文和英文为语言的报告用这个应该会很方便。有很多同学感兴趣我确实很开心，但是**点星真不是必须的**。我很欢迎使用vim的同学下载试用这个插件，但请仅在你们真心觉得这个插件不错的时候再点星吧，谢谢。
-
-喵~
-
-This is a plugin for user to lookup synonyms of any word under cursor and
-replace it with an user chosen synonym. It also accept word covered in visual
-mode or manual input. But for the latter two cases, auto-replacement function
-isn't activated by default.
+This is a plugin for user to *lookup* synonyms of any word under cursor and
+*replace it* with an user chosen synonym. It also accepts word/phrases covered in
+visual mode or manual input. But for the latter two cases, auto-replacement
+function isn't activated by default, and the result will be displayed in
+a split buffer.
 
 ![](http://i.imgur.com/LJpdBwD.png)
 
@@ -34,24 +31,6 @@ long as internet is available.
 To ensure the best user experience, **the backend that reports error during
 query will have its priority lowered.**
 
-## Motivation
-
-After searching on Github for quite a while, I realized that comparing to
-emacs, very few vim plugins for thesaurus query is satisfactory. Among the
-plugins I tried, the most functional one was the one created by [Anton
-Beloglazov](https://github.com/beloglazov/vim-online-thesaurus).
-However, even his plugin doesn't support word replacement functionality. On top
-of that, since his code relies heavily on vim script and regexp, to expand its
-functionality is really difficult.
-
-![](http://i.imgur.com/3B1i8Di.png)
-
-So I decided to create another thesaurus query plugin built upon python
-backend. Currently the performance is similar to Anton's plugin, and the only
-additional functionality is under-cursor word replacement. But due to Python's
-programmability, it should be easy for me to add more functions if requested.
-
-
 ## Installation
 
 Use your plugin manager of choice.
@@ -71,7 +50,8 @@ Use your plugin manager of choice.
 
 ## Usage
 
-By default, ThesaurusQueryReplaceCurrentWord is mapped to `<LocalLeader>cs`.
+By default, command `:ThesaurusQueryReplaceCurrentWord` is mapped to
+`<LocalLeader>cs`.
 
 ```
     nnoremap <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
@@ -149,4 +129,8 @@ explicitly by user.
 ## TODO List
 
 1. Add option to truncate the synonym list when its length is over a certain
-   threashhold(need more feedback to decide parameters).
+   threshold(need more feedback to decide parameters).
+2. Add more thesaurus source and try to parallelize the query process with
+   a timeout limit.
+3. Implement algorithm to make synonym candidates in a same form(tense,
+   plurality, etc.). This could take a while... :-|
