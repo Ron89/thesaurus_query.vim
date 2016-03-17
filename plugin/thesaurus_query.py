@@ -28,20 +28,18 @@ class Thesaurus_Query_Handler:
         Define the query routine used.
         """
         from tq_local_mthesaur_lookup import word_query_mthesaur_lookup
-        from online_query_handler import word_query_handler_thesaurus_lookup
+        from online_query_handler import word_query_handler_thesaurus_lookup as word_query_thesaurus_com_lookup
+        import datamuse_query
         self.query_backends = []
         local_as_primary = vim.eval("g:thesaurus_query#use_local_thesaurus_source_as_primary")
-        use_fallback = vim.eval("g:thesaurus_query#use_alternative_backend")
+#        use_fallback = vim.eval("g:thesaurus_query#use_alternative_backend")
+        self.query_backends.append(datamuse_query)
+        self.query_backends.append(word_query_thesaurus_com_lookup())
         if local_as_primary=="1":
-            self.query_backends.append(word_query_mthesaur_lookup())
-            if use_fallback=="1":
-                self.query_backends.append(word_query_handler_thesaurus_lookup())
+            self.query_backends.insert(0,word_query_mthesaur_lookup())
         else:
-            self.query_backends.append(word_query_handler_thesaurus_lookup())
-            if use_fallback=="1":
-                self.query_backends.append(word_query_mthesaur_lookup())
-
-        self.use_fallback=int(use_fallback)
+            self.query_backends.append(word_query_mthesaur_lookup())
+#        self.use_fallback=int(use_fallback)
 
 
     def query(self, word):
@@ -136,7 +134,7 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
     vim.command("call g:TQ_echo_HL(\"None|Candidates for |WarningMSG|{}\\n|None\")".format(vim.eval("l:trimmed_word")))
     for case in syno_result_prompt:
         if case[0] != "":
-            vim.command('call g:TQ_echo_HL("Keyword|Definition: |None|{}\\n")'.format(case[0]))
+            vim.command('call g:TQ_echo_HL("Keyword|Found as: |None|{}\\n")'.format(case[0]))
         vim.command('call g:TQ_echo_HL("Keyword|Synonyms: |None|")')
         col_count = 10
         col_count_max = int(vim.eval("&columns"))
@@ -194,7 +192,7 @@ def tq_generate_thesaurus_buffer(candidates):
             tq_thesaurus_buffer[line_count]='Synonyms: {}'.format(", ".join(case[1]))
             line_count+=1
             continue
-        tq_thesaurus_buffer[line_count:line_count+2]=['Definition: {}'.format(case[0]), 'Synonyms: {}'.format(", ".join(case[1]))]
+        tq_thesaurus_buffer[line_count:line_count+2]=['Found_as: {}'.format(case[0]), 'Synonyms: {}'.format(", ".join(case[1]))]
         line_count+=2
     vim.command("setlocal bufhidden=")
     vim.command("silent g/^Synonyms:/ normal! 0Vgq")

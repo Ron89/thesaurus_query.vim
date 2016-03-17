@@ -4,6 +4,13 @@
 
   This log is kept according to the [[http://keepachangelog.com/][Keep a CHANGELOG]] manifesto
 
+** V0.2
+*** Added
+    - datamuse query method, made into default
+*** Depreciated
+*** Removed
+    - variable =g:thesaurus_query#use_alternative_backend=
+*** Fixed
 ** v0.1.1										 :released:
    - add feature: lowering query priority of mal-functional backend;
    - add feature: recognize case(all upper case | first letter upper case | all

@@ -14,7 +14,7 @@ setlocal iskeyword+=:
 
 " Entry name rules
 syntax match thesMainEntry /Main entry: */ contained
-syntax keyword thesDefinition Definition:
+syntax keyword thesDefinition Found_as:
 syntax keyword thesSynonyms Synonyms:
 syntax keyword thesPartOfSpeech noun. pron. verb. adj. adv. prep. conj. interj.
 
