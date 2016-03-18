@@ -71,8 +71,7 @@ class Thesaurus_Query_Handler:
             self.word_list[word]=synonym_list
             self.word_list_keys.append(word)
             if len(self.word_list_keys) > self.wordlist_size_max:
-                dumped_item=self.word_list.pop(self.word_list_keys.pop(0))
-                del dumped_item
+                del self.word_list[self.word_list_keys.pop(0)]
         return synonym_list
 
 def truncate_synonym_list(synonym_list):
@@ -99,40 +98,32 @@ def truncate_synonym_list(synonym_list):
 
 def tq_candidate_list_populate(candidates):
     '''
-    generate thesaurus_wait_list and syno_result_prompt to be shown on terminal
+    generate waitlist and result_IDed to be shown on message_box
     '''
-    thesaurus_wait_list = []
-    syno_result_prompt = []
+    waitlist = []
+    result_IDed = []
     wordOriginal = vim.eval('l:trimmed_word')
     word_ID = 0
     for syno_case in candidates:
-        syno_result_prompt.append([syno_case[0],[]])
+        result_IDed.append([syno_case[0],[]])
         for word_curr in syno_case[1]:
             if wordOriginal.isupper():
-                syno_result_prompt[-1][1].append("({}){}".format(word_ID, word_curr.upper()))
-                thesaurus_wait_list.append("{}".format(word_curr.upper()))
+                result_IDed[-1][1].append("({}){}".format(word_ID, word_curr.upper()))
+                waitlist.append("{}".format(word_curr.upper()))
             elif wordOriginal[0].isupper():
-                syno_result_prompt[-1][1].append("({}){}".format(word_ID, word_curr[0].upper()+word_curr[1:]))
-                thesaurus_wait_list.append("{}".format(word_curr[0].upper()+word_curr[1:]))
+                result_IDed[-1][1].append("({}){}".format(word_ID, word_curr[0].upper()+word_curr[1:]))
+                waitlist.append("{}".format(word_curr[0].upper()+word_curr[1:]))
             else:
-                syno_result_prompt[-1][1].append("({}){}".format(word_ID, word_curr))
-                thesaurus_wait_list.append("{}".format(word_curr))
+                result_IDed[-1][1].append("({}){}".format(word_ID, word_curr))
+                waitlist.append("{}".format(word_curr))
             word_ID+=1
-    return [word_ID, thesaurus_wait_list, syno_result_prompt]
+    return [word_ID, waitlist, result_IDed]
 
-def tq_replace_cursor_word_from_candidates(candidate_list):
+def candidate_list_printing(result_IDed):
     '''
-    Using vim's color message box to populate a candidate list from found
-    synonyms. Then ask user to choose suitable candidate to replace word under
-    cursor.
+    Print candidate list to the messagebox
     '''
-    [truncated_flag, candidates] = truncate_synonym_list(candidate_list)
-
-    [candidate_num, thesaurus_wait_list, syno_result_prompt] = tq_candidate_list_populate(candidates)
-
-    vim.command("echon \"In line: ... \"|echohl Keyword|echon \"{}\"|echohl None |echon \" ...\n\"".format(vim.current.line.replace('\\','\\\\').replace('"','\\"')))
-    vim.command("call g:TQ_echo_HL(\"None|Candidates for |WarningMSG|{}\\n|None\")".format(vim.eval("l:trimmed_word")))
-    for case in syno_result_prompt:
+    for case in result_IDed:
         if case[0] != "":
             vim.command('call g:TQ_echo_HL("Keyword|Found as: |None|{}\\n")'.format(case[0]))
         vim.command('call g:TQ_echo_HL("Keyword|Synonyms: |None|")')
@@ -146,6 +137,22 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
                 vim.command('echon "\n          {} "'.format(synonym_i))
                 col_count = 10 + len(synonym_i)+1
         vim.command('echon "\n"')
+
+def tq_replace_cursor_word_from_candidates(candidate_list):
+    '''
+    Using vim's color message box to populate a candidate list from found
+    synonyms. Then ask user to choose suitable candidate to replace word under
+    cursor.
+    '''
+    [truncated_flag, candidates] = truncate_synonym_list(candidate_list)
+
+    [candidate_num, thesaurus_wait_list, syno_result_IDed] = tq_candidate_list_populate(candidates)
+
+    vim.command("echon \"In line: ... \"|echohl Keyword|echon \"{}\"|echohl None |echon \" ...\n\"".format(vim.current.line.replace('\\','\\\\').replace('"','\\"')))
+    vim.command("call g:TQ_echo_HL(\"None|Candidates for |WarningMSG|{}\\n|None\")".format(vim.eval("l:trimmed_word")))
+    
+    candidate_list_printing(syno_result_IDed)
+
     if truncated_flag==0:
         thesaurus_user_choice = vim.eval("input('Type number and <Enter> (empty cancels): ')")
     else:
@@ -162,7 +169,7 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
         return
     if (thesaurus_user_choice>=candidate_num or thesaurus_user_choice<0):
         vim.command('call g:TQ_echo_HL("WarningMSG|\nInvalid Input. |None|Ending synonym replacing session without making changes.")')
-    vim.command("normal! wbcw{}".format(thesaurus_wait_list[thesaurus_user_choice]))
+    vim.command("normal! ciw{}".format(thesaurus_wait_list[thesaurus_user_choice]))
 
 def tq_generate_thesaurus_buffer(candidates):
     '''
