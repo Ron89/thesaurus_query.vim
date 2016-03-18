@@ -10,7 +10,6 @@ CONTENTS                                                     *thesaurus_query*
         |g:thesaurus_query#display_list_all_time|
         |g:thesaurus_query#map_keys|
         |g:thesaurus_query#use_local_thesaurus_source_as_primary|
-        |g:thesaurus_query#use_alternative_backend|
         |g:thesaurus_query#mthesaur_file|
         |g:raise_backend_priority_if_synonym_found|
         |g:thesaurus_query#truncation_on_relavance|
@@ -94,13 +93,6 @@ Currently there are 5 global variables used to customize the behavior.
         0:      query with online backend first.
         1:      query with local backend first.
                                                         default=0
-
-*g:thesaurus_query#use_alternative_backend*
-    This variable is used when initiating core query handler. When default
-    query backend return empty or error, this variable will decide:
-        0:      don't use alternative backend
-        1:      use alternative backend
-                                                        default=1
 
 *g:thesaurus_query#mthesaur_file*
     this variable is offered by tq_local_mthesaur_lookup. Used to determine
