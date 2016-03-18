@@ -18,7 +18,7 @@ class word_query_mthesaur_lookup:
     '''
     def __init__(self):
         self.mthesaur_file="./mthesaurus.txt"
-        self.identifier="mthesaur_default"
+        self.identifier="mthesaur_txt"
         self.mthesaur_verified = 0
         self.mthesaur_file_locate()
 

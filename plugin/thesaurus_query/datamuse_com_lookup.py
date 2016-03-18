@@ -6,7 +6,7 @@ import json
 #import vim
 
 query_result_trunc=50
-identifier="datamuse_default"
+identifier="datamuse_com"
 
 def query(target, query_method="synonym"):
     ''' return result as list. relavance from high to low in each PoS.
