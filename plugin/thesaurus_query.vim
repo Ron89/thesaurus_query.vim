@@ -39,11 +39,11 @@ function! g:TQ_echo_HL(message_for_echo)
     endfor
 endfunction
 
-python import sys as tq_sys_api
-python import os as tq_os_api
-python import vim as tq_vim_api
-python tq_sys_api.path.append(tq_vim_api.eval('expand("<sfile>:h")'))
-python import thesaurus_query
+python import sys
+python import os
+python import vim
+python sys.path.append(vim.eval('expand("<sfile>:h")'))
+python import thesaurus_query.thesaurus_query as thesaurus_query
 
 
 
@@ -65,15 +65,15 @@ function! s:Thesaurus_Query_Lookup(word, replace)
     let l:syno_found = 1  " initialize the value
 
 " query the current word
-python tq_synonym_result = tq_framework.query(tq_vim_api.eval("l:word"))
+python tq_synonym_result = tq_framework.query(vim.eval("l:word"))
 
 python<<endOfPython
 # mark for exit function if no candidate is found
 if not tq_synonym_result:
-    tq_vim_api.command("echom 'No synonym found for \"{}\".'".format(tq_vim_api.eval("l:word")))
-    tq_vim_api.command("let l:syno_found=0")
+    vim.command("echom 'No synonym found for \"{}\".'".format(vim.eval("l:word")))
+    vim.command("let l:syno_found=0")
 # if replace flag is on, prompt user to choose after populating candidate list
-elif tq_vim_api.eval('l:replace') != '0':
+elif vim.eval('l:replace') != '0':
     thesaurus_query.tq_replace_cursor_word_from_candidates(tq_synonym_result)
 endOfPython
 

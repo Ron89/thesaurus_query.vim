@@ -27,14 +27,14 @@ class Thesaurus_Query_Handler:
         """
         Define the query routine used.
         """
-        from tq_local_mthesaur_lookup import word_query_mthesaur_lookup
-        from online_query_handler import word_query_handler_thesaurus_lookup as word_query_thesaurus_com_lookup
-        import datamuse_query
+        from mthesaur_lookup import word_query_mthesaur_lookup
+        from thesaurus_com_lookup import word_query_handler_thesaurus_lookup as word_query_thesaurus_com_lookup
+        import datamuse_com_lookup
         self.query_backends = []
         local_as_primary = vim.eval("g:thesaurus_query#use_local_thesaurus_source_as_primary")
 #        use_fallback = vim.eval("g:thesaurus_query#use_alternative_backend")
         self.query_backends.append(word_query_thesaurus_com_lookup())
-        self.query_backends.append(datamuse_query)
+        self.query_backends.append(datamuse_com_lookup)
         if local_as_primary=="1":
             self.query_backends.insert(0,word_query_mthesaur_lookup())
         else:
