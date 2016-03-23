@@ -53,6 +53,11 @@ tq_framework = thesaurus_query.Thesaurus_Query_Handler()
 endOfPython
 endfunction
 
+
+function! s:Thesaurus_Query_Restore_Handler()
+    py tq_framework.restore_thesaurus_query_handler()
+endfunction
+
 function! s:Thesaurus_Query_Lookup(word, replace)
 " a:word        word to be looked up
 " a:replace     flag:
@@ -153,6 +158,14 @@ if !exists("g:raise_backend_priority_if_synonym_found")
     let g:raise_backend_priority_if_synonym_found=0
 endif
 
+" this variable is offered by core query handler. It's a list of
+" query_backends user want to enable, with the sequence of user prefered
+" priority.
+"       * Please be careful not to mis-spell when setting this variable.
+if !exists("g:thesaurus_query#enabled_backends")
+    let g:thesaurus_query#enabled_backends=["thesaurus_com","datamuse_com","mthesaur_txt"]
+endif
+
 call g:Thesaurus_Query_Init()
 
 
@@ -161,6 +174,8 @@ call g:Thesaurus_Query_Init()
 " --------------------------------
 command! ThesaurusQueryReplaceCurrentWord :call <SID>Thesaurus_Query_Lookup(expand('<cword>'), 1)
 command! ThesaurusQueryLookupCurrentWord :call <SID>Thesaurus_Query_Lookup(expand('<cword>'), 0)
+command! ThesaurusQueryReset :call <SID>Thesaurus_Query_Restore_Handler()
+
 command! -nargs=1 Thesaurus :call <SID>Thesaurus_Query_Lookup(<q-args>, 0)
 
 

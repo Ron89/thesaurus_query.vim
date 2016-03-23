@@ -9,6 +9,7 @@ CONTENTS                                                     *thesaurus_query*
     4. Customization ......................... |thesaurus_query-Customization|
         |g:thesaurus_query#display_list_all_time|
         |g:thesaurus_query#map_keys|
+        |g:thesaurus_query#enabled_backends|
         |g:thesaurus_query#use_local_thesaurus_source_as_primary|
         |g:thesaurus_query#mthesaur_file|
         |g:raise_backend_priority_if_synonym_found|
@@ -62,6 +63,10 @@ The plugin provides three ways of using.
 :Thesaurus                                                       |:Thesaurus|
     This routine take one argument as target word and then query its synonyms.
     Query result would be displayed in a split buffer.
+:ThesaurusQueryReset                                   |:ThesaurusQueryReset|
+    Reset ThesaurusQuery, empty cached history in current session, restore
+    backend priority sequence to default/user defined in
+    |g:thesaurus_query#enabled_backends|.
 
 The functionalities are also mapped to key-bindings
     nnoremap <unique> <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
@@ -85,7 +90,16 @@ Currently there are 5 global variables used to customize the behavior.
             1: do not use default mapped keys.
                                                         default=1
 
+*g:thesaurus_query#enabled_backends* 
+    this variable is offered by core query handler. It's a list of
+    query_backends user want to enable, with the sequence of user prefered
+    priority.
+        * Please be careful not to mis-spell when setting this variable. 
+        * if !exists("g:thesaurus_query#enabled_backends") let
+                    default=["thesaurus_com","datamuse_com","mthesaur_txt"]
+
 *g:thesaurus_query#use_local_thesaurus_source_as_primary*
+    DEPRECIATED!!! DO NOT USE THIS VARIABLE ANY MORE~
     This variable is used when initiating core query handler.  It determine
     the priority between online thesaurus backend(based on Thesaurus.com) and
     local thesaurus backend(based on mthesaur.txt). If

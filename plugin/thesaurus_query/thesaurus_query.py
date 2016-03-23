@@ -13,11 +13,8 @@ class Thesaurus_Query_Handler:
     '''
 
     def __init__(self, cache_size_max=100):
-        self.word_list = {}  # hold wordlist obtained in previous query
-        self.word_list_keys = []  # hold all keys for wordlist
-                                  # in old->new order
         self.wordlist_size_max = cache_size_max
-        self.query_source_cmd = ''
+        self.restore_thesaurus_query_handler()
         self.query_backend_define()
 #        self.raise_backend_priority_if_synonym_found =
 #        self.truncate_definition = -1  # number of definitions retained in output
@@ -30,16 +27,14 @@ class Thesaurus_Query_Handler:
         from mthesaur_lookup import word_query_mthesaur_lookup
         from thesaurus_com_lookup import word_query_handler_thesaurus_lookup as word_query_thesaurus_com_lookup
         import datamuse_com_lookup
-        self.query_backends = []
-        local_as_primary = vim.eval("g:thesaurus_query#use_local_thesaurus_source_as_primary")
-#        use_fallback = vim.eval("g:thesaurus_query#use_alternative_backend")
-        self.query_backends.append(word_query_thesaurus_com_lookup())
-        self.query_backends.append(datamuse_com_lookup)
-        if local_as_primary=="1":
-            self.query_backends.insert(0,word_query_mthesaur_lookup())
-        else:
-            self.query_backends.append(word_query_mthesaur_lookup())
-#        self.use_fallback=int(use_fallback)
+        self.query_backends = {}
+        # initiate all available backends and load them to self.query_backends
+        backend_thesaurus_com=word_query_thesaurus_com_lookup()
+        backend_datamuse_com=datamuse_com_lookup
+        backend_mthesaur_txt=word_query_mthesaur_lookup()
+        self.query_backends[backend_thesaurus_com.identifier] = backend_thesaurus_com
+        self.query_backends[backend_datamuse_com.identifier] = backend_datamuse_com
+        self.query_backends[backend_mthesaur_txt.identifier] = backend_mthesaur_txt
 
 
     def query(self, word):
@@ -49,22 +44,22 @@ class Thesaurus_Query_Handler:
         error_encountered = 0
         good_backends=[]
         faulty_backends=[]
-        for query_backend_curr in self.query_backends:  # query each of the backend list till found
-            [state, synonym_list]=query_backend_curr.query(word)
+        for query_backend_curr in self.query_backend_priority:  # query each of the backend list till found
+            [state, synonym_list]=self.query_backends[query_backend_curr].query(word)
             if state == -1:
                 error_encountered = 1
-                faulty_backends.append(query_backend_curr)
+                faulty_backends.append(self.query_backends[query_backend_curr].identifier)
                 continue
             if state == 0:
-                good_backends.append(query_backend_curr)
+                good_backends.append(self.query_backends[query_backend_curr].identifier)
                 break
         for faulty in faulty_backends:
-            self.query_backends.remove(faulty)
-        self.query_backends+=faulty_backends
+            self.query_backend_priority.remove(faulty)
+        self.query_backend_priority+=faulty_backends
         if int(vim.eval("g:raise_backend_priority_if_synonym_found")) == 1:
             for good in good_backends:
-                self.query_backends.remove(good)
-            self.query_backends=good_backends+self.query_backends
+                self.query_backend_priority.remove(good)
+            self.query_backend_priority=good_backends+self.query_backend_priority
         if error_encountered == 1:
             vim.command('echohl WarningMSG | echon "WARNING: " | echohl None | echon "one or more query backends report error. Please check on thesaurus source(s).\n"')
         if state == 0:  # save to word_list buffer only when synonym is found
@@ -73,6 +68,21 @@ class Thesaurus_Query_Handler:
             if len(self.word_list_keys) > self.wordlist_size_max:
                 del self.word_list[self.word_list_keys.pop(0)]
         return synonym_list
+
+    def restore_thesaurus_query_handler(self):
+        self.query_backend_priority = vim.eval("g:thesaurus_query#enabled_backends")
+        self.word_list = {}  # hold wordlist obtained in previous query
+        self.word_list_keys = []  # hold all keys for wordlist
+                                  # in old->new order
+        # depreciated variable
+        if vim.eval('exists("g:thesaurus_query#use_local_thesaurus_source_as_primary")'):
+            local_as_primary = vim.eval("g:thesaurus_query#use_local_thesaurus_source_as_primary")
+        else:
+            local_as_primary = None
+        if local_as_primary=="1":
+            self.query_backend_priority.remove("mthesaur_txt")
+            self.query_backend_priority.insert(0,"mthesaur_txt")
+
 
 def truncate_synonym_list(synonym_list):
     truncated_flag = 0
@@ -150,7 +160,7 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
 
     vim.command("echon \"In line: ... \"|echohl Keyword|echon \"{}\"|echohl None |echon \" ...\n\"".format(vim.current.line.replace('\\','\\\\').replace('"','\\"')))
     vim.command("call g:TQ_echo_HL(\"None|Candidates for |WarningMSG|{}\\n|None\")".format(vim.eval("l:trimmed_word")))
-    
+
     candidate_list_printing(syno_result_IDed)
 
     if truncated_flag==0:
