@@ -8,28 +8,39 @@ a split buffer.
 
 ![](http://i.imgur.com/LJpdBwD.png)
 
-Two backends are used for this plugin, they function independently.
+Three backends are used for this plugin, they function independently.
 
-*   **Online query backend** queries from [Thesaurus.com](http://thesaurus.com/) for
-    synonym, so internet connection is required for this backend's
-    functionality.
+* **thesaurus\_com** queries from [Thesaurus.com](http://thesaurus.com/) for
+  synonym, so internet connection is required for this backend's functionality.
+  The returned synonym list from this source has very high quality. But since
+  `thesaurus.com` didn't actually provide official API. The functionality of
+  this backend might fail when the website changes its design.
+* **datamuse\_com** queries from [datamuse.com](http://www.datamuse.com) using
+  its officially provided API. The returned synonym list is usually quite
+  relavant with reasonable quality. But the synonyms list tend to be short, so
+  it might leave out some less-frequently-used synonyms. 
+* **mthesaur\_txt** queries from local `mthesaur.txt`. It is an useful option
+  when you don't have any internet access at all. For this backend to work, be
+  sure to download the file from
+  [gutenberg.org](http://www.gutenberg.org/files/3202/files/) and place it
+  under "~/.vim/thesaurus". If you place the file elsewhere, change global
+  variable |g:thesaurus_query#mthesaur_file| to point to the file you
+  downloaded, eg. put the following line `let
+  g:thesaurus_query#mthesaurus="~/.config/nvim/thesaurus/mthesaur.txt"` into
+  your `.vimrc` file if your `mthesaur.txt` is placed in folder
+  "~/.config/nvim/thesaurus/".
 
-*   **Local query backend** queries from `mthesaur.txt`. For this backend to work,
-    be sure to download the file from
-    [gutenberg.org](http://www.gutenberg.org/files/3202/files/) and place
-    it under "~/.vim/thesaurus". If you place the file elsewhere, change
-    global variable |g:thesaurus_query#mthesaur_file| to
-    point to the file you downloaded, eg. put the following line
-    `let g:thesaurus_query#mthesaurus="~/.config/nvim/thesaurus/mthesaur.txt"`
-    into your `.vimrc` file if your `mthesaur.txt` is placed in folder
-    "~/.config/nvim/thesaurus/".
+**By default, The sequence of query is thesaurus\_com -> datamuse\_com ->
+mthesaur\_txt** Next query will be conducted only when the previous query
+return empty sysnonym list. You may remove unwanted backend or lower their
+priority by removing them/putting them on latter position in variable
+`g:thesaurus_query#enabled_backends`. Its default is
+    g:thesaurus_query#enabled_backends=["thesaurus_com","datamuse_com","mthesaur_txt"]
 
-**By default, online query backend will be used first(higher priority).** So
-it'll still work properly if user neglects configuring for `mthesaur.txt`, as
-long as internet is available.
 
 To ensure the best user experience, **the backend that reports error during
-query will have its priority lowered.**
+query will have its priority automatically lowered.** If user want to restore originally defined priority, simply invoke command
+    :ThesaurusQueryReset
 
 ## Installation
 
