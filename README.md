@@ -6,7 +6,7 @@ visual mode or manual input. But for the latter two cases, auto-replacement
 function isn't activated by default, and the result will be displayed in
 a split buffer.
 
-![](http://i.imgur.com/LJpdBwD.png)
+![](http://i.imgur.com/2e50XYP.png)
 
 Three backends are used for this plugin, they function independently.
 
@@ -18,7 +18,7 @@ Three backends are used for this plugin, they function independently.
 * **datamuse\_com** queries from [datamuse.com](http://www.datamuse.com) using
   its officially provided API. The returned synonym list is usually quite
   relavant with reasonable quality. But the synonyms list tend to be short, so
-  it might leave out some less-frequently-used synonyms. 
+  it might leave out some less-frequently-used synonyms.
 * **mthesaur\_txt** queries from local `mthesaur.txt`. It is an useful option
   when you don't have any internet access at all. For this backend to work, be
   sure to download the file from
@@ -109,7 +109,7 @@ has any complain about the current layout or otherwise, please draft an issue
 to let me know. Currently, I have drafted two variables to help reducing the
 candidate list when the number of synonym is too overwhelming.
 
-![](http://i.imgur.com/1nBNcoL.png)
+![](http://i.imgur.com/NTygvav.png)
 
 #### Synonym group truncate
 Synonyms are grouped by definitions. If there are too many groups to your
