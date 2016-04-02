@@ -4,7 +4,14 @@
 
   This log is kept according to the [[http://keepachangelog.com/][Keep a CHANGELOG]] manifesto
 
-** V0.2
+** V0.3
+*** Added
+*** Changed
+    - made plugin into autoload plugin to speed-up vim startup
+*** Depreciated
+*** Removed
+*** Fixed
+** V0.2																																																												:released:
 *** Added
     - datamuse query routine
     - implement backend enable/disable by =g:thesaurus_query#enabled_backends=

@@ -135,8 +135,8 @@ def candidate_list_printing(result_IDed):
     '''
     for case in result_IDed:
         if case[0] != "":
-            vim.command('call g:TQ_echo_HL("Keyword|Found as: |None|{}\\n")'.format(case[0]))
-        vim.command('call g:TQ_echo_HL("Keyword|Synonyms: |None|")')
+            vim.command('call thesaurus_query#echo_HL("Keyword|Found as: |None|{}\\n")'.format(case[0]))
+        vim.command('call thesaurus_query#echo_HL("Keyword|Synonyms: |None|")')
         col_count = 10
         col_count_max = int(vim.eval("&columns"))
         for synonym_i in case[1]:
@@ -159,7 +159,7 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
     [candidate_num, thesaurus_wait_list, syno_result_IDed] = tq_candidate_list_populate(candidates)
 
     vim.command("echon \"In line: ... \"|echohl Keyword|echon \"{}\"|echohl None |echon \" ...\n\"".format(vim.current.line.replace('\\','\\\\').replace('"','\\"')))
-    vim.command("call g:TQ_echo_HL(\"None|Candidates for |WarningMSG|{}\\n|None\")".format(vim.eval("l:trimmed_word")))
+    vim.command("call thesaurus_query#echo_HL(\"None|Candidates for |WarningMSG|{}\\n|None\")".format(vim.eval("l:trimmed_word")))
 
     candidate_list_printing(syno_result_IDed)
 
@@ -175,10 +175,10 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
     try:
         thesaurus_user_choice=int(thesaurus_user_choice)
     except ValueError:
-        vim.command('call g:TQ_echo_HL("WarningMSG|\nInvalid Input. |None|Ending synonym replacing session without making changes.")')
+        vim.command('call thesaurus_query#echo_HL("WarningMSG|\nInvalid Input. |None|Ending synonym replacing session without making changes.")')
         return
     if (thesaurus_user_choice>=candidate_num or thesaurus_user_choice<0):
-        vim.command('call g:TQ_echo_HL("WarningMSG|\nInvalid Input. |None|Ending synonym replacing session without making changes.")')
+        vim.command('call thesaurus_query#echo_HL("WarningMSG|\nInvalid Input. |None|Ending synonym replacing session without making changes.")')
     vim.command("normal! ciw{}".format(thesaurus_wait_list[thesaurus_user_choice]))
 
 def tq_generate_thesaurus_buffer(candidates):
