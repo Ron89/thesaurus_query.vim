@@ -179,6 +179,7 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
         return
     if thesaurus_user_choice>=candidate_num or thesaurus_user_choice<0:
         vim.command('call thesaurus_query#echo_HL("WarningMSG|\nInvalid Input. |None|Ending synonym replacing session without making changes.")')
+        return
     vim.command("normal! ciw{}".format(thesaurus_wait_list[thesaurus_user_choice]))
 
 def tq_generate_thesaurus_buffer(candidates):
