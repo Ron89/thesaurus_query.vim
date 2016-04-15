@@ -6,7 +6,7 @@ visual mode or manual input. But for the latter two cases, auto-replacement
 function isn't activated by default, and the result will be displayed in
 a split buffer.
 
-This plugin is written in Python. So *+Python version of Vim is required*.
+This plugin is written in Python. So **+Python version of Vim is required**.
 
 ![](http://i.imgur.com/2e50XYP.png)
 
