@@ -1,8 +1,8 @@
 " Vim plugin for looking up words in an online thesaurus
 " Maintainer:   HE Chong [[chong.he.1989@gmail.com][e-mail]]
-" Based on script written by:
-" Author:       Anton Beloglazov <http://beloglazov.info/>
-" Original idea and code: Nick Coleman <http://www.nickcoleman.org/>
+"
+" Original Authors:       Anton Beloglazov <http://beloglazov.info/>
+"                         Nick Coleman <http://www.nickcoleman.org/>
 
 if exists("b:current_syntax")
     finish

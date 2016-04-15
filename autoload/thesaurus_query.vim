@@ -1,6 +1,7 @@
 " An thesaurus query & replacing framework written in python.
 " Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
-" part of the code and default online thesaurus lookup routine:
+"
+" part of the code and idea of using online resources for thesaurus query:
 "       Anton Beloglazov <http://beloglazov.info/>
 
 let s:save_cpo = &cpo

@@ -1,5 +1,4 @@
-# Handler for Online Thesaurus Lookup routine =online_thesaurus_lookup.py=, structurize
-# the result with the general word query framework.
+# python wrapper for word query from thesaurus.com
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
 
 import urllib2

@@ -1,4 +1,4 @@
-# python wrapper for word query in datamuse.com
+# python wrapper for word query from datamuse.com
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
 
 import urllib2
