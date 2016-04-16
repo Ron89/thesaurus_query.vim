@@ -5,6 +5,10 @@
 
 ** V0.3
 *** Added
+    - multi-language thesaurus query support, currently English('en') and
+      Russian('ru') are supported
+    - =b:tq_language= and =g:tq_language= to setup which language source you
+      prefer the plugin to query
 *** Changed
     - made plugin into autoload plugin to speed-up vim startup
 *** Depreciated

@@ -26,6 +26,7 @@ class word_query_handler_thesaurus_lookup:
     def __init__(self):
 #        self.query_source_cmd = os.path.dirname(os.path.realpath(__file__))+"/online_thesaurus_lookup.sh"
         self.identifier="thesaurus_com"
+        self.language="en"
         self.header_length=11    # length of "Definition:", current header of definition
         self.relavent_val_pos=9
         self.syno_pos=11

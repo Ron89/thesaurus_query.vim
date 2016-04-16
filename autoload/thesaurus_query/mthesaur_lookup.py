@@ -19,6 +19,7 @@ class word_query_mthesaur_lookup:
     def __init__(self):
         self.mthesaur_file="./mthesaurus.txt"
         self.identifier="mthesaur_txt"
+        self.language="en"
         self.mthesaur_verified = 0
         self.mthesaur_file_locate()
 
@@ -57,5 +58,3 @@ class word_query_mthesaur_lookup:
         if match_found:
             return [0, [["", synonym_list]]]
         return [1, []]
-
-

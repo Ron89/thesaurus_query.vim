@@ -7,6 +7,7 @@ import json
 
 query_result_trunc=50
 identifier="datamuse_com"
+language="en"
 
 def query(target, query_method="synonym"):
     ''' return result as list. relavance from high to low in each PoS.

@@ -27,14 +27,17 @@ class Thesaurus_Query_Handler:
         from mthesaur_lookup import word_query_mthesaur_lookup
         from thesaurus_com_lookup import word_query_handler_thesaurus_lookup as word_query_thesaurus_com_lookup
         import datamuse_com_lookup
+        import jeck_ru_lookup
         self.query_backends = {}
         # initiate all available backends and load them to self.query_backends
         backend_thesaurus_com=word_query_thesaurus_com_lookup()
         backend_datamuse_com=datamuse_com_lookup
         backend_mthesaur_txt=word_query_mthesaur_lookup()
+        backend_jeck_ru=jeck_ru_lookup
         self.query_backends[backend_thesaurus_com.identifier] = backend_thesaurus_com
         self.query_backends[backend_datamuse_com.identifier] = backend_datamuse_com
         self.query_backends[backend_mthesaur_txt.identifier] = backend_mthesaur_txt
+        self.query_backends[backend_jeck_ru.identifier] = backend_jeck_ru
 
 
     def query(self, word):
@@ -45,6 +48,13 @@ class Thesaurus_Query_Handler:
         good_backends=[]
         faulty_backends=[]
         for query_backend_curr in self.query_backend_priority:  # query each of the backend list till found
+            specified_language = get_variable("tq_language")
+            if specified_language!="All":
+                if specified_language==-1:
+                    if self.query_backends[query_backend_curr].language!='en':
+                        continue
+                elif self.query_backends[query_backend_curr].language not in specified_language:
+                    continue
             [state, synonym_list]=self.query_backends[query_backend_curr].query(word)
             if state == -1:
                 error_encountered = 1
@@ -62,6 +72,9 @@ class Thesaurus_Query_Handler:
             self.query_backend_priority=good_backends+self.query_backend_priority
         if error_encountered == 1:
             vim.command('echohl WarningMSG | echon "WARNING: " | echohl None | echon "one or more query backends report error. Please check on thesaurus source(s).\n"')
+        if 'state' not in locals():
+            vim.command('echohl WarningMSG | echon "WARNING: " | echohl None | echon "No thesaurus source is used. Please check on your configuration on g:thesaurus_query#enabled_backends and g:tq_language or b:tq_language.\n"')
+            return []
         if state == 0:  # save to word_list buffer only when synonym is found
             self.word_list[word]=synonym_list
             self.word_list_keys.append(word)
@@ -83,6 +96,18 @@ class Thesaurus_Query_Handler:
             self.query_backend_priority.remove("mthesaur_txt")
             self.query_backend_priority.insert(0,"mthesaur_txt")
 
+def get_variable(v_name):
+    '''
+    obtain vim variable, buffer variable first, global variable second.
+    if no variable exists, return -1
+    '''
+    if vim.eval("exists('b:'.'{}')".format(v_name))=='0':
+        if vim.eval("exists('g:'.'{}')".format(v_name))=='0':
+            return -1
+        else:
+            return vim.eval('g:'+v_name)
+    else:
+        return vim.eval('b:'+v_name)
 
 def truncate_synonym_list(synonym_list):
     truncated_flag = 0

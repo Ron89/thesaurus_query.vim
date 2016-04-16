@@ -1,4 +1,4 @@
-# Thesaurus Query/Replacement Plugin
+# Thesaurus Query/Replacement Plugin for Multiple Languages(currently English and Russian)
 
 This is a plugin for user to *lookup* synonyms of any word under cursor and
 *replace it* with an user chosen synonym. It also accepts word/phrases covered in
@@ -7,6 +7,20 @@ function isn't activated by default, and the result will be displayed in
 a split buffer.
 
 This plugin is written in Python. So **+Python version of Vim is required**.
+
+## What's New
+ * Multi-language Thesaurus Query feature is added since Version 0.3.0.
+   Currently English and Russian are supported. By default, only English
+   backends are activated. Users may activate Russian Thesaurus backends by
+   ```
+   let g:tq_language = 'ru'
+   ```
+   or activate both English and Russian backends by
+   ```
+   let g:tq_language = ['ru', 'en']
+   ```
+   For detail, please refer to my [Documentation](https://github.com/Ron89/thesaurus_query.vim/blob/master/doc/thesaurus_query.txt).
+
 
 ![](http://i.imgur.com/2e50XYP.png)
 
@@ -80,6 +94,10 @@ backends is behaving properly.
   g:thesaurus_query#mthesaurus="~/.config/nvim/thesaurus/mthesaur.txt"` into
   your `.vimrc` file if your `mthesaur.txt` is placed in folder
   "~/.config/nvim/thesaurus/".
+* **jeck\_ru** is a *Russian* thesaurus backend. It queries
+  [jeck.ru](http://jeck.ru/tools/SynonymsDictionary) for synonym resources.
+  This website didn't provide standard API to use. Hence functionality of this
+  backend depends on whether the website owner will change the webpage design.
 
 **By default, The sequence of query is thesaurus\_com -> datamuse\_com ->
 mthesaur\_txt** Next query will be conducted only when the previous query
@@ -89,11 +107,23 @@ variable
 `g:thesaurus_query#enabled_backends`. Its default is
 
 ```
-    g:thesaurus_query#enabled_backends=["thesaurus_com","datamuse_com","mthesaur_txt"]
+    g:thesaurus_query#enabled_backends=["thesaurus_com","datamuse_com","mthesaur_txt","jeck_ru"]
+```
+
+Backend **jeck\_ru** is currently **not activated by default**, due to the
+default setting `g:tq_language='en'`. To enable Russian backend, add 'ru' to
+the `tq_language` list:
+```
+    g:tq_language=['en','ru']
+```
+Or if you want to use only Russian thesaurus engine in specific/current buffer
+```
+    b:tq_language=['ru']
 ```
 
 To ensure the best user experience, **the backend that reports error during
-query will have its priority automatically lowered.** If user want to restore originally defined priority, simply invoke command
+query will have its priority automatically lowered.** If user want to restore
+originally defined priority, simply invoke command
 
 ```
     :ThesaurusQueryReset

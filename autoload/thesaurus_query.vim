@@ -15,12 +15,19 @@ endif
 " --------------------------------
 "  Setting up default values & Initialize
 " --------------------------------
+
 if !exists("g:thesaurus_query#display_list_all_time")
     let g:thesaurus_query#display_list_all_time = 0
 endif
 
 if !exists("g:thesaurus_query#map_keys")
     let g:thesaurus_query#map_keys = 1
+endif
+
+" this variable defines which query backend language do you want to use. It
+" can be either string or list
+if !exists("g:tq_language")
+    let g:tq_language = 'en'
 endif
 
 " This variable is for default query routine, if according to thesaurus.com,
@@ -83,7 +90,7 @@ endif
 " priority.
 "       * Please be careful not to mis-spell when setting this variable.
 if !exists("g:thesaurus_query#enabled_backends")
-    let g:thesaurus_query#enabled_backends=["thesaurus_com","datamuse_com","mthesaur_txt"]
+    let g:thesaurus_query#enabled_backends=["thesaurus_com","datamuse_com","mthesaur_txt","jeck_ru"]
 endif
 
 
