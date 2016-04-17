@@ -99,7 +99,7 @@ Currently there are 5 global variables used to customize the behavior.
     priority.
         * Please be careful not to mis-spell when setting this variable. 
         * if !exists("g:thesaurus_query#enabled_backends") let
-                    default=["thesaurus_com","datamuse_com","mthesaur_txt"]
+                    default=["jeck_ru","thesaurus_com","datamuse_com","mthesaur_txt"]
 >
 
 *g/b:tq_language*

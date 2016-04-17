@@ -107,7 +107,7 @@ variable
 `g:thesaurus_query#enabled_backends`. Its default is
 
 ```
-    g:thesaurus_query#enabled_backends=["thesaurus_com","datamuse_com","mthesaur_txt","jeck_ru"]
+    g:thesaurus_query#enabled_backends=["jeck_ru","thesaurus_com","datamuse_com","mthesaur_txt"]
 ```
 
 Backend **jeck\_ru** is currently **not activated by default**, due to the

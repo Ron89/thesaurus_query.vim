@@ -90,7 +90,7 @@ endif
 " priority.
 "       * Please be careful not to mis-spell when setting this variable.
 if !exists("g:thesaurus_query#enabled_backends")
-    let g:thesaurus_query#enabled_backends=["thesaurus_com","datamuse_com","mthesaur_txt","jeck_ru"]
+    let g:thesaurus_query#enabled_backends=["jeck_ru","thesaurus_com","jeck_ru","datamuse_com","mthesaur_txt"]
 endif
 
 
