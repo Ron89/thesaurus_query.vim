@@ -15,6 +15,8 @@
 *** Removed
 *** Fixed
     - fix out-of-bound user input exception in candidate choosing.
+    - add =KeyboardInterrupt= exception handler for candidate choosing.(closes
+      Issue #8)
 ** V0.2																																																												:released:
 *** Added
     - datamuse query routine
