@@ -188,10 +188,21 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
 
     candidate_list_printing(syno_result_IDed)
 
-    if truncated_flag==0:
-        thesaurus_user_choice = vim.eval("input('Type number and <Enter> (empty cancels): ')")
-    else:
-        thesaurus_user_choice = vim.eval("input('Type number and <Enter> (results truncated, Type `A<Enter>` to browse all results\nin split; empty cancels): ')")
+    def obtain_user_choice(trunc_flag):
+        ''' return user choice
+        if KeyboardInterrupt is detect, return None as normal input
+        '''
+        try:
+            if trunc_flag==0:
+                thesaurus_user_choice=vim.eval("input('Type number and <Enter> (empty cancels): ')")
+            else:
+                thesaurus_user_choice = vim.eval("input('Type number and <Enter> (results truncated, Type `A<Enter>` to browse all results\nin split; empty cancels): ')")
+        except KeyboardInterrupt:
+            return None 
+        return thesaurus_user_choice
+
+    thesaurus_user_choice = obtain_user_choice(truncated_flag)
+
     if not thesaurus_user_choice:
         return
     if thesaurus_user_choice == "A":
