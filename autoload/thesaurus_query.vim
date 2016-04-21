@@ -195,11 +195,13 @@ endOfPython
 
 " exit function if no candidate is found
     if !l:syno_found + l:replace*(!g:thesaurus_query#display_list_all_time)
+        python del tq_synonym_result
         return
     endif
 
 " create new buffer to display all query result and return to original buffer
-python thesaurus_query.tq_generate_thesaurus_buffer(tq_synonym_result)
+    python thesaurus_query.tq_generate_thesaurus_buffer(tq_synonym_result)
+    python del tq_synonym_result
 endfunction
 
 function! thesaurus_query#auto_complete_integrate(findstart, base)
