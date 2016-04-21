@@ -12,6 +12,7 @@
     - use =completefunc= for insertmode autocomplete (Issue #7)
     - variable =let g:tq_use_vim_autocomplete = 1= to activate =completefunc=
 *** Changed
+    - (internal) words and query results in Python are now all utf-8 decoded
     - made plugin into autoload plugin to speed-up vim startup
 *** Depreciated
     - all variables starting with =g:thesaurus_query#=, replacing the prefix of

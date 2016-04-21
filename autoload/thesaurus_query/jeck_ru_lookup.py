@@ -32,14 +32,14 @@ nested list = [PoS, list wordlist]
     Classifier('str'): Identifier to classify the resulting wordlist suits.
     wordlist = [word_0, word_1, ...]: list of words belonging to a same definition
     '''
-    target=target.replace(" ", "+")
+    target=target.replace(u" ", u"+")
     result_list=jeck_ru_url_handler(target)
     if result_list == 1:
         return [1,[]]
     else:
         synonym_list = parser(result_list)
         if synonym_list:
-            return [0, [["", synonym_list]]]
+            return [0, [[u"", synonym_list]]]
         else:
             return [1, []]
 
@@ -83,11 +83,12 @@ def jeck_ru_url_handler(target):
     Query jiport for sysnonym
     '''
     try:
-        response = urllib2.urlopen(fixurl('http://jeck.ru/tools/SynonymsDictionary/{}'.format(target)), timeout=5)
+        response = urllib2.urlopen(fixurl('http://jeck.ru/tools/SynonymsDictionary/{}'.format(target.encode('utf-8'))), timeout=5)
+        web_content = StringIO(response.read().decode('utf-8'))
+        response.close()
     except urllib2.URLError, error:
-        print "The word \"{}\" has not been found on jeck.ru!\n".format(target)
+#        print "The word \"{}\" has not been found on jeck.ru!\n".format(target)
         return 1
-    web_content = StringIO(response.read())
     return web_content
 
 
@@ -102,16 +103,16 @@ def parser(webcontent):
 #            output = "The word \"{}\" has not been found on jeck.ru!\n".format(target)
 #            break
 #        if "Всего" in line_curr and ("синонимов" in line_curr or "синонима" in line_curr):
-        if "На странице нет нецензурных слов." in line_curr:
+        if u"На странице нет нецензурных слов." in line_curr:
             end_tag_count=0
             continue
         elif end_tag_count<4:
-            if "</div>" in line_curr:
+            if u"</div>" in line_curr:
                 end_tag_count+=1
                 continue
-            elif "href" in line_curr:
-                fields = re.split("<|>", line_curr)
-                synonym_list.append(fields[2])
+            elif u"href" in line_curr:
+                fields = re.split(u"<|>", line_curr)
+                synonym_list.append(fields[2].lower())
                 continue
 #            fields = re.split("<|>", line_curr)
 #            if len(fields)<3:

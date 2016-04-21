@@ -102,7 +102,7 @@ if !exists("g:thesaurus_query#truncation_on_relavance")
 endif
 
 if !exists("g:thesaurus_query#truncation_on_definition_num")
-    let g:thesaurus_query#truncation_on_definition_num = g:tq_truncation_on_definition_num 
+    let g:thesaurus_query#truncation_on_definition_num = g:tq_truncation_on_definition_num
 endif
 
 if !exists("g:thesaurus_query#truncation_on_syno_list_size")
@@ -125,7 +125,7 @@ if !exists("g:thesaurus_query#enabled_backends")
     let g:thesaurus_query#enabled_backends=g:tq_enabled_backends
 endif
 
-
+let s:tq_separator_regexp = "[^\^ :=+\\-_\\/;`'\"!@#$%&*\(\)\\[\\]{}|,<\.>?~]"
 
 " --------------------------------
 "  Function(s)
@@ -181,12 +181,12 @@ function! thesaurus_query#Thesaurus_Query_Lookup(word, replace)
     let l:syno_found = 1  " initialize the value
 
 " query the current word
-python tq_synonym_result = tq_framework.query(vim.eval("l:word"))
+python tq_synonym_result = tq_framework.query(vim.eval("l:word").decode('utf-8'))
 
 python<<endOfPython
 # mark for exit function if no candidate is found
 if not tq_synonym_result:
-    vim.command("echom 'No synonym found for \"{}\".'".format(vim.eval("l:word")))
+    vim.command(u"echom 'No synonym found for \"{}\".'".format(vim.eval("l:word").decode('utf-8')))
     vim.command("let l:syno_found=0")
 # if replace flag is on, prompt user to choose after populating candidate list
 elif vim.eval('l:replace') != '0':
@@ -206,25 +206,31 @@ function! thesaurus_query#auto_complete_integrate(findstart, base)
     if a:findstart
         let l:line = getline('.')
         let l:start = col('.') - 1
-        while start > 0 && l:line[l:start - 1] =~ '\a'
+        while start > 0 && l:line[l:start - 1] =~ s:tq_separator_regexp
             let l:start -= 1
         endwhile
         return l:start
     else
         " find matching with online backends
         let l:trimmed_word = s:Trim(a:base)
-        let l:word = substitute(tolower(l:trimmed_word), '"', '', 'g')
+        let l:word = tolower(l:trimmed_word)
+        let l:synoList = []
 python<<endOfPython
-tq_synonym_result = tq_framework.query(vim.eval("l:word"))
-tq_synonym_combined = [i[1] for i in tq_synonym_result]
+tq_synonym_result = tq_framework.query(vim.eval("l:word").decode('utf-8'))
+tq_synonym_combined = [tq_iterator[1] for tq_iterator in tq_synonym_result]
 tq_synonym_annexed = []
 tq_synonym_combined = map(tq_synonym_annexed.extend, tq_synonym_combined)
-tq_synonym_annexed = [thesaurus_query.tq_word_form_reverse(i) for i in tq_synonym_annexed]
-del tq_synonym_combined
-tq_synonym_annexed.insert(0,vim.eval("a:base"))
-vim.command("let l:synoList = {}".format(tq_synonym_annexed))
-del tq_synonym_annexed
+tq_synonym_annexed = [thesaurus_query.tq_word_form_reverse(tq_iterator) for tq_iterator in tq_synonym_annexed]
+if tq_synonym_annexed:
+    tq_synonym_annexed.insert(0,vim.eval("a:base").decode('utf-8'))
+for tq_iterator in tq_synonym_annexed:
+    vim.command(u'call add(l:synoList, "{}")'.format(tq_iterator))
+# delete all variable used in the function, keep namespace clean
+if 'tq_iterator' in locals():
+    del tq_iterator
 del tq_synonym_result
+del tq_synonym_combined
+del tq_synonym_annexed
 endOfPython
         return l:synoList
     endif

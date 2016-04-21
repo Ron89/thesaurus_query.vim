@@ -34,14 +34,14 @@ class word_query_handler_thesaurus_lookup:
 
     def query_cmd_handler(self, word):
         self.syno_list=[]
-        query_result_raw = online_thesaurus_lookup(word)
+        query_result_raw = online_thesaurus_lookup(word).decode('utf-8')
         self.query_result = StringIO(query_result_raw)
 
 
     def synonym_found(self):
         first_line = self.query_result.readline()
-        if first_line != '\n':
-            if "Internet Error." in first_line:
+        if first_line != u'\n':
+            if u"Internet Error." in first_line:
                 self.query_result.close()
                 return -1
             self.query_result.close()
@@ -54,9 +54,9 @@ class word_query_handler_thesaurus_lookup:
         self.query_result.readline()  # skip the line 'Synonyms:'
         while True:
             self.line_curr = self.query_result.readline()
-            if self.line_curr[:self.relavent_val_pos] != "relevant-":
+            if self.line_curr[:self.relavent_val_pos] != u"relevant-":
                 break
-            self.line_curr=self.line_curr.rstrip('\n')
+            self.line_curr=self.line_curr.rstrip(u'\n')
             if self.line_curr[self.relavent_val_pos] in word_dic.keys():
                 word_dic[self.line_curr[self.relavent_val_pos]].append(self.line_curr[self.syno_pos:])
             else:
@@ -72,8 +72,8 @@ class word_query_handler_thesaurus_lookup:
         status = True
         self.line_curr=self.query_result.readline()
         while not (not self.line_curr or not status):
-            if self.line_curr[:self.header_length] == 'Definition:':
-                self.line_curr=self.line_curr.rstrip('\n')
+            if self.line_curr[:self.header_length] == u'Definition:':
+                self.line_curr=self.line_curr.rstrip(u'\n')
                 definition_curr = self.line_curr[self.header_length+1:]
                 self.syno_list.append([definition_curr, []])
                 [status, self.syno_list[-1][1]] = self.syno_populating()
@@ -93,15 +93,19 @@ class word_query_handler_thesaurus_lookup:
 
 
 def online_thesaurus_lookup(target):
+    '''
+    Direct query from thesaurus.com. All returns are encoded with utf-8.
+    '''
     output = ""
     try:
-        response = urllib2.urlopen('http://www.thesaurus.com/browse/{}'.format(target))
+        response = urllib2.urlopen((u'http://www.thesaurus.com/browse/{}'.format(target)).encode('utf-8'))
         parser = StringIO(response.read())
+        response.close()
     except urllib2.HTTPError, error:
-        output = "The word \"{}\" has not been found on dictionary.com!\n".format(target)
+        output = "The word \"{}\" has not been found on dictionary.com!\n".format(target.encode('utf-8'))
         return output
     except urllib2.URLError, error:
-        output = "Internet Error. The word \"{}\" has not been found on dictionary.com!\n".format(target)
+        output = "Internet Error. The word \"{}\" has not been found on dictionary.com!\n".format(target.encode('utf-8'))
         return output
 
     end_tag_count=2

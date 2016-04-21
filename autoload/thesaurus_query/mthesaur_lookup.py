@@ -46,15 +46,15 @@ class word_query_mthesaur_lookup:
         match_found = 0
         thesaur_file = open(self.mthesaur_file, 'r')
         while True:
-            line_curr=thesaur_file.readline()
+            line_curr=thesaur_file.readline().decode('utf-8')
             if not line_curr:
                 break
-            synonym_list = line_curr.rstrip("\r\n").split(',')
+            synonym_list = line_curr.rstrip(u"\r\n").split(u',')
             if word in synonym_list:
                 match_found = 1
                 synonym_list.remove(word)
                 break
 
         if match_found:
-            return [0, [["", synonym_list]]]
+            return [0, [[u"", synonym_list]]]
         return [1, []]
