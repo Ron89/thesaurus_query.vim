@@ -3,16 +3,21 @@
 
   This log is kept according to the [[http://keepachangelog.com/][Keep a CHANGELOG]] manifesto
 
-** V0.3
+** V0.3																																																										:unreleased:
 *** Added
     - multi-language thesaurus query support, currently English('en') and
       Russian('ru') are supported
     - =b:tq_language= and =g:tq_language= to setup which language source you
       prefer the plugin to query
+    - use =completefunc= for insertmode autocomplete (Issue #7)
+    - variable =let g:tq_use_vim_autocomplete = 1= to activate =completefunc=
 *** Changed
     - made plugin into autoload plugin to speed-up vim startup
 *** Depreciated
+    - all variables starting with =g:thesaurus_query#=, replacing the prefix of
+      all of them by =g:tq_=
 *** Removed
+    - variable =g:thesaurus_query#map_keys=, use =g:tq_map_keys= instead.
 *** Fixed
     - fix out-of-bound user input exception in candidate choosing.
     - add =KeyboardInterrupt= exception handler for candidate choosing.(closes

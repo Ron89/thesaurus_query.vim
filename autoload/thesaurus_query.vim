@@ -16,12 +16,8 @@ endif
 "  Setting up default values & Initialize
 " --------------------------------
 
-if !exists("g:thesaurus_query#display_list_all_time")
-    let g:thesaurus_query#display_list_all_time = 0
-endif
-
-if !exists("g:thesaurus_query#map_keys")
-    let g:thesaurus_query#map_keys = 1
+if !exists("g:tq_display_list_all_time")
+    let g:tq_display_list_all_time = 0
 endif
 
 " this variable defines which query backend language do you want to use. It
@@ -33,23 +29,23 @@ endif
 " This variable is for default query routine, if according to thesaurus.com,
 " the found synonym's relavance is smaller or equal to this value, it is
 " neglected
-if !exists("g:thesaurus_query#truncation_on_relavance")
-    let g:thesaurus_query#truncation_on_relavance = 0
+if !exists("g:tq_truncation_on_relavance")
+    let g:tq_truncation_on_relavance = 0
 endif
 
 " This variable is for replacing candidate display. If value is -1, no
 " truncate of output is made upon number of definitions. Else, if number is n,
 " only synonyms of the first n word definitions were retained.
-if !exists("g:thesaurus_query#truncation_on_definition_num")
-    let g:thesaurus_query#truncation_on_definition_num = -1
+if !exists("g:tq_truncation_on_definition_num")
+    let g:tq_truncation_on_definition_num = -1
 endif
 
 " This variable is for replacing candidate display. If value is -1, no
 " truncate of output is made upon number of synonyms from a single definition.
 " Else, if number is n, only first n synonyms of that definition will be
 " retained.
-if !exists("g:thesaurus_query#truncation_on_syno_list_size")
-    let g:thesaurus_query#truncation_on_syno_list_size = -1
+if !exists("g:tq_truncation_on_syno_list_size")
+    let g:tq_truncation_on_syno_list_size = -1
 endif
 
 " This variable is used when initiating core query handler.  It determine
@@ -59,38 +55,74 @@ endif
 "     0:      query with online backend first.
 "     1:      query with local backend first.
 "                                                     default=0
-if !exists("g:thesaurus_query#use_local_thesaurus_source_as_primary")
-    let g:thesaurus_query#use_local_thesaurus_source_as_primary = 0
+if !exists("g:tq_use_local_thesaurus_source_as_primary")
+    let g:tq_use_local_thesaurus_source_as_primary = 0
 endif
 
 " This variable is used when initiating core query handler
 " When default query backend return empty or error, this variable will decide:
 "   value: 0    -> don't use alternative backend
 "   value: 1    -> use alternative backend
-if !exists("g:thesaurus_query#use_alternative_backend")
-    let g:thesaurus_query#use_alternative_backend=1
+if !exists("g:tq_use_alternative_backend")
+    let g:tq_use_alternative_backend=1
 endif
 
 " this variable is offered by tq_local_mthesaur_lookup, to determine the
 " location of mthesaurus file. File located by this variable will be first
 " verified before verifying &thesaurus.
-if !exists("g:thesaurus_query#mthesaur_file")
-    let g:thesaurus_query#mthesaur_file="~/.vim/thesaurus/mthesaur.txt"
+if !exists("g:tq_mthesaur_file")
+    let g:tq_mthesaur_file="~/.vim/thesaurus/mthesaur.txt"
 endif
 
 " this variable is offered by core query handler, if value is
 "       0:      priority of the backend that find the synonyms will be topped
 "       1:      backend priority won't be affected by synonym findings
-if !exists("g:raise_backend_priority_if_synonym_found")
-    let g:raise_backend_priority_if_synonym_found=0
+if !exists("g:tq_raise_backend_priority_if_synonym_found")
+    let g:tq_raise_backend_priority_if_synonym_found=0
 endif
 
 " this variable is offered by core query handler. It's a list of
 " query_backends user want to enable, with the sequence of user prefered
 " priority.
 "       * Please be careful not to mis-spell when setting this variable.
+if !exists("g:tq_enabled_backends")
+    let g:tq_enabled_backends=["jeck_ru","thesaurus_com","jeck_ru","datamuse_com","mthesaur_txt"]
+endif
+
+
+" --------------------------------
+" legacy settings (depreciated, do NOT use)
+
+if !exists("g:thesaurus_query#display_list_all_time")
+    let g:thesaurus_query#display_list_all_time = g:tq_display_list_all_time
+endif
+
+if !exists("g:thesaurus_query#truncation_on_relavance")
+    let g:thesaurus_query#truncation_on_relavance = g:tq_truncation_on_relavance
+endif
+
+if !exists("g:thesaurus_query#truncation_on_definition_num")
+    let g:thesaurus_query#truncation_on_definition_num = g:tq_truncation_on_definition_num 
+endif
+
+if !exists("g:thesaurus_query#truncation_on_syno_list_size")
+    let g:thesaurus_query#truncation_on_syno_list_size = g:tq_truncation_on_syno_list_size
+endif
+
+if !exists("g:thesaurus_query#use_local_thesaurus_source_as_primary")
+    let g:thesaurus_query#use_local_thesaurus_source_as_primary = g:tq_use_local_thesaurus_source_as_primary
+endif
+
+if !exists("g:thesaurus_query#use_alternative_backend")
+    let g:thesaurus_query#use_alternative_backend=g:tq_use_alternative_backend
+endif
+
+if !exists("g:thesaurus_query#mthesaur_file")
+    let g:thesaurus_query#mthesaur_file=g:tq_mthesaur_file
+endif
+
 if !exists("g:thesaurus_query#enabled_backends")
-    let g:thesaurus_query#enabled_backends=["jeck_ru","thesaurus_com","jeck_ru","datamuse_com","mthesaur_txt"]
+    let g:thesaurus_query#enabled_backends=g:tq_enabled_backends
 endif
 
 
@@ -168,6 +200,34 @@ endOfPython
 
 " create new buffer to display all query result and return to original buffer
 python thesaurus_query.tq_generate_thesaurus_buffer(tq_synonym_result)
+endfunction
+
+function! thesaurus_query#auto_complete_integrate(findstart, base)
+    if a:findstart
+        let l:line = getline('.')
+        let l:start = col('.') - 1
+        while start > 0 && l:line[l:start - 1] =~ '\a'
+            let l:start -= 1
+        endwhile
+        return l:start
+    else
+        " find matching with online backends
+        let l:trimmed_word = s:Trim(a:base)
+        let l:word = substitute(tolower(l:trimmed_word), '"', '', 'g')
+python<<endOfPython
+tq_synonym_result = tq_framework.query(vim.eval("l:word"))
+tq_synonym_combined = [i[1] for i in tq_synonym_result]
+tq_synonym_annexed = []
+tq_synonym_combined = map(tq_synonym_annexed.extend, tq_synonym_combined)
+tq_synonym_annexed = [thesaurus_query.tq_word_form_reverse(i) for i in tq_synonym_annexed]
+del tq_synonym_combined
+tq_synonym_annexed.insert(0,vim.eval("a:base"))
+vim.command("let l:synoList = {}".format(tq_synonym_annexed))
+del tq_synonym_annexed
+del tq_synonym_result
+endOfPython
+        return l:synoList
+    endif
 endfunction
 
 call thesaurus_query#Thesaurus_Query_Init()

@@ -16,9 +16,6 @@ class Thesaurus_Query_Handler:
         self.wordlist_size_max = cache_size_max
         self.restore_thesaurus_query_handler()
         self.query_backend_define()
-#        self.raise_backend_priority_if_synonym_found =
-#        self.truncate_definition = -1  # number of definitions retained in output
-#        self.truncate_syno_list = -1   # number of synonyms retained for each definition in output
 
     def query_backend_define(self):
         """
@@ -66,7 +63,7 @@ class Thesaurus_Query_Handler:
         for faulty in faulty_backends:
             self.query_backend_priority.remove(faulty)
         self.query_backend_priority+=faulty_backends
-        if int(vim.eval("g:raise_backend_priority_if_synonym_found")) == 1:
+        if int(vim.eval("g:tq_raise_backend_priority_if_synonym_found")) == 1:
             for good in good_backends:
                 self.query_backend_priority.remove(good)
             self.query_backend_priority=good_backends+self.query_backend_priority
@@ -131,26 +128,30 @@ def truncate_synonym_list(synonym_list):
     del output_buffer_temp
     return [truncated_flag, output_buffer]
 
+def tq_word_form_reverse(target_word):
+    '''
+    adjust candidate according to trimmed word
+    '''
+    wordOriginal = vim.eval('l:trimmed_word')
+    if wordOriginal.isupper():
+        return target_word.upper()
+    elif wordOriginal[0].isupper():
+        return target_word[0].upper()+target_word[1:]
+    return target_word
+
 def tq_candidate_list_populate(candidates):
     '''
     generate waitlist and result_IDed to be shown on message_box
     '''
     waitlist = []
     result_IDed = []
-    wordOriginal = vim.eval('l:trimmed_word')
     word_ID = 0
     for syno_case in candidates:
         result_IDed.append([syno_case[0],[]])
         for word_curr in syno_case[1]:
-            if wordOriginal.isupper():
-                result_IDed[-1][1].append("({}){}".format(word_ID, word_curr.upper()))
-                waitlist.append("{}".format(word_curr.upper()))
-            elif wordOriginal[0].isupper():
-                result_IDed[-1][1].append("({}){}".format(word_ID, word_curr[0].upper()+word_curr[1:]))
-                waitlist.append("{}".format(word_curr[0].upper()+word_curr[1:]))
-            else:
-                result_IDed[-1][1].append("({}){}".format(word_ID, word_curr))
-                waitlist.append("{}".format(word_curr))
+            word_curr = tq_word_form_reverse(word_curr)
+            result_IDed[-1][1].append("({}){}".format(word_ID, word_curr))
+            waitlist.append("{}".format(word_curr))
             word_ID+=1
     return [word_ID, waitlist, result_IDed]
 

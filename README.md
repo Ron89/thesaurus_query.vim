@@ -89,9 +89,9 @@ backends is behaving properly.
   sure to download the file from
   [gutenberg.org](http://www.gutenberg.org/files/3202/files/) and place it
   under "~/.vim/thesaurus". If you place the file elsewhere, change global
-  variable |g:thesaurus_query#mthesaur_file| to point to the file you
+  variable |g:tq_mthesaur_file| to point to the file you
   downloaded, eg. put the following line `let
-  g:thesaurus_query#mthesaurus="~/.config/nvim/thesaurus/mthesaur.txt"` into
+  g:tq_mthesaurus="~/.config/nvim/thesaurus/mthesaur.txt"` into
   your `.vimrc` file if your `mthesaur.txt` is placed in folder
   "~/.config/nvim/thesaurus/".
 * **jeck\_ru** is a *Russian* thesaurus backend. It queries
@@ -104,10 +104,10 @@ mthesaur\_txt** Next query will be conducted only when the previous query
 return empty sysnonym list or failed to query. You may remove unwanted backend
 or lower their priority by removing them/putting them on latter position in
 variable
-`g:thesaurus_query#enabled_backends`. Its default is
+`g:tq_enabled_backends`. Its default is
 
 ```
-    g:thesaurus_query#enabled_backends=["jeck_ru","thesaurus_com","datamuse_com","mthesaur_txt"]
+    g:tq_enabled_backends=["jeck_ru","thesaurus_com","datamuse_com","mthesaur_txt"]
 ```
 
 Backend **jeck\_ru** is currently **not activated by default**, due to the
@@ -140,7 +140,7 @@ folder "~/.vim/thesaurus". If user place the file elsewhere, be sure to let
 this plugin know the location of your `mthesaur.txt` file by adding the line
 
 ```
-    let g:thesaurus_query#mthesaurus="/directory/to/your/mthesaur.txt
+    let g:tq_mthesaurus="/directory/to/your/mthesaur.txt
 ```
 
 into your `.vimrc`.
@@ -160,7 +160,7 @@ Synonyms are grouped by definitions. If there are too many groups to your
 liking, you may reduce the number of groups shown to `3` by setting
 
 ```
-    g:thesaurus_query#truncation_on_definition_num = 3.
+    g:tq_truncation_on_definition_num = 3.
 ```
 
 #### Synonym list truncate
@@ -169,7 +169,7 @@ case, to reduce the number of synonym shown in each group to no more than
 `200`, you can set
 
 ```
-    g:thesaurus_query#truncation_on_syno_list_size = 200
+    g:tq_truncation_on_syno_list_size = 200
 ```
 
 Know that if query result is truncated by your rule, and you want to browse
