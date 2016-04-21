@@ -91,7 +91,7 @@ backends is behaving properly.
   under "~/.vim/thesaurus". If you place the file elsewhere, change global
   variable |g:tq_mthesaur_file| to point to the file you
   downloaded, eg. put the following line `let
-  g:tq_mthesaurus="~/.config/nvim/thesaurus/mthesaur.txt"` into
+  g:tq_mthesaur_file="~/.config/nvim/thesaurus/mthesaur.txt"` into
   your `.vimrc` file if your `mthesaur.txt` is placed in folder
   "~/.config/nvim/thesaurus/".
 * **jeck\_ru** is a *Russian* thesaurus backend. It queries
@@ -140,7 +140,7 @@ folder "~/.vim/thesaurus". If user place the file elsewhere, be sure to let
 this plugin know the location of your `mthesaur.txt` file by adding the line
 
 ```
-    let g:tq_mthesaurus="/directory/to/your/mthesaur.txt
+    let g:tq_mthesaur_file="/directory/to/your/mthesaur.txt
 ```
 
 into your `.vimrc`.
