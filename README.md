@@ -66,6 +66,12 @@ this routine don't offer replacement by default. Because my current replacement
 script is a simple one liner, it couldn't deal with many flexible situations as
 yet.
 
+Also, this plugin support Vim's builtin `completefunc` insert mode autocomplete
+function. To invoke it, use keybinding `ctrl-x ctrl-u` in insert mode. This
+function resembles Vim's own thesaurus checking function, but using online
+resources for matchings.
+
+
 ## Configuration
 
 ### Description for backends and their setup
