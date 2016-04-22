@@ -4,6 +4,7 @@
 import urllib2
 import re
 import vim
+from tq_common_lib import decode_utf_8, encode_utf_8, fixurl
 #from online_thesaurus_lookup import online_thesaurus_lookup
 try:
     from StringIO import StringIO
@@ -34,7 +35,7 @@ class word_query_handler_thesaurus_lookup:
 
     def query_cmd_handler(self, word):
         self.syno_list=[]
-        query_result_raw = online_thesaurus_lookup(word).decode('utf-8')
+        query_result_raw = decode_utf_8(online_thesaurus_lookup(word))
         self.query_result = StringIO(query_result_raw)
 
 
@@ -98,14 +99,14 @@ def online_thesaurus_lookup(target):
     '''
     output = ""
     try:
-        response = urllib2.urlopen((u'http://www.thesaurus.com/browse/{}'.format(target)).encode('utf-8'))
+        response = urllib2.urlopen(fixurl(u'http://www.thesaurus.com/browse/{}'.format(target)))
         parser = StringIO(response.read())
         response.close()
     except urllib2.HTTPError, error:
-        output = "The word \"{}\" has not been found on dictionary.com!\n".format(target.encode('utf-8'))
+        output = "The word \"{}\" has not been found on dictionary.com!\n".format(encode_utf_8(target))
         return output
     except urllib2.URLError, error:
-        output = "Internet Error. The word \"{}\" has not been found on dictionary.com!\n".format(target.encode('utf-8'))
+        output = "Internet Error. The word \"{}\" has not been found on dictionary.com!\n".format(encode_utf_8(target))
         return output
 
     end_tag_count=2

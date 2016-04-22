@@ -3,6 +3,7 @@
 
 import urllib2
 import json
+from tq_common_lib import fixurl
 #import vim
 
 query_result_trunc=50
@@ -41,10 +42,10 @@ def datamuse_api_wrapper(target, query_method, max_return=query_result_trunc):
             "left_content":u"words?lc="
             }
     try:
-        response = urllib2.urlopen((
+        response = urllib2.urlopen(fixurl(
                 u'http://api.datamuse.com/{}{}&max={}'.format(
                     case_mapper[query_method], target, max_return
-                    )).encode('utf-8'))
+                    )))
         result_list = json.load(response)
         response.close()
     except urllib2.URLError, error:

@@ -3,6 +3,7 @@
 
 import vim
 import os
+from tq_common_lib import decode_utf_8
 
 class word_query_mthesaur_lookup:
     '''
@@ -46,7 +47,7 @@ class word_query_mthesaur_lookup:
         match_found = 0
         thesaur_file = open(self.mthesaur_file, 'r')
         while True:
-            line_curr=thesaur_file.readline().decode('utf-8')
+            line_curr=decode_utf_8(thesaur_file.readline())
             if not line_curr:
                 break
             synonym_list = line_curr.rstrip(u"\r\n").split(u',')

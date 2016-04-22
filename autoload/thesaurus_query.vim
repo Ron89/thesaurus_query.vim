@@ -155,6 +155,7 @@ python import os
 python import vim
 python sys.path.append(vim.eval('expand("<sfile>:h")'))
 python import thesaurus_query.thesaurus_query as thesaurus_query
+python from thesaurus_query.tq_common_lib import decode_utf_8, encode_utf_8
 
 
 
@@ -181,12 +182,12 @@ function! thesaurus_query#Thesaurus_Query_Lookup(word, replace)
     let l:syno_found = 1  " initialize the value
 
 " query the current word
-python tq_synonym_result = tq_framework.query(vim.eval("l:word").decode('utf-8'))
+python tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")))
 
 python<<endOfPython
 # mark for exit function if no candidate is found
 if not tq_synonym_result:
-    vim.command(u"echom 'No synonym found for \"{}\".'".format(vim.eval("l:word").decode('utf-8')))
+    vim.command("echom 'No synonym found for \"{}\".'".format(vim.eval("l:word")))
     vim.command("let l:syno_found=0")
 # if replace flag is on, prompt user to choose after populating candidate list
 elif vim.eval('l:replace') != '0':
@@ -218,15 +219,15 @@ function! thesaurus_query#auto_complete_integrate(findstart, base)
         let l:word = tolower(l:trimmed_word)
         let l:synoList = []
 python<<endOfPython
-tq_synonym_result = tq_framework.query(vim.eval("l:word").decode('utf-8'))
+tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")))
 tq_synonym_combined = [tq_iterator[1] for tq_iterator in tq_synonym_result]
 tq_synonym_annexed = []
 tq_synonym_combined = map(tq_synonym_annexed.extend, tq_synonym_combined)
 tq_synonym_annexed = [thesaurus_query.tq_word_form_reverse(tq_iterator) for tq_iterator in tq_synonym_annexed]
 if tq_synonym_annexed:
-    tq_synonym_annexed.insert(0,vim.eval("a:base").decode('utf-8'))
+    tq_synonym_annexed.insert(0,decode_utf_8(vim.eval("a:base")))
 for tq_iterator in tq_synonym_annexed:
-    vim.command(u'call add(l:synoList, "{}")'.format(tq_iterator))
+    vim.command('call add(l:synoList, "{}")'.format(encode_utf_8(tq_iterator)))
 # delete all variable used in the function, keep namespace clean
 if 'tq_iterator' in locals():
     del tq_iterator
