@@ -6,6 +6,12 @@ visual mode or manual input. But for the latter two cases, auto-replacement
 function isn't activated by default, and the result will be displayed in
 a split buffer.
 
+**Notice:** Currently this plugin Supports only English and Russian thesaurus
+query. If you want to use the plugin for other languages, or if you're not
+satisfied with the performance of current backends and know of some online
+synonym services that I can integrate into the plugin, please come and post an
+issue with your suggestion.
+
 This plugin is written in Python. So **+Python version of Vim is required**.
 
 ## What's New
