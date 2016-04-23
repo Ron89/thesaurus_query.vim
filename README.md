@@ -21,6 +21,11 @@ This plugin is written in Python. So **+Python version of Vim is required**.
    ```
    For detail, please refer to my [Documentation](https://github.com/Ron89/thesaurus_query.vim/blob/master/doc/thesaurus_query.txt).
 
+ * Now aside from our `spell` like thesaurus choosing interface, invoked from
+   normal mode, you may also query thesaurus in Insert mode. The functionality
+   is made possible via `completefunc`. To use it, use keybinding `ctrl-x
+   ctrl-u` under insert mode, when cursor is at the end of a word.
+
 
 ![](http://i.imgur.com/2e50XYP.png)
 
