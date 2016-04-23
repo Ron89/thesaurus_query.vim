@@ -3,7 +3,7 @@
 
   This log is kept according to the [[http://keepachangelog.com/][Keep a CHANGELOG]] manifesto
 
-** V0.3																																																										:unreleased:
+** V0.3																																																												:released:
 *** Added
     - multi-language thesaurus query support, currently English('en') and
       Russian('ru') are supported
