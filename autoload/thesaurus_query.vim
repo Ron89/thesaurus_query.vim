@@ -4,6 +4,11 @@
 " part of the code and idea of using online resources for thesaurus query:
 "       Anton Beloglazov <http://beloglazov.info/>
 
+if exists("g:loaded_thesaurus_query_autoload")
+    finish
+endif
+let g:loaded_thesaurus_query_autoload = 1
+
 let s:save_cpo = &cpo
 set cpo&vim
 
