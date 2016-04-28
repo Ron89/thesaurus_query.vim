@@ -7,17 +7,15 @@ CONTENTS                                                     *thesaurus_query*
     2. Requirements ........................... |thesaurus_query-requirements|
     3. Usage ......................................... |thesaurus_query-usage|
     4. Customization ......................... |thesaurus_query-Customization|
-        |g:thesaurus_query#display_list_all_time|
-        |g:thesaurus_query#map_keys|
-        |g:thesaurus_query#enabled_backends|
-        |g:thesaurus_query#use_local_thesaurus_source_as_primary|
-        |g:thesaurus_query#mthesaur_file|
+        |g:tq_display_list_all_time|
+        |g:tq_map_keys| |g:tq_use_vim_autocompletefunc|
+        |g:tq_enabled_backends| |b/g:tq_language|
+        |g:tq_use_local_thesaurus_source_as_primary| |g:tq_mthesaur_file|
         |g:raise_backend_priority_if_synonym_found|
-        |g:thesaurus_query#truncation_on_relavance|
-        |g:thesaurus_query#truncation_on_definition_num|
-        |g:thesaurus_query#truncation_on_syno_list_size|
-    5. Licence ..................................... |thesaurus_query-licence|
-===============================================================================
+        |g:tq_truncation_on_relavance| |g:tq_truncation_on_definition_num|
+        |g:tq_truncation_on_syno_list_size| 5. Licence
+        ..................................... |thesaurus_query-licence|
+        ===============================================================================
 
 
 1. Intro                                               *thesaurus_query-intro*
@@ -35,10 +33,10 @@ Two backends are used for this plugin:
         be sure to download the file from
         [gutenberg.org](http://www.gutenberg.org/files/3202/files/) and place
         it under "~/.vim/thesaurus". If you place the file elsewhere, change
-        global variable |g:thesaurus_query#mthesaur_file| to
-        point to the file you downloaded, eg. put the following line
-      let g:thesaurus_query#mthesaurus="~/.config/nvim/thesaurus/mthesaur.txt"
-        into your `.vimrc` file if your `mthesaur.txt` is placed in folder
+        global variable |g:tq_mthesaur_file| to point to the file you
+        downloaded, eg. put the following line `let
+        g:tq_mthesaur_file="~/.config/nvim/thesaurus/mthesaur.txt"` into your
+        `.vimrc` file if your `mthesaur.txt` is placed in folder
         "~/.config/nvim/thesaurus/".
 
 2. Requirements                                 *thesaurus_query-requirements*
@@ -77,28 +75,53 @@ The functionalities are also mapped to key-bindings
 
 Currently there are 5 global variables used to customize the behavior.
 
-*g:thesaurus_query#display_list_all_time*
+*g:tq_display_list_all_time*
     Determine if a minibuffer is still used when user decided to use the
     replacement routine.
             0: do not display split buffer if replace routine is used
             1: display split buffer at all time
                                                         default=0
+>
 
-*g:thesaurus_query#map_keys*
+*g:tq_map_keys*
     Decide if default keymapping is used.
             0: use default mapped keys
             1: do not use default mapped keys.
                                                         default=1
+>
+*g:tq_use_vim_autocompletefunc*
+    Decide if use Vim's built-in `comletefunc` for insert-mode synonym
+    replacement. Note, `ctrl-xctrl-u` in insert mode invoke completefunc.
+                                                        default=1
+>
 
-*g:thesaurus_query#enabled_backends* 
+*g:tq_enabled_backends* 
     this variable is offered by core query handler. It's a list of
     query_backends user want to enable, with the sequence of user prefered
     priority.
         * Please be careful not to mis-spell when setting this variable. 
-        * if !exists("g:thesaurus_query#enabled_backends") let
-                    default=["thesaurus_com","datamuse_com","mthesaur_txt"]
+        * if !exists("g:tq_enabled_backends") let
+                    default=["jeck_ru","thesaurus_com","datamuse_com","mthesaur_txt"]
+>
 
-*g:thesaurus_query#use_local_thesaurus_source_as_primary*
+*g/b:tq_language*
+    Each query backend are associated with a Language(English, Russian, etc.)
+    This variable decides of all backends enabled by
+    |g:tq_enabled_backends|, which one to be used in general(g:)
+    session or specific buffer(b:), based on the language they are associatd
+    with. It can be either string or list. This setting can be eigher buffer
+    variable or global variable. With buffer variable prioritized. Following
+    are few examples:
+        Only English Query Backends are to be used in general buffers:
+            let g:tq_language='en'
+        All backends, regardless of their specific language, are to be used
+            let g:tq_language='All'
+        English and Russian Query Backends are to be used in current buffer:
+            let b:tq_language=['en', 'ru']
+                                                       default='en'
+>
+
+*g:tq_use_local_thesaurus_source_as_primary*
     DEPRECIATED!!! DO NOT USE THIS VARIABLE ANY MORE~
     This variable is used when initiating core query handler.  It determine
     the priority between online thesaurus backend(based on Thesaurus.com) and
@@ -107,36 +130,41 @@ Currently there are 5 global variables used to customize the behavior.
         0:      query with online backend first.
         1:      query with local backend first.
                                                         default=0
+>
 
-*g:thesaurus_query#mthesaur_file*
+*g:tq_mthesaur_file*
     this variable is offered by tq_local_mthesaur_lookup. Used to determine
     locate `mthesaur.txt` file from your computer. If no `mthesaur.txt`is
     found at this location, location specified in &thesaurus will be checked.
                                     default="~/.vim/thesaurus/mthesaur.txt"
+>
 
 *g:raise_backend_priority_if_synonym_found*
     this variable is offered by core query handler, if value is
           0:    priority of the backend that find the synonyms will be topped
           1:    backend priority won't be affected by synonym findings
                                                         default=0
+>
 
-*g:thesaurus_query#truncation_on_relavance*
+*g:tq_truncation_on_relavance*
     This variable is for default query routine, if according to thesaurus.com,
     the found synonym's relavance is smaller or equal to this value, it is
     neglected
     * Note that this truncation will truncate the wordlist for BOTH replacing
       candidate interface and thesaurus split won't be truncated.
                                                         default=0
+>
 
-*g:thesaurus_query#truncation_on_definition_num*
+*g:tq_truncation_on_definition_num*
     This variable is for replacing candidate display. If value is
         -1:     no truncate of output is made upon number of definitions.
         n:      only synonyms of the first n word definitions were retained.
     * Note that this truncation will only affect the replacing candidate
       interface, thesaurus split will NOT be truncated.
                                                         default=-1
+>
 
-*g:thesaurus_query#truncation_on_syno_list_size*
+*g:tq_truncation_on_syno_list_size*
     This variable is for replacing candidate display. If value is
         -1:     no truncate of output is made upon number of synonyms from a
                 single definition.
@@ -144,7 +172,7 @@ Currently there are 5 global variables used to customize the behavior.
     * Note that this truncation will only affect the replacing candidate
       interface, thesaurus split will NOT be truncated.
                                                         default=-1
-
+>
 
 5. Licence                                           *thesaurus_query-licence*
 

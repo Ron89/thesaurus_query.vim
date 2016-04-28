@@ -1,12 +1,20 @@
-# python wrapper for word query in datamuse.com
+# python wrapper for word query from datamuse.com
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
 
-import urllib2
+
+try:
+    from urllib2 import urlopen
+    from urllib2 import URLError
+except ImportError:
+    from urllib.request import urlopen
+    from urllib.error import URLError
 import json
+from .tq_common_lib import fixurl
 #import vim
 
 query_result_trunc=50
 identifier="datamuse_com"
+language="en"
 
 def query(target, query_method="synonym"):
     ''' return result as list. relavance from high to low in each PoS.
@@ -20,7 +28,7 @@ nested list = [PoS, list wordlist]
     Classifier('str'): Identifier to classify the resulting wordlist suits.
     wordlist = [word_0, word_1, ...]: list of words belonging to a same definition
     '''
-    target=target.replace(" ", "+")
+    target=target.replace(u" ", u"+")
     result_list=datamuse_api_wrapper(target, query_method=query_method)
     if result_list == -1:
         return [-1,[]]
@@ -33,21 +41,22 @@ def datamuse_api_wrapper(target, query_method, max_return=query_result_trunc):
     query_method:
         synonym, antonym, suggest, right_content, left_content
     '''
-    case_mapper={"synonym":"words?rel_syn=",
-            "suggest":"sug?s=",
-            "antonym":"words?rel_ant=",
-            "right_content":"words?rc=",
-            "left_content":"words?lc="
+    case_mapper={"synonym":u"words?rel_syn=",
+            "suggest":u"sug?s=",
+            "antonym":u"words?rel_ant=",
+            "right_content":u"words?rc=",
+            "left_content":u"words?lc="
             }
     try:
-        response = urllib2.urlopen(
-                'http://api.datamuse.com/{}{}&max={}'.format(
+        response = urlopen(fixurl(
+                u'http://api.datamuse.com/{}{}&max={}'.format(
                     case_mapper[query_method], target, max_return
-                    ))
-    except urllib2.URLError, error:
-        print u"Internet Error. The word \"{}\" has not been found on datamuse!\n".format(target)
+                    )).decode('ASCII'))
+        result_list = json.load(response)
+        response.close()
+    except URLError:
+#        print(u"Internet Error. The word \"{}\" has not been found on datamuse!\n".format(target))
         return -1
-    result_list = json.load(response)
     return result_list
 
 
@@ -67,7 +76,7 @@ def parser(target_list):
             result[u''] = [word[u'word']]
     if not result:
         return [1, []]
-    if '' in result:
+    if u'' in result:
         output = [0, [[u'',result.pop(u'')]]]
     else:
         output = [0,[]]

@@ -1,10 +1,29 @@
-
 * Changelog
   All notable changes to this project will be documented in this file.
 
   This log is kept according to the [[http://keepachangelog.com/][Keep a CHANGELOG]] manifesto
 
-** V0.2
+** V0.3																																																												:released:
+*** Added
+    - multi-language thesaurus query support, currently English('en') and
+      Russian('ru') are supported
+    - =b:tq_language= and =g:tq_language= to setup which language source you
+      prefer the plugin to query
+    - use =completefunc= for insertmode autocomplete (Issue #7)
+    - variable =let g:tq_use_vim_autocomplete = 1= to activate =completefunc=
+*** Changed
+    - (internal) words and query results in Python are now all utf-8 decoded
+    - made plugin into autoload plugin to speed-up vim startup
+*** Depreciated
+    - all variables starting with =g:thesaurus_query#=, replacing the prefix of
+      all of them by =g:tq_=
+*** Removed
+    - variable =g:thesaurus_query#map_keys=, use =g:tq_map_keys= instead.
+*** Fixed
+    - fix out-of-bound user input exception in candidate choosing.
+    - add =KeyboardInterrupt= exception handler for candidate choosing.(closes
+      Issue #8)
+** V0.2																																																												:released:
 *** Added
     - datamuse query routine
     - implement backend enable/disable by =g:thesaurus_query#enabled_backends=
@@ -23,5 +42,5 @@
      width.
    - fixed on-demand query(`:Thesaurus [your_word]`);
    - cleaned global scope variables;
-** v0.1.0
+** v0.1.0																																																										:released:
    - initial release
