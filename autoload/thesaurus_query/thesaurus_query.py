@@ -245,7 +245,7 @@ def tq_generate_thesaurus_buffer(candidates):
     for case in candidates:
         tq_thesaurus_buffer.append([""])
         if not case[0]:
-            tq_thesaurus_buffer[line_count]='Synonyms: {}'.format(", ".join(send_string_to_vim(case[1])))
+            tq_thesaurus_buffer[line_count]='Synonyms: {}'.format(send_string_to_vim(", ".join(case[1])))
             line_count+=1
             continue
         tq_thesaurus_buffer[line_count:line_count+2]=['Found_as: {}'.format(send_string_to_vim(case[0])), 'Synonyms: {}'.format(send_string_to_vim(", ".join(case[1])))]
