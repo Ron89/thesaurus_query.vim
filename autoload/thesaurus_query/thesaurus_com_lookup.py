@@ -39,7 +39,7 @@ class word_query_handler_thesaurus_lookup:
 
     def query_cmd_handler(self, word):
         self.syno_list=[]
-        query_result_raw = decode_utf_8(online_thesaurus_lookup(word))
+        query_result_raw = online_thesaurus_lookup(word)
         self.query_result = StringIO(query_result_raw)
 
 
