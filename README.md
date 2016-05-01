@@ -12,7 +12,8 @@ satisfied with the performance of current backends and know of some online
 synonym services that I can integrate into the plugin, please come and post an
 issue with your suggestion.
 
-This plugin is written in Python. So **+Python version of Vim is required**.
+This plugin is written in Python. So **+Python or +Python3 version of Vim is
+required**.
 
 ## What's New
  * Multi-language Thesaurus Query feature is added since Version 0.3.0.

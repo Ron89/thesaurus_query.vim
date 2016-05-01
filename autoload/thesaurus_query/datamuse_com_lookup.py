@@ -9,7 +9,8 @@ except ImportError:
     from urllib.request import urlopen
     from urllib.error import URLError
 import json
-from .tq_common_lib import fixurl
+import codecs
+from .tq_common_lib import fixurl, decode_utf_8
 #import vim
 
 query_result_trunc=50
@@ -52,7 +53,8 @@ def datamuse_api_wrapper(target, query_method, max_return=query_result_trunc):
                 u'http://api.datamuse.com/{}{}&max={}'.format(
                     case_mapper[query_method], target, max_return
                     )).decode('ASCII'))
-        result_list = json.load(response)
+        reader = codecs.getreader('utf-8')
+        result_list = json.load(reader(response))
         response.close()
     except URLError:
 #        print(u"Internet Error. The word \"{}\" has not been found on datamuse!\n".format(target))

@@ -14,7 +14,7 @@ try:
     from StringIO import StringIO
 except ImportError:
     from urllib.request import urlopen
-    from urllib.error import URLError
+    from urllib.error import URLError, HTTPError
     from io import StringIO
 
 import re
@@ -51,7 +51,7 @@ def jeck_ru_url_handler(target):
     Query jiport for sysnonym
     '''
     try:
-        response = urlopen(fixurl('http://jeck.ru/tools/SynonymsDictionary/{}'.format(encode_utf_8(target))).decode('ASCII'), timeout=5)
+        response = urlopen(fixurl(u'http://jeck.ru/tools/SynonymsDictionary/{}'.format(target)).decode('ASCII'))
         web_content = StringIO(decode_utf_8(response.read()))
         response.close()
     except URLError:

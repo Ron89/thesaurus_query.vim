@@ -29,6 +29,17 @@ def encode_utf_8(string_in):
         return string_in.encode('utf-8') if isinstance(string_in, unicode) else string_in
     return string_in.encode('utf-8') if isinstance(string_in, str) else string_in
 
+def send_string_to_vim(string_in):
+    ''' return properly coded result
+    Vim in default mac OS with python 2.* only receive encoded utf-8 string
+    properly. Vim with python 3.* only receive decoded utf-8 string properly.
+    Vim with python 2.* on Linux seemed to handle both well. Hence the
+    function.
+    '''
+    if sys.version_info > (3,0):
+        return decode_utf_8(string_in)
+    return encode_utf_8(string_in)
+
 def fixurl(url):
     ''' return url-compatible ascii string
     code by Markus Jarderot

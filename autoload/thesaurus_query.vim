@@ -198,7 +198,7 @@ if not tq_synonym_result:
     vim.command("let l:syno_found=0")
 # if replace flag is on, prompt user to choose after populating candidate list
 elif vim.eval('l:replace') != '0':
-    thesaurus_query.tq_replace_cursor_word_from_candidates(tq_synonym_result)
+    tq_interface.tq_replace_cursor_word_from_candidates(tq_synonym_result)
 endOfPython
 else
 python<<endOfPython
@@ -208,7 +208,7 @@ if not tq_synonym_result:
     vim.command("let l:syno_found=0")
 # if replace flag is on, prompt user to choose after populating candidate list
 elif vim.eval('l:replace') != '0':
-    thesaurus_query.tq_replace_cursor_word_from_candidates(tq_synonym_result)
+    tq_interface.tq_replace_cursor_word_from_candidates(tq_synonym_result)
 endOfPython
 endif
 

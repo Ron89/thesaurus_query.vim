@@ -39,7 +39,7 @@ class word_query_handler_thesaurus_lookup:
 
     def query_cmd_handler(self, word):
         self.syno_list=[]
-        query_result_raw = decode_utf_8(online_thesaurus_lookup(word))
+        query_result_raw = online_thesaurus_lookup(word)
         self.query_result = StringIO(query_result_raw)
 
 
@@ -67,7 +67,7 @@ class word_query_handler_thesaurus_lookup:
             else:
                 word_dic[self.line_curr[self.relavent_val_pos]]=[self.line_curr[self.syno_pos:]]
         for key in sorted(word_dic, reverse=True):
-            if key <= self.truncation_on_relavance:
+            if int(key) <= self.truncation_on_relavance:
                 continue
             syno_list_curr=syno_list_curr+word_dic[key]     # sorted
         del word_dic
@@ -99,18 +99,18 @@ class word_query_handler_thesaurus_lookup:
 
 def online_thesaurus_lookup(target):
     '''
-    Direct query from thesaurus.com. All returns are encoded with utf-8.
+    Direct query from thesaurus.com. All returns are decoded with utf-8.
     '''
-    output = ""
+    output = u""
     try:
         response = urlopen(fixurl(u'http://www.thesaurus.com/browse/{}'.format(target)).decode('ASCII'))
-        parser = StringIO(response.read())
+        parser = StringIO(decode_utf_8(response.read()))
         response.close()
     except HTTPError:
-        output = "The word \"{}\" has not been found on dictionary.com!\n".format(encode_utf_8(target))
+        output = u"The word \"{}\" has not been found on dictionary.com!\n".format(target)
         return output
     except URLError:
-        output = "Internet Error. The word \"{}\" has not been found on dictionary.com!\n".format(encode_utf_8(target))
+        output = u"Internet Error. The word \"{}\" has not been found on dictionary.com!\n".format(target)
         return output
 
     end_tag_count=2
@@ -118,27 +118,27 @@ def online_thesaurus_lookup(target):
         line_curr = parser.readline()
         if not line_curr:
             break
-        if "no thesaurus results" in line_curr:
-            output = "The word \"{}\" has not been found on thesaurus.com!\n".format(target)
+        if u"no thesaurus results" in line_curr:
+            output = u"The word \"{}\" has not been found on thesaurus.com!\n".format(target)
             break
-        if "synonym-description" in line_curr:
+        if u"synonym-description" in line_curr:
             end_tag_count=0
             continue
         elif end_tag_count<2:
-            if "</div>" in line_curr:
+            if u"</div>" in line_curr:
                 end_tag_count+=1
                 continue
-            fields = re.split("<|>|&quot;", line_curr)
+            fields = re.split(u"<|>|&quot;", line_curr)
             if len(fields)<3:
                 continue
             elif len(fields)<10:
-                if "txt" in fields[1]:
-                    output+="\nDefinition: {}. ".format(fields[2])
+                if u"txt" in fields[1]:
+                    output+=u"\nDefinition: {}. ".format(fields[2])
                     continue
-                elif "ttl" in fields[1]:
-                    output+="{}\nSynonyms:\n".format(fields[2])
+                elif u"ttl" in fields[1]:
+                    output+=u"{}\nSynonyms:\n".format(fields[2])
                     continue
-            elif "www.thesaurus.com" in fields[3]:
-                output+="{} {}\n".format(fields[6], fields[14])
+            elif u"www.thesaurus.com" in fields[3]:
+                output+=u"{} {}\n".format(fields[6], fields[14])
     parser.close()
     return output
