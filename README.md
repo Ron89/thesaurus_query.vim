@@ -1,5 +1,7 @@
 # Thesaurus Query/Replacement Plugin for Multiple Languages(currently English and Russian)
 
+[![Join the chat at https://gitter.im/Ron89/thesaurus_query.vim](https://badges.gitter.im/Ron89/thesaurus_query.vim.svg)](https://gitter.im/Ron89/thesaurus_query.vim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This is a plugin for user to *lookup* synonyms of any word under cursor and
 *replace it* with an user chosen synonym. It also accepts word/phrases covered in
 visual mode or manual input. But for the latter two cases, auto-replacement
