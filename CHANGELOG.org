@@ -3,6 +3,9 @@
 
   This log is kept according to the [[http://keepachangelog.com/][Keep a CHANGELOG]] manifesto
 
+** V0.3.1																																																								:unreleased:
+*** Added
+    - Add Python3 support, and set as default. Python2 still supported.
 ** V0.3																																																												:released:
 *** Added
     - multi-language thesaurus query support, currently English('en') and

@@ -4,7 +4,7 @@
 # Original idea: Anton Beloglazov <http://beloglazov.info/>
 
 import vim
-from tq_common_lib import decode_utf_8, encode_utf_8
+from .tq_common_lib import decode_utf_8, encode_utf_8, send_string_to_vim
 
 class Thesaurus_Query_Handler:
     '''
@@ -22,10 +22,10 @@ class Thesaurus_Query_Handler:
         """
         Define the query routine used.
         """
-        from mthesaur_lookup import word_query_mthesaur_lookup
-        from thesaurus_com_lookup import word_query_handler_thesaurus_lookup as word_query_thesaurus_com_lookup
-        import datamuse_com_lookup
-        import jeck_ru_lookup
+        from .mthesaur_lookup import word_query_mthesaur_lookup
+        from .thesaurus_com_lookup import word_query_handler_thesaurus_lookup as word_query_thesaurus_com_lookup
+        from . import datamuse_com_lookup
+        from . import jeck_ru_lookup
         self.query_backends = {}
         # initiate all available backends and load them to self.query_backends
         backend_thesaurus_com=word_query_thesaurus_com_lookup()
@@ -162,16 +162,16 @@ def candidate_list_printing(result_IDed):
     '''
     for case in result_IDed:
         if case[0] != u"":
-            vim.command('call thesaurus_query#echo_HL("Keyword|Found as: |None|{}\\n")'.format(encode_utf_8(case[0])))
+            vim.command('call thesaurus_query#echo_HL("Keyword|Found as: |None|{}\\n")'.format(send_string_to_vim(case[0])))
         vim.command('call thesaurus_query#echo_HL("Keyword|Synonyms: |None|")')
         col_count = 10
         col_count_max = int(vim.eval("&columns"))
         for synonym_i in case[1]:
             if (col_count+len(synonym_i)+1)<col_count_max:
-                vim.command('echon "{} "'.format(encode_utf_8(synonym_i)))
+                vim.command('echon "{} "'.format(send_string_to_vim(synonym_i)))
                 col_count += len(synonym_i)+1
             else:
-                vim.command('echon "\n          {} "'.format(encode_utf_8(synonym_i)))
+                vim.command('echon "\n          {} "'.format(send_string_to_vim(synonym_i)))
                 col_count = 10 + len(synonym_i)+1
         vim.command('echon "\n"')
 
@@ -218,7 +218,7 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
     if thesaurus_user_choice>=candidate_num or thesaurus_user_choice<0:
         vim.command('call thesaurus_query#echo_HL("WarningMSG|\n\nInvalid Input! |None|Ending synonym replacing session without making changes.")')
         return
-    vim.command("normal! ciw{}".format(encode_utf_8(thesaurus_wait_list[thesaurus_user_choice])))
+    vim.command("normal! ciw{}".format(send_string_to_vim(thesaurus_wait_list[thesaurus_user_choice])))
 
 def tq_generate_thesaurus_buffer(candidates):
     '''
@@ -245,10 +245,10 @@ def tq_generate_thesaurus_buffer(candidates):
     for case in candidates:
         tq_thesaurus_buffer.append([""])
         if not case[0]:
-            tq_thesaurus_buffer[line_count]='Synonyms: {}'.format(", ".join(encode_utf_8(case[1])))
+            tq_thesaurus_buffer[line_count]='Synonyms: {}'.format(", ".join(send_string_to_vim(case[1])))
             line_count+=1
             continue
-        tq_thesaurus_buffer[line_count:line_count+2]=['Found_as: {}'.format(encode_utf_8(case[0])), 'Synonyms: {}'.format(encode_utf_8(", ".join(case[1])))]
+        tq_thesaurus_buffer[line_count:line_count+2]=['Found_as: {}'.format(send_string_to_vim(case[0])), 'Synonyms: {}'.format(send_string_to_vim(", ".join(case[1])))]
         line_count+=2
     vim.command("setlocal bufhidden=")
     vim.command("silent g/^Synonyms:/ normal! 0Vgq")

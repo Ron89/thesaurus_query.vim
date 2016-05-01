@@ -1,15 +1,19 @@
 # python wrapper for word query from thesaurus.com
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
 
-import urllib2
-import re
-import vim
-from tq_common_lib import decode_utf_8, encode_utf_8, fixurl
-#from online_thesaurus_lookup import online_thesaurus_lookup
 try:
+    from urllib2 import urlopen
+    from urllib2 import URLError,HTTPError
     from StringIO import StringIO
 except ImportError:
+    from urllib.request import urlopen
+    from urllib.error import URLError,HTTPError
     from io import StringIO
+
+import re
+import vim
+from .tq_common_lib import decode_utf_8, encode_utf_8, fixurl
+#from online_thesaurus_lookup import online_thesaurus_lookup
 
 class word_query_handler_thesaurus_lookup:
     '''
@@ -63,7 +67,7 @@ class word_query_handler_thesaurus_lookup:
             else:
                 word_dic[self.line_curr[self.relavent_val_pos]]=[self.line_curr[self.syno_pos:]]
         for key in sorted(word_dic, reverse=True):
-            if key <= self.truncation_on_relavance:
+            if int(key) <= self.truncation_on_relavance:
                 continue
             syno_list_curr=syno_list_curr+word_dic[key]     # sorted
         del word_dic
@@ -95,18 +99,18 @@ class word_query_handler_thesaurus_lookup:
 
 def online_thesaurus_lookup(target):
     '''
-    Direct query from thesaurus.com. All returns are encoded with utf-8.
+    Direct query from thesaurus.com. All returns are decoded with utf-8.
     '''
-    output = ""
+    output = u""
     try:
-        response = urllib2.urlopen(fixurl(u'http://www.thesaurus.com/browse/{}'.format(target)))
-        parser = StringIO(response.read())
+        response = urlopen(fixurl(u'http://www.thesaurus.com/browse/{}'.format(target)).decode('ASCII'))
+        parser = StringIO(decode_utf_8(response.read()))
         response.close()
-    except urllib2.HTTPError, error:
-        output = "The word \"{}\" has not been found on dictionary.com!\n".format(encode_utf_8(target))
+    except HTTPError:
+        output = u"The word \"{}\" has not been found on dictionary.com!\n".format(target)
         return output
-    except urllib2.URLError, error:
-        output = "Internet Error. The word \"{}\" has not been found on dictionary.com!\n".format(encode_utf_8(target))
+    except URLError:
+        output = u"Internet Error. The word \"{}\" has not been found on dictionary.com!\n".format(target)
         return output
 
     end_tag_count=2
@@ -114,27 +118,27 @@ def online_thesaurus_lookup(target):
         line_curr = parser.readline()
         if not line_curr:
             break
-        if "no thesaurus results" in line_curr:
-            output = "The word \"{}\" has not been found on thesaurus.com!\n".format(target)
+        if u"no thesaurus results" in line_curr:
+            output = u"The word \"{}\" has not been found on thesaurus.com!\n".format(target)
             break
-        if "synonym-description" in line_curr:
+        if u"synonym-description" in line_curr:
             end_tag_count=0
             continue
         elif end_tag_count<2:
-            if "</div>" in line_curr:
+            if u"</div>" in line_curr:
                 end_tag_count+=1
                 continue
-            fields = re.split("<|>|&quot;", line_curr)
+            fields = re.split(u"<|>|&quot;", line_curr)
             if len(fields)<3:
                 continue
             elif len(fields)<10:
-                if "txt" in fields[1]:
-                    output+="\nDefinition: {}. ".format(fields[2])
+                if u"txt" in fields[1]:
+                    output+=u"\nDefinition: {}. ".format(fields[2])
                     continue
-                elif "ttl" in fields[1]:
-                    output+="{}\nSynonyms:\n".format(fields[2])
+                elif u"ttl" in fields[1]:
+                    output+=u"{}\nSynonyms:\n".format(fields[2])
                     continue
-            elif "www.thesaurus.com" in fields[3]:
-                output+="{} {}\n".format(fields[6], fields[14])
+            elif u"www.thesaurus.com" in fields[3]:
+                output+=u"{} {}\n".format(fields[6], fields[14])
     parser.close()
     return output

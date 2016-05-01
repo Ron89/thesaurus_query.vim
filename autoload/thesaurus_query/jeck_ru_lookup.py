@@ -8,14 +8,17 @@
 # needed(which is good, I don't want too much dependency to this plugin if I
 # can avoid it).
 
-import urllib2
-import re
-from tq_common_lib import decode_utf_8, encode_utf_8, fixurl
-
 try:
+    from urllib2 import urlopen
+    from urllib2 import URLError
     from StringIO import StringIO
 except ImportError:
+    from urllib.request import urlopen
+    from urllib.error import URLError, HTTPError
     from io import StringIO
+
+import re
+from .tq_common_lib import decode_utf_8, encode_utf_8, fixurl
 
 identifier="jeck_ru"
 language="ru"
@@ -48,10 +51,10 @@ def jeck_ru_url_handler(target):
     Query jiport for sysnonym
     '''
     try:
-        response = urllib2.urlopen(fixurl('http://jeck.ru/tools/SynonymsDictionary/{}'.format(encode_utf_8(target))), timeout=5)
+        response = urlopen(fixurl(u'http://jeck.ru/tools/SynonymsDictionary/{}'.format(target)).decode('ASCII'))
         web_content = StringIO(decode_utf_8(response.read()))
         response.close()
-    except urllib2.URLError, error:
+    except URLError:
 #        print "The word \"{}\" has not been found on jeck.ru!\n".format(target)
         return 1
     return web_content

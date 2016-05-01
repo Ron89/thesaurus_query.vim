@@ -3,7 +3,7 @@
 
 import vim
 import os
-from tq_common_lib import decode_utf_8
+from .tq_common_lib import decode_utf_8
 
 class word_query_mthesaur_lookup:
     '''

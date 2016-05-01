@@ -1,26 +1,53 @@
-import urlparse, urllib
+import sys
+import urllib
+if sys.version_info < (3,0):
+    import urlparse
+    urlpquote = urllib.quote
+    urlpunquote = urllib.unquote
+    urlpurlsplit = urlparse.urlsplit
+    urlpurlunsplit = urlparse.urlunsplit
+else:
+    import urllib.parse as urlparse
+    urlpquote = urlparse.quote
+    urlpunquote = urlparse.unquote
+    urlpurlsplit = urlparse.urlsplit
+    urlpurlunsplit = urlparse.urlunsplit
 
 def decode_utf_8(string_in):
     '''
     safely decode string into unicode string
     '''
-    return string_in.decode('utf-8') if not isinstance(string_in, unicode) else string_in
+    if sys.version_info < (3,0):
+        return string_in.decode('utf-8') if not isinstance(string_in, unicode) else string_in
+    return string_in.decode('utf-8') if not isinstance(string_in, str) else string_in
 
 def encode_utf_8(string_in):
     '''
     safely encode unicode string to string
     '''
-    return string_in.encode('utf-8') if isinstance(string_in, unicode) else string_in
+    if sys.version_info < (3,0):
+        return string_in.encode('utf-8') if isinstance(string_in, unicode) else string_in
+    return string_in.encode('utf-8') if isinstance(string_in, str) else string_in
+
+def send_string_to_vim(string_in):
+    ''' return properly coded result
+    Vim in default mac OS with python 2.* only receive encoded utf-8 string
+    properly. Vim with python 3.* only receive decoded utf-8 string properly.
+    Vim with python 2.* on Linux seemed to handle both well. Hence the
+    function.
+    '''
+    if sys.version_info > (3,0):
+        return decode_utf_8(string_in)
+    return encode_utf_8(string_in)
 
 def fixurl(url):
     ''' return url-compatible ascii string
     code by Markus Jarderot
     '''
-    if not isinstance(url,unicode):
-        url = url.decode('utf8')
+    url = decode_utf_8(url)
 
     # parse it
-    parsed = urlparse.urlsplit(url)
+    parsed = urlpurlsplit(url)
 
     # divide the netloc further
     userpass,at,hostport = parsed.netloc.rpartition('@')
@@ -29,21 +56,30 @@ def fixurl(url):
 
     # encode each component
     scheme = parsed.scheme.encode('utf8')
-    user = urllib.quote(user.encode('utf8'))
+    user = encode_utf_8(urlpquote(user.encode('utf8')))
     colon1 = colon1.encode('utf8')
-    pass_ = urllib.quote(pass_.encode('utf8'))
+    pass_ = encode_utf_8(urlpquote(pass_.encode('utf8')))
     at = at.encode('utf8')
     host = host.encode('idna')
     colon2 = colon2.encode('utf8')
     port = port.encode('utf8')
-    path = '/'.join(  # could be encoded slashes!
-        urllib.quote(urllib.unquote(pce).encode('utf8'),'')
-        for pce in parsed.path.split('/')
-    )
-    query = urllib.quote(urllib.unquote(parsed.query).encode('utf8'),'=&?/')
-    fragment = urllib.quote(urllib.unquote(parsed.fragment).encode('utf8'))
+    if sys.version_info < (3,0):
+        path = '/'.join(  # could be encoded slashes!
+            urlpquote(urlpunquote(pce).encode('utf8'),'')
+            for pce in parsed.path.split('/')
+        )
+    else:
+        path = b'/'.join(  # could be encoded slashes!
+            encode_utf_8(urlpquote(urlpunquote(pce).encode('utf8'),b''))
+            for pce in parsed.path.split('/')
+        )
+    query = encode_utf_8(urlpquote(urlpunquote(parsed.query).encode('utf8'),'=&?/'))
+    fragment = encode_utf_8(urlpquote(urlpunquote(parsed.fragment).encode('utf8')))
 
     # put it back together
-    netloc = ''.join((user,colon1,pass_,at,host,colon2,port))
+    if sys.version_info < (3,0):
+        netloc = ''.join((user,colon1,pass_,at,host,colon2,port))
+    else:
+        netloc = b''.join((user,colon1,pass_,at,host,colon2,port))
     return urlparse.urlunsplit((scheme,netloc,path,query,fragment))
 

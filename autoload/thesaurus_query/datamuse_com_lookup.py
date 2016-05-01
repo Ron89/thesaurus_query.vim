@@ -1,9 +1,16 @@
 # python wrapper for word query from datamuse.com
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
 
-import urllib2
+
+try:
+    from urllib2 import urlopen
+    from urllib2 import URLError
+except ImportError:
+    from urllib.request import urlopen
+    from urllib.error import URLError
 import json
-from tq_common_lib import fixurl
+import codecs
+from .tq_common_lib import fixurl, decode_utf_8
 #import vim
 
 query_result_trunc=50
@@ -42,14 +49,15 @@ def datamuse_api_wrapper(target, query_method, max_return=query_result_trunc):
             "left_content":u"words?lc="
             }
     try:
-        response = urllib2.urlopen(fixurl(
+        response = urlopen(fixurl(
                 u'http://api.datamuse.com/{}{}&max={}'.format(
                     case_mapper[query_method], target, max_return
-                    )))
-        result_list = json.load(response)
+                    )).decode('ASCII'))
+        reader = codecs.getreader('utf-8')
+        result_list = json.load(reader(response))
         response.close()
-    except urllib2.URLError, error:
-        print u"Internet Error. The word \"{}\" has not been found on datamuse!\n".format(target)
+    except URLError:
+#        print(u"Internet Error. The word \"{}\" has not been found on datamuse!\n".format(target))
         return -1
     return result_list
 
