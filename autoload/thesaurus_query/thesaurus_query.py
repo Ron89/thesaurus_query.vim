@@ -26,16 +26,19 @@ class Thesaurus_Query_Handler:
         from .thesaurus_com_lookup import word_query_handler_thesaurus_lookup as word_query_thesaurus_com_lookup
         from . import datamuse_com_lookup
         from . import jeck_ru_lookup
+        from . import woxikon_de_lookup
         self.query_backends = {}
         # initiate all available backends and load them to self.query_backends
-        backend_thesaurus_com=word_query_thesaurus_com_lookup()
-        backend_datamuse_com=datamuse_com_lookup
-        backend_mthesaur_txt=word_query_mthesaur_lookup()
-        backend_jeck_ru=jeck_ru_lookup
+        backend_thesaurus_com = word_query_thesaurus_com_lookup()
+        backend_datamuse_com = datamuse_com_lookup
+        backend_mthesaur_txt = word_query_mthesaur_lookup()
+        backend_jeck_ru = jeck_ru_lookup
+        backend_woxikon_de = woxikon_de_lookup
         self.query_backends[backend_thesaurus_com.identifier] = backend_thesaurus_com
         self.query_backends[backend_datamuse_com.identifier] = backend_datamuse_com
         self.query_backends[backend_mthesaur_txt.identifier] = backend_mthesaur_txt
         self.query_backends[backend_jeck_ru.identifier] = backend_jeck_ru
+        self.query_backends[backend_woxikon_de.identifier] = backend_woxikon_de
 
 
     def query(self, word):

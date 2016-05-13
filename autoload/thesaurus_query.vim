@@ -33,7 +33,7 @@ endif
 " this variable defines which query backend language do you want to use. It
 " can be either string or list
 if !exists("g:tq_language")
-    let g:tq_language = 'en'
+    let g:tq_language = ['en']
 endif
 
 " This variable is for default query routine, if according to thesaurus.com,
@@ -96,7 +96,7 @@ endif
 " priority.
 "       * Please be careful not to mis-spell when setting this variable.
 if !exists("g:tq_enabled_backends")
-    let g:tq_enabled_backends=["jeck_ru","thesaurus_com","datamuse_com","mthesaur_txt"]
+    let g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","datamuse_com","mthesaur_txt"]
 endif
 
 

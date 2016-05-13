@@ -118,7 +118,7 @@ Currently there are 5 global variables used to customize the behavior.
             let g:tq_language='All'
         English and Russian Query Backends are to be used in current buffer:
             let b:tq_language=['en', 'ru']
-                                                       default='en'
+                                                       default=['en']
 >
 
 *g:tq_use_local_thesaurus_source_as_primary*

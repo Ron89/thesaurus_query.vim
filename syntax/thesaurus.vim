@@ -13,7 +13,7 @@ syntax case match
 setlocal iskeyword+=:
 
 " Entry name rules
-syntax match thesPartOfSpeech '\v\a{,6}\.'
+syntax match thesPartOfSpeech '\v\a{,6}\.|\[\a\]'
 " syntax match thesMainEntry '"\v\{2,}"' contained
 syntax keyword thesDefinition Found_as: nextgroup=thesPartOfSpeech
 syntax keyword thesSynonyms Synonyms:
