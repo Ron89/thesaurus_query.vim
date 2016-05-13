@@ -13,8 +13,8 @@ CONTENTS                                                     *thesaurus_query*
         |g:tq_use_local_thesaurus_source_as_primary| |g:tq_mthesaur_file|
         |g:raise_backend_priority_if_synonym_found|
         |g:tq_truncation_on_relavance| |g:tq_truncation_on_definition_num|
-        |g:tq_truncation_on_syno_list_size| 5. Licence
-        ..................................... |thesaurus_query-licence|
+        |g:tq_truncation_on_syno_list_size| 
+    5. Licence..................................... |thesaurus_query-licence|
         ===============================================================================
 
 
