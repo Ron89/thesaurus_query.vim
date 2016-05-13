@@ -1,4 +1,4 @@
-# Thesaurus Query/Replacement Plugin for Multiple Languages(currently English and Russian)
+# Thesaurus Query/Replacement Plugin for Multiple Languages
 
 [![Join the chat at https://gitter.im/Ron89/thesaurus_query.vim](https://badges.gitter.im/Ron89/thesaurus_query.vim.svg)](https://gitter.im/Ron89/thesaurus_query.vim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -8,19 +8,20 @@ visual mode or manual input. But for the latter two cases, auto-replacement
 function isn't activated by default, and the result will be displayed in
 a split buffer.
 
-**Notice:** Currently this plugin Supports only English and Russian thesaurus
-query. If you want to use the plugin for other languages, or if you're not
-satisfied with the performance of current backends and know of some online
-synonym services that I can integrate into the plugin, please come and post an
-issue with your suggestion.
+**Notice:** Currently this plugin Supports only English, Russian (ru) and
+German (de) thesaurus query. If you want to use the plugin for other languages,
+or if you're not satisfied with the performance of current backends and know of
+some online synonym services that I can integrate into the plugin, please come
+and post an issue with your suggestion.
 
 This plugin is written in Python. So **+Python or +Python3 version of Vim is
 required**.
 
 ## What's New
  * Multi-language Thesaurus Query feature is added since Version 0.3.0.
-   Currently English and Russian are supported. By default, only English
-   backends are activated. Users may activate Russian Thesaurus backends by
+   Currently English, Russian and German are supported. By default, only
+   English backends are activated. Users may activate Russian Thesaurus
+   backends by
    ```
    let g:tq_language = 'ru'
    ```
@@ -118,6 +119,10 @@ backends is behaving properly.
   [jeck.ru](http://jeck.ru/tools/SynonymsDictionary) for synonym resources.
   This website didn't provide standard API to use. Hence functionality of this
   backend depends on whether the website owner will change the webpage design.
+* **woxikon\_de** is a *German* thesaurus backend. It queries
+  [woxikon.de](http://synonyme.woxikon.de/synonyme) for synonym resources. This
+  website didn't provide standard API to use. Hence functionality of this
+  backend depends on whether the website owner will change the webpage design.
 
 **By default, The sequence of query is thesaurus\_com -> datamuse\_com ->
 mthesaur\_txt** Next query will be conducted only when the previous query
@@ -127,18 +132,18 @@ variable
 `g:tq_enabled_backends`. Its default is
 
 ```
-    g:tq_enabled_backends=["jeck_ru","thesaurus_com","datamuse_com","mthesaur_txt"]
+    g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","datamuse_com","mthesaur_txt"]
 ```
 
-Backend **jeck\_ru** is currently **not activated by default**, due to the
-default setting `g:tq_language='en'`. To enable Russian backend, add 'ru' to
-the `tq_language` list:
+Backend **woxikon\_de**, **jeck\_ru** are currently **not activated by
+default**, due to the default setting `g:tq_language='en'`. To enable Russian
+and German backend, add 'ru' and 'de' to the `tq_language` list:
 ```
-    g:tq_language=['en','ru']
+    g:tq_language=['en','ru', 'de']
 ```
-Or if you want to use only Russian thesaurus engine in specific/current buffer
+Or if you want to use only German thesaurus engine in specific/current buffer
 ```
-    b:tq_language=['ru']
+    b:tq_language=['de']
 ```
 
 To ensure the best user experience, **the backend that reports error during

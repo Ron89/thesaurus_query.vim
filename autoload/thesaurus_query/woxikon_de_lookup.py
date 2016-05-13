@@ -36,7 +36,7 @@ nested list = [PoS, list wordlist]
     wordlist = [word_0, word_1, ...]: list of words belonging to a same definition
     '''
     target=target.replace(u" ", u"+")
-    result_list=jeck_ru_url_handler(target)
+    result_list=woxikon_de_url_handler(target)
     if result_list == -1:
         return [-1,[]]
     else:
@@ -46,7 +46,7 @@ nested list = [PoS, list wordlist]
         else:
             return [1, []]
 
-def jeck_ru_url_handler(target):
+def woxikon_de_url_handler(target):
     '''
     Query jiport for sysnonym
     '''
