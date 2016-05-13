@@ -1,4 +1,4 @@
-# Thesaurus Query/Replacement Plugin for Multiple Languages
+# Multi-Language Thesaurus Query/Replacement Plugin
 
 [![Join the chat at https://gitter.im/Ron89/thesaurus_query.vim](https://badges.gitter.im/Ron89/thesaurus_query.vim.svg)](https://gitter.im/Ron89/thesaurus_query.vim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -19,15 +19,15 @@ required**.
 
 ## What's New
  * Multi-language Thesaurus Query feature is added since Version 0.3.0.
-   Currently English, Russian and German are supported. By default, only
+   Currently **English, Russian and German** are supported. By default, only
    English backends are activated. Users may activate Russian Thesaurus
    backends by
    ```
    let g:tq_language = 'ru'
    ```
-   or activate both English and Russian backends by
+   or activate both English and German backends by
    ```
-   let g:tq_language = ['ru', 'en']
+   let g:tq_language = ['de', 'en']
    ```
    For detail, please refer to my [Documentation](https://github.com/Ron89/thesaurus_query.vim/blob/master/doc/thesaurus_query.txt).
 
