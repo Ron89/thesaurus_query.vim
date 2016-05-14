@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# python wrapper for word query from jeck.ru
+# python wrapper for word query from woxikon.de
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
 #
 #
