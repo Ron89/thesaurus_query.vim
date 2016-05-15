@@ -42,10 +42,10 @@ command! -nargs=1 Thesaurus :call thesaurus_query#Thesaurus_Query_Lookup(<q-args
 " --------------------------------
 
 if g:tq_map_keys
-    nnoremap <silent> <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
-    vnoremap <silent> <LocalLeader>cs y:Thesaurus <C-r>"<CR>
     nnoremap <unique><silent> <Leader>cs :ThesaurusQueryReplaceCurrentWord<CR>
     vnoremap <unique><silent> <Leader>cs y:Thesaurus <C-r>"<CR>
+    nnoremap <silent> <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
+    vnoremap <silent> <LocalLeader>cs y:Thesaurus <C-r>"<CR>
 endif
 
 if g:tq_use_vim_autocomplete
