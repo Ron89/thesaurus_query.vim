@@ -8,12 +8,16 @@ CONTENTS                                                     *thesaurus_query*
     3. Usage ......................................... |thesaurus_query-usage|
     4. Customization ......................... |thesaurus_query-Customization|
         |g:tq_display_list_all_time|
-        |g:tq_map_keys| |g:tq_use_vim_autocompletefunc|
-        |g:tq_enabled_backends| |b/g:tq_language|
-        |g:tq_use_local_thesaurus_source_as_primary| |g:tq_mthesaur_file|
+        |g:tq_map_keys|
+        |g:tq_use_vim_autocompletefunc|
+        |g:tq_enabled_backends|
+        |b/g:tq_language|
+        |g:tq_use_local_thesaurus_source_as_primary|
+        |g:tq_mthesaur_file|
         |g:raise_backend_priority_if_synonym_found|
-        |g:tq_truncation_on_relavance| |g:tq_truncation_on_definition_num|
-        |g:tq_truncation_on_syno_list_size| 
+        |g:tq_truncation_on_relavance|
+        |g:tq_truncation_on_definition_num|
+        |g:tq_truncation_on_syno_list_size|
     5. Licence..................................... |thesaurus_query-licence|
         ===============================================================================
 
@@ -66,9 +70,13 @@ The plugin provides three ways of using.
     backend priority sequence to default/user defined in
     |g:thesaurus_query#enabled_backends|.
 
-The functionalities are also mapped to key-bindings
-    nnoremap <unique> <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
-    vnoremap <unique> <LocalLeader>cs y:Thesaurus <C-r>"<CR>
+The functionalities are also mapped to key-bindings, if `g:tq_map_keys=1` as
+default (Note: since this plugin is active for all buffers, the use of
+`<LocalLeader>`is now depreciated):
+    nnoremap <unique> <Leader>cs :ThesaurusQueryReplaceCurrentWord<CR>
+    vnoremap <unique> <Leader>cs y:Thesaurus <C-r>"<CR>
+    nnoremap <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
+    vnoremap <LocalLeader>cs y:Thesaurus <C-r>"<CR>
 
 
 4. Customization                                |thesaurus_query-Customization|
@@ -95,11 +103,11 @@ Currently there are 5 global variables used to customize the behavior.
                                                         default=1
 >
 
-*g:tq_enabled_backends* 
+*g:tq_enabled_backends*
     this variable is offered by core query handler. It's a list of
     query_backends user want to enable, with the sequence of user prefered
     priority.
-        * Please be careful not to mis-spell when setting this variable. 
+        * Please be careful not to mis-spell when setting this variable.
         * if !exists("g:tq_enabled_backends") let
                     default=["jeck_ru","thesaurus_com","datamuse_com","mthesaur_txt"]
 >

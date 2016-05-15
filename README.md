@@ -59,10 +59,10 @@ Use your plugin manager of choice.
 ## Usage
 
 By default, command `:ThesaurusQueryReplaceCurrentWord` is mapped to
-`<LocalLeader>cs`.
+`<Leader>cs`.
 
 ```
-    nnoremap <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
+    nnoremap <Leader>cs :ThesaurusQueryReplaceCurrentWord<CR>
 ```
 
 This routine check the synonyms of  the word under cursor and replace it with
@@ -74,7 +74,7 @@ Another might-be-useful routine is the one to look up for words covered in
 visual mode,
 
 ```
-    vnoremap <LocalLeader>cs y:Thesaurus <C-r>"<CR>
+    vnoremap <Leader>cs y:Thesaurus <C-r>"<CR>
 ```
 
 this routine don't offer replacement by default. Because my current replacement
