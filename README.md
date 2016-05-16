@@ -206,6 +206,19 @@ arbitrarily make up truncation threshold that may damage user experience, both
 truncation methods are inactive unless variables stated above are set
 explicitly by user.
 
+## Credit
+
+This plugin is functionally based on and extended from the idea behind
+[vim-online-thesaurus](http://www.vim.org/scripts/script.php?script_id=4588) by
+Anton Beloglazov:
+
+Several key improvements were made comparing to his plugin:
+- added synonym replacing mechanism
+- added fallback backend to ensure functionality even when server down or lack
+  of internet connection.
+- added multilanguage support. With proper backends, it is possible to extend
+  the functionality of this plugin to any western letter based languages. 
+
 ## TODO List
 
 1. Add option to truncate the synonym list when its length is over a certain
