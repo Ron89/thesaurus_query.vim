@@ -12,6 +12,7 @@ let g:loaded_thesaurus_query_autoload = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+
 " environs setup
 if has("python3")
     let s:tq_use_python = 'python3 '
@@ -21,6 +22,44 @@ else
     echoerr 'thesaurus_query framework require vim with python support.'
     finish
 endif
+
+" --------------------------------
+" legacy settings (depreciated, do NOT use)
+
+if exists("g:thesaurus_query#display_list_all_time")
+    let g:tq_display_list_all_time = g:thesaurus_query#display_list_all_time
+endif
+
+if exists("g:thesaurus_query#truncation_on_relavance")
+    let g:tq_truncation_on_relavance = g:thesaurus_query#truncation_on_relavance
+endif
+
+if exists("g:thesaurus_query#truncation_on_definition_num")
+    let g:tq_truncation_on_definition_num = g:thesaurus_query#truncation_on_definition_num
+endif
+
+if exists("g:thesaurus_query#truncation_on_syno_list_size")
+    let g:tq_truncation_on_syno_list_size = g:thesaurus_query#truncation_on_syno_list_size
+endif
+
+if exists("g:thesaurus_query#use_local_thesaurus_source_as_primary")
+    let g:tq_use_local_thesaurus_source_as_primary = g:thesaurus_query#use_local_thesaurus_source_as_primary
+endif
+
+if exists("g:thesaurus_query#use_alternative_backend")
+    let g:tq_use_alternative_backend = g:thesaurus_query#use_alternative_backend
+endif
+
+if exists("g:thesaurus_query#mthesaur_file")
+    let g:tq_mthesaur_file = g:thesaurus_query#mthesaur_file
+endif
+
+if exists("g:thesaurus_query#enabled_backends")
+    let g:tq_enabled_backends = g:thesaurus_query#enabled_backends
+endif
+
+let s:tq_separator_regexp = "[^\^ :=+\\-_\\/;`'\"!@#$%&*\(\)\\[\\]{}|,<\.>?~]"
+
 
 " --------------------------------
 "  Setting up default values & Initialize
@@ -101,43 +140,6 @@ endif
 
 
 " --------------------------------
-" legacy settings (depreciated, do NOT use)
-
-if !exists("g:thesaurus_query#display_list_all_time")
-    let g:thesaurus_query#display_list_all_time = g:tq_display_list_all_time
-endif
-
-if !exists("g:thesaurus_query#truncation_on_relavance")
-    let g:thesaurus_query#truncation_on_relavance = g:tq_truncation_on_relavance
-endif
-
-if !exists("g:thesaurus_query#truncation_on_definition_num")
-    let g:thesaurus_query#truncation_on_definition_num = g:tq_truncation_on_definition_num
-endif
-
-if !exists("g:thesaurus_query#truncation_on_syno_list_size")
-    let g:thesaurus_query#truncation_on_syno_list_size = g:tq_truncation_on_syno_list_size
-endif
-
-if !exists("g:thesaurus_query#use_local_thesaurus_source_as_primary")
-    let g:thesaurus_query#use_local_thesaurus_source_as_primary = g:tq_use_local_thesaurus_source_as_primary
-endif
-
-if !exists("g:thesaurus_query#use_alternative_backend")
-    let g:thesaurus_query#use_alternative_backend=g:tq_use_alternative_backend
-endif
-
-if !exists("g:thesaurus_query#mthesaur_file")
-    let g:thesaurus_query#mthesaur_file=g:tq_mthesaur_file
-endif
-
-if !exists("g:thesaurus_query#enabled_backends")
-    let g:thesaurus_query#enabled_backends=g:tq_enabled_backends
-endif
-
-let s:tq_separator_regexp = "[^\^ :=+\\-_\\/;`'\"!@#$%&*\(\)\\[\\]{}|,<\.>?~]"
-
-" --------------------------------
 "  Function(s)
 " --------------------------------
 
@@ -214,7 +216,7 @@ endif
 
 
 " exit function if no candidate is found
-    if !l:syno_found + l:replace*(!g:thesaurus_query#display_list_all_time)
+    if !l:syno_found + l:replace*(!g:tq_display_list_all_time)
         exec s:tq_use_python.'del tq_synonym_result'
         return
     endif

@@ -12,7 +12,7 @@ except ImportError:
 
 import re
 import vim
-from .tq_common_lib import decode_utf_8, encode_utf_8, fixurl
+from .tq_common_lib import decode_utf_8, fixurl
 #from online_thesaurus_lookup import online_thesaurus_lookup
 
 class word_query_handler_thesaurus_lookup:
@@ -35,7 +35,7 @@ class word_query_handler_thesaurus_lookup:
         self.header_length=11    # length of "Definition:", current header of definition
         self.relavent_val_pos=9
         self.syno_pos=11
-        self.truncation_on_relavance=int(vim.eval("g:thesaurus_query#truncation_on_relavance")) # truncate on which relavance level?
+        self.truncation_on_relavance=int(vim.eval("g:tq_truncation_on_relavance")) # truncate on which relavance level?
 
     def query_cmd_handler(self, word):
         self.syno_list=[]

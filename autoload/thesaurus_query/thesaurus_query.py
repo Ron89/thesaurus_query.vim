@@ -74,7 +74,7 @@ class Thesaurus_Query_Handler:
         if error_encountered == 1:
             vim.command('echohl WarningMSG | echon "WARNING: " | echohl None | echon "one or more query backends report error. Please check on thesaurus source(s).\n"')
         if 'state' not in locals():
-            vim.command('echohl WarningMSG | echon "WARNING: " | echohl None | echon "No thesaurus source is used. Please check on your configuration on g:thesaurus_query#enabled_backends and g:tq_language or b:tq_language.\n"')
+            vim.command('echohl WarningMSG | echon "WARNING: " | echohl None | echon "No thesaurus source is used. Please check on your configuration on g:tq_enabled_backends and g:tq_language or b:tq_language.\n"')
             return []
         if state == 0:  # save to word_list buffer only when synonym is found
             self.word_list[word]=synonym_list
@@ -84,13 +84,13 @@ class Thesaurus_Query_Handler:
         return synonym_list
 
     def restore_thesaurus_query_handler(self):
-        self.query_backend_priority = vim.eval("g:thesaurus_query#enabled_backends")
+        self.query_backend_priority = vim.eval("g:tq_enabled_backends")
         self.word_list = {}  # hold wordlist obtained in previous query
         self.word_list_keys = []  # hold all keys for wordlist
                                   # in old->new order
         # depreciated variable
-        if vim.eval('exists("g:thesaurus_query#use_local_thesaurus_source_as_primary")'):
-            local_as_primary = vim.eval("g:thesaurus_query#use_local_thesaurus_source_as_primary")
+        if vim.eval('exists("g:tq_use_local_thesaurus_source_as_primary")'):
+            local_as_primary = vim.eval("g:tq_use_local_thesaurus_source_as_primary")
         else:
             local_as_primary = None
         if local_as_primary=="1":
@@ -112,8 +112,8 @@ def get_variable(v_name):
 
 def truncate_synonym_list(synonym_list):
     truncated_flag = 0
-    truncate_on_definition = int(vim.eval("g:thesaurus_query#truncation_on_definition_num"))  # number of definitions retained in output
-    truncate_syno_list = int(vim.eval("g:thesaurus_query#truncation_on_syno_list_size"))   # number of synonyms retained for each definition in output
+    truncate_on_definition = int(vim.eval("g:tq_truncation_on_definition_num"))  # number of definitions retained in output
+    truncate_syno_list = int(vim.eval("g:tq_truncation_on_syno_list_size"))   # number of synonyms retained for each definition in output
     output_buffer = []
     if truncate_on_definition > 0:
         if truncate_on_definition<=len(synonym_list):

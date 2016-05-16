@@ -28,8 +28,8 @@ class word_query_mthesaur_lookup:
         if os.path.exists(self.mthesaur_file):
             self.mthesaur_verified = 1
             return
-        if os.path.exists(os.path.expanduser(vim.eval("g:thesaurus_query#mthesaur_file"))):
-            self.mthesaur_file = os.path.expanduser(vim.eval("g:thesaurus_query#mthesaur_file"))
+        if os.path.exists(os.path.expanduser(vim.eval("g:tq_mthesaur_file"))):
+            self.mthesaur_file = os.path.expanduser(vim.eval("g:tq_mthesaur_file"))
             self.mthesaur_verified = 1
             return
 

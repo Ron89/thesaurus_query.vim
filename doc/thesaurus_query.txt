@@ -68,7 +68,7 @@ The plugin provides three ways of using.
 :ThesaurusQueryReset                                   |:ThesaurusQueryReset|
     Reset ThesaurusQuery, empty cached history in current session, restore
     backend priority sequence to default/user defined in
-    |g:thesaurus_query#enabled_backends|.
+    |g:tq_enabled_backends|.
 
 The functionalities are also mapped to key-bindings, if `g:tq_map_keys=1` as
 default (Note: since this plugin is active for all buffers, the use of

@@ -13,6 +13,8 @@
     - default value for =g:tq_language= become list, =g:tq_language = ['en']=
 *** Depreciated
     - use of =<LocalLeader>cs=.
+*** Fixed
+    - the issue that makes redefining variable mid-session ineffective
 ** V0.3																																																												:released:
 *** Added
     - multi-language thesaurus query support, currently English('en') and
