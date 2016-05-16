@@ -9,6 +9,7 @@
     - Add German(=de=) support (Issue #12)
     - Add Python3 support, and set as default. Python2 still supported.
 *** Changed
+    - change =g:tq_use_python= to =s:tq_use_python=.
     - default value for =g:tq_language= become list, =g:tq_language = ['en']=
 *** Depreciated
     - use of =<LocalLeader>cs=.

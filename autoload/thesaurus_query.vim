@@ -14,9 +14,9 @@ set cpo&vim
 
 " environs setup
 if has("python3")
-    let g:tq_use_python = 'python3 '
+    let s:tq_use_python = 'python3 '
 elseif has("python")
-    let g:tq_use_python = 'python '
+    let s:tq_use_python = 'python '
 else
     echoerr 'thesaurus_query framework require vim with python support.'
     finish
@@ -160,20 +160,20 @@ function! thesaurus_query#echo_HL(message_for_echo)
     endfor
 endfunction
 
-exec g:tq_use_python.'import sys'
-exec g:tq_use_python.'import os'
-exec g:tq_use_python.'import vim'
-exec g:tq_use_python."sys.path.append(vim.eval('expand(\"<sfile>:h\")'))"
-exec g:tq_use_python.'import thesaurus_query.thesaurus_query as tq_interface'
-exec g:tq_use_python.'from thesaurus_query.tq_common_lib import decode_utf_8, encode_utf_8'
+exec s:tq_use_python.'import sys'
+exec s:tq_use_python.'import os'
+exec s:tq_use_python.'import vim'
+exec s:tq_use_python."sys.path.append(vim.eval('expand(\"<sfile>:h\")'))"
+exec s:tq_use_python.'import thesaurus_query.thesaurus_query as tq_interface'
+exec s:tq_use_python.'from thesaurus_query.tq_common_lib import decode_utf_8, encode_utf_8'
 
 function! thesaurus_query#Thesaurus_Query_Init()
-    exec g:tq_use_python.'tq_framework = tq_interface.Thesaurus_Query_Handler()'
+    exec s:tq_use_python.'tq_framework = tq_interface.Thesaurus_Query_Handler()'
 endfunction
 
 
 function! thesaurus_query#Thesaurus_Query_Restore_Handler()
-    exec g:tq_use_python.'tq_framework.restore_thesaurus_query_handler()'
+    exec s:tq_use_python.'tq_framework.restore_thesaurus_query_handler()'
 endfunction
 
 function! thesaurus_query#Thesaurus_Query_Lookup(word, replace)
@@ -188,9 +188,9 @@ function! thesaurus_query#Thesaurus_Query_Lookup(word, replace)
     let l:syno_found = 1  " initialize the value
 
 " query the current word
-    exec g:tq_use_python.'tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")))'
+    exec s:tq_use_python.'tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")))'
 
-if g:tq_use_python=='python3 '
+if s:tq_use_python=='python3 '
 python3<<endOfPython
 # mark for exit function if no candidate is found
 if not tq_synonym_result:
@@ -215,13 +215,13 @@ endif
 
 " exit function if no candidate is found
     if !l:syno_found + l:replace*(!g:thesaurus_query#display_list_all_time)
-        exec g:tq_use_python.'del tq_synonym_result'
+        exec s:tq_use_python.'del tq_synonym_result'
         return
     endif
 
 " create new buffer to display all query result and return to original buffer
-    exec g:tq_use_python.'tq_interface.tq_generate_thesaurus_buffer(tq_synonym_result)'
-    exec g:tq_use_python.'del tq_synonym_result'
+    exec s:tq_use_python.'tq_interface.tq_generate_thesaurus_buffer(tq_synonym_result)'
+    exec s:tq_use_python.'del tq_synonym_result'
 endfunction
 
 function! thesaurus_query#auto_complete_integrate(findstart, base)
@@ -237,12 +237,12 @@ function! thesaurus_query#auto_complete_integrate(findstart, base)
         let l:trimmed_word = s:Trim(a:base)
         let l:word = tolower(l:trimmed_word)
         let l:synoList = []
-        exec g:tq_use_python.'tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")))'
-        exec g:tq_use_python.'tq_synonym_combined = [tq_iterator[1] for tq_iterator in tq_synonym_result]'
-        exec g:tq_use_python.'tq_synonym_annexed = []'
-        exec g:tq_use_python.'tq_synonym_combined = map(tq_synonym_annexed.extend, tq_synonym_combined)'
-        exec g:tq_use_python.'tq_synonym_annexed = [tq_interface.tq_word_form_reverse(tq_iterator) for tq_iterator in tq_synonym_annexed]'
-if g:tq_use_python=='python3 '
+        exec s:tq_use_python.'tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")))'
+        exec s:tq_use_python.'tq_synonym_combined = [tq_iterator[1] for tq_iterator in tq_synonym_result]'
+        exec s:tq_use_python.'tq_synonym_annexed = []'
+        exec s:tq_use_python.'tq_synonym_combined = map(tq_synonym_annexed.extend, tq_synonym_combined)'
+        exec s:tq_use_python.'tq_synonym_annexed = [tq_interface.tq_word_form_reverse(tq_iterator) for tq_iterator in tq_synonym_annexed]'
+if s:tq_use_python=='python3 '
 python3<<endOfPython
 if tq_synonym_annexed:
     tq_synonym_annexed.insert(0,decode_utf_8(vim.eval("a:base")))
@@ -264,9 +264,9 @@ if 'tq_iterator' in locals():
 endOfPython
 
 endif
-        exec g:tq_use_python.'del tq_synonym_result'
-        exec g:tq_use_python.'del tq_synonym_combined'
-        exec g:tq_use_python.'del tq_synonym_annexed'
+        exec s:tq_use_python.'del tq_synonym_result'
+        exec s:tq_use_python.'del tq_synonym_combined'
+        exec s:tq_use_python.'del tq_synonym_annexed'
         return l:synoList
     endif
 endfunction
