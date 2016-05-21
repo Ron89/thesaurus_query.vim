@@ -94,7 +94,7 @@ class word_query_handler_thesaurus_lookup:
             return [query_status, self.syno_list]
         if self.process_query_result():
             return [0, self.syno_list]
-        return [-1, []]
+        return [1, []]
 
 
 def online_thesaurus_lookup(target):
