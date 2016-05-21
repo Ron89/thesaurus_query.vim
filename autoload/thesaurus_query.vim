@@ -238,6 +238,9 @@ function! thesaurus_query#auto_complete_integrate(findstart, base)
         " find matching with online backends
         let l:trimmed_word = s:Trim(a:base)
         let l:word = tolower(l:trimmed_word)
+        if l:trimmed_word == ''
+            return
+        endif
         let l:synoList = []
         exec s:tq_use_python.'tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")))'
         exec s:tq_use_python.'tq_synonym_combined = [tq_iterator[1] for tq_iterator in tq_synonym_result]'
@@ -257,7 +260,7 @@ endOfPython
 else
 python<<endOfPython
 if tq_synonym_annexed:
-    tq_synonym_annexed.insert(0,decode_utf_8(vim.eval("a:base")))
+    tq_synonym_annexed.insert(0,decode_utf_8(vim.eval("l:trimmed_word")))
 for tq_iterator in tq_synonym_annexed:
     vim.command('call add(l:synoList, "{}")'.format(encode_utf_8(tq_iterator)))
 # delete all variable used in the function, keep namespace clean
