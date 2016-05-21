@@ -35,7 +35,6 @@ class word_query_handler_thesaurus_lookup:
         self.header_length=11    # length of "Definition:", current header of definition
         self.relavent_val_pos=9
         self.syno_pos=11
-        self.truncation_on_relavance=int(vim.eval("g:tq_truncation_on_relavance")) # truncate on which relavance level?
 
     def query_cmd_handler(self, word):
         self.syno_list=[]
@@ -66,8 +65,9 @@ class word_query_handler_thesaurus_lookup:
                 word_dic[self.line_curr[self.relavent_val_pos]].append(self.line_curr[self.syno_pos:])
             else:
                 word_dic[self.line_curr[self.relavent_val_pos]]=[self.line_curr[self.syno_pos:]]
+        truncation_on_relavance=int(vim.eval("g:tq_truncation_on_relavance")) # truncate on which relavance level?
         for key in sorted(word_dic, reverse=True):
-            if int(key) <= self.truncation_on_relavance:
+            if int(key) <= truncation_on_relavance:
                 continue
             syno_list_curr=syno_list_curr+word_dic[key]     # sorted
         del word_dic
