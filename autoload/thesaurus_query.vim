@@ -244,15 +244,14 @@ function! thesaurus_query#auto_complete_integrate(findstart, base)
         let l:synoList = []
         exec s:tq_use_python.'tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")))'
         exec s:tq_use_python.'tq_synonym_combined = [tq_iterator[1] for tq_iterator in tq_synonym_result]'
-        exec s:tq_use_python.'tq_synonym_annexed = []'
-        exec s:tq_use_python.'tq_synonym_combined = map(tq_synonym_annexed.extend, tq_synonym_combined)'
+        exec s:tq_use_python.'tq_synonym_annexed = [tq_interface.tq_word_form_reverse(item) for syn_sublist in tq_synonym_combined for item in syn_sublist]'
         exec s:tq_use_python.'tq_synonym_annexed = [tq_interface.tq_word_form_reverse(tq_iterator) for tq_iterator in tq_synonym_annexed]'
 if s:tq_use_python=='python3 '
 python3<<endOfPython
 if tq_synonym_annexed:
     tq_synonym_annexed.insert(0,decode_utf_8(vim.eval("a:base")))
 for tq_iterator in tq_synonym_annexed:
-    vim.command('call add(l:synoList, "{}")'.format(encode_utf_8(tq_iterator)))
+    vim.command('call add(l:synoList, "{}")'.format(tq_interface.send_string_to_vim(tq_iterator)))
 # delete all variable used in the function, keep namespace clean
 if 'tq_iterator' in locals():
     del tq_iterator
@@ -262,7 +261,7 @@ python<<endOfPython
 if tq_synonym_annexed:
     tq_synonym_annexed.insert(0,decode_utf_8(vim.eval("l:trimmed_word")))
 for tq_iterator in tq_synonym_annexed:
-    vim.command('call add(l:synoList, "{}")'.format(encode_utf_8(tq_iterator)))
+    vim.command('call add(l:synoList, "{}")'.format(tq_interface.send_string_to_vim(tq_iterator)))
 # delete all variable used in the function, keep namespace clean
 if 'tq_iterator' in locals():
     del tq_iterator

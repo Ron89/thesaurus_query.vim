@@ -14,6 +14,8 @@
 *** Depreciated
     - use of =<LocalLeader>cs=.
 *** Fixed
+    - Insert mode auto-complete ineffective in Python3 due to behavior
+      difference of =map= in Python3 and Python2.
     - the issue that makes redefining variable mid-session ineffective
     - fix out-of-boundary exception when query empty string with completefunc
       (insert mode completion)
