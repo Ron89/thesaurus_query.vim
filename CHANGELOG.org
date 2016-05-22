@@ -14,6 +14,8 @@
 *** Depreciated
     - use of =<LocalLeader>cs=.
 *** Fixed
+    - Exclude Tab =\\t= from being recognized as part of a word in Insert Mode
+      query.
     - Insert mode auto-complete ineffective in Python3 due to behavior
       difference of =map= in Python3 and Python2.
     - the issue that makes redefining variable mid-session ineffective

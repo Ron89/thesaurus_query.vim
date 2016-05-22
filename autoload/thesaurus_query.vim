@@ -58,7 +58,7 @@ if exists("g:thesaurus_query#enabled_backends")
     let g:tq_enabled_backends = g:thesaurus_query#enabled_backends
 endif
 
-let s:tq_separator_regexp = "[^\^ :=+\\-_\\/;`'\"!@#$%&*\(\)\\[\\]{}|,<\.>?~]"
+let s:tq_separator_regexp = "[^\^ \t:=+\\-_\\/;`'\"!@#$%&*\(\)\\[\\]{}|,<\.>?~]"
 
 
 " --------------------------------
@@ -259,7 +259,7 @@ endOfPython
 else
 python<<endOfPython
 if tq_synonym_annexed:
-    tq_synonym_annexed.insert(0,decode_utf_8(vim.eval("l:trimmed_word")))
+    tq_synonym_annexed.insert(0,decode_utf_8(vim.eval("a:base")))
 for tq_iterator in tq_synonym_annexed:
     vim.command('call add(l:synoList, "{}")'.format(tq_interface.send_string_to_vim(tq_iterator)))
 # delete all variable used in the function, keep namespace clean
