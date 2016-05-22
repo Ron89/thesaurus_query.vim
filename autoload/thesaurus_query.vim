@@ -167,7 +167,7 @@ exec s:tq_use_python.'import os'
 exec s:tq_use_python.'import vim'
 exec s:tq_use_python."sys.path.append(vim.eval('expand(\"<sfile>:h\")'))"
 exec s:tq_use_python.'import thesaurus_query.thesaurus_query as tq_interface'
-exec s:tq_use_python.'from thesaurus_query.tq_common_lib import decode_utf_8, encode_utf_8'
+exec s:tq_use_python.'from thesaurus_query.tq_common_lib import decode_utf_8'
 
 function! thesaurus_query#Thesaurus_Query_Init()
     exec s:tq_use_python.'tq_framework = tq_interface.Thesaurus_Query_Handler()'
@@ -245,7 +245,6 @@ function! thesaurus_query#auto_complete_integrate(findstart, base)
         exec s:tq_use_python.'tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")))'
         exec s:tq_use_python.'tq_synonym_combined = [tq_iterator[1] for tq_iterator in tq_synonym_result]'
         exec s:tq_use_python.'tq_synonym_annexed = [tq_interface.tq_word_form_reverse(item) for syn_sublist in tq_synonym_combined for item in syn_sublist]'
-        exec s:tq_use_python.'tq_synonym_annexed = [tq_interface.tq_word_form_reverse(tq_iterator) for tq_iterator in tq_synonym_annexed]'
 if s:tq_use_python=='python3 '
 python3<<endOfPython
 if tq_synonym_annexed:
