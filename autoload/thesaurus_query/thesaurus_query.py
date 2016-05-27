@@ -4,6 +4,7 @@
 # Original idea: Anton Beloglazov <http://beloglazov.info/>
 
 import vim
+import re
 from .tq_common_lib import decode_utf_8, send_string_to_vim, get_variable
 
 class Thesaurus_Query_Handler:
@@ -208,7 +209,74 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
     if thesaurus_user_choice>=candidate_num or thesaurus_user_choice<0:
         vim.command('call thesaurus_query#echo_HL("WarningMSG|\n\nInvalid Input! |None|Ending synonym replacing session without making changes.")')
         return
-    vim.command("normal! ciw{}".format(send_string_to_vim(thesaurus_wait_list[thesaurus_user_choice])))
+    current_line = vim.current.line
+    current_cursor = vim.current.window.cursor
+    word_original = vim.eval("l:trimmed_word")
+
+    def find_word_over_cursor(target_word):
+        ''' Try locate the word on current line
+        '''
+        state = False
+        letter_iter = - current_line[current_cursor[1]:].find(target_word)
+        if current_line[
+                current_cursor[1]: current_cursor[1]-letter_iter].isspace():
+            state = True
+        else:
+            for letter_iter in range(len(target_word)):
+                if current_line[
+                        current_cursor[1]-letter_iter :
+                        current_cursor[1]-letter_iter+len(target_word)] == \
+                        target_word:
+                    state = True
+                    break
+        return [state, letter_iter]
+
+    def remove_wrapped_part(target_word, layer):
+        ''' Recursively remove wrapped content from the following lines
+        '''
+        def scan_current_layer():
+            tail_found = False
+            overlap_size = 0
+            result_word = target_word
+            word_split = target_word.split()
+            line_split = vim.current.buffer[current_cursor[0]-1+layer].split()
+            for overlap_size in range(
+                    1, min( len(word_split)+1, len(line_split)+1)):
+                if word_split[-overlap_size:] == line_split[:overlap_size]:
+                    tail_found = True
+                    result_word = ' '.join(
+                        word_split[:len(word_split)-overlap_size])
+                    vim.current.buffer[
+                        current_cursor[0]-1+layer]=re.sub(
+                            " ".join(
+                                line_split[ : overlap_size])+r'\s*', '',
+                            vim.current.buffer[ current_cursor[0]-1+layer]
+                            , 1)
+                    break
+            return (tail_found, result_word)
+        current_layer_tailored, remainder_target = scan_current_layer()
+        if not current_layer_tailored:
+            target_word = remove_wrapped_part(target_word, layer+1)
+            current_layer_tailored, remainder_target = scan_current_layer()
+            if not current_layer_tailored:
+                return target_word
+        return remainder_target
+
+    word_in_one_line, relative_pos = find_word_over_cursor(word_original)
+    if not word_in_one_line:
+        unwrapped = remove_wrapped_part(word_original, 1)
+
+        word_in_one_line, relative_pos = find_word_over_cursor(
+            unwrapped)
+
+    vim.current.buffer[current_cursor[0]-1] = \
+            current_line[:current_cursor[1]-relative_pos] + \
+            send_string_to_vim(
+                thesaurus_wait_list[thesaurus_user_choice]) + \
+                    current_line[
+                        current_cursor[1]-relative_pos+len(word_original):
+                        ]
+
 
 def tq_generate_thesaurus_buffer(candidates):
     '''

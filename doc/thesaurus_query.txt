@@ -59,21 +59,27 @@ Internet is required for online query backend to be functional;
 
 The plugin provides three ways of using.
 
-:ThesaurusQueryReplaceCurrentWord         |:ThesaurusQueryReplaceCurrentWord|
+:ThesaurusQueryReplaceCurrentWord         *:ThesaurusQueryReplaceCurrentWord*
     This command checkup the word under cursor and attempt to replace it with
     use chosen candidate.
 
-:ThesaurusQueryLookupCurrentWord           |:ThesaurusQueryLookupCurrentWord|
+:ThesaurusQueryLookupCurrentWord           *:ThesaurusQueryLookupCurrentWord*
     This command checkup the word under cursor and list all found synonyms in
     a split buffer.
 
-:Thesaurus                                                       |:Thesaurus|
+:Thesaurus                                                       *:Thesaurus*
     This routine take one argument as target word and then query its synonyms.
     Query result would be displayed in a split buffer.
-:ThesaurusQueryReset                                   |:ThesaurusQueryReset|
+
+:ThesaurusQueryReplace                               *:ThesaurusQueryReplace*
+    DO NOT use this command directly!!!
+    The command used by synonym replacing key-mapping for phrase selected in
+    visual mode.
+
+:ThesaurusQueryReset                                   *:ThesaurusQueryReset*
     Reset ThesaurusQuery, empty cached history in current session, restore
     backend priority sequence to default/user defined in
-    |g:tq_enabled_backends|.
+    `g:tq_enabled_backends`.
 
 The functionalities are also mapped to key-bindings, if `g:tq_map_keys=1` as
 default (Note: since this plugin is active for all buffers, the use of
@@ -81,7 +87,7 @@ default (Note: since this plugin is active for all buffers, the use of
     nnoremap <unique> <Leader>cs :ThesaurusQueryReplaceCurrentWord<CR>
     vnoremap <unique> <Leader>cs y:Thesaurus <C-r>"<CR>
     nnoremap <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
-    vnoremap <LocalLeader>cs y:Thesaurus <C-r>"<CR>
+    vnoremap <LocalLeader>cs "ky:ThesaurusQueryReplace <C-r>k<CR>
 
 
 ===============================================================================

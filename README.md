@@ -2,11 +2,9 @@
 
 [![Join the chat at https://gitter.im/Ron89/thesaurus_query.vim](https://badges.gitter.im/Ron89/thesaurus_query.vim.svg)](https://gitter.im/Ron89/thesaurus_query.vim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This is a plugin for user to *lookup* synonyms of any word under cursor and
-*replace it* with an user chosen synonym. It also accepts word/phrases covered in
-visual mode or manual input. But for the latter two cases, auto-replacement
-function isn't activated by default, and the result will be displayed in
-a split buffer.
+This is a plugin for user to *lookup* synonyms of any word under cursor or
+phrase covered in visual mode, and *replace it* with an user chosen synonym. It
+also accepts word/phrases from manual input for synonym checkup.
 
 **Notice:** Currently this plugin Supports only English, Russian (ru) and
 German (de) thesaurus query. If you want to use the plugin for other languages,
@@ -65,21 +63,24 @@ By default, command `:ThesaurusQueryReplaceCurrentWord` is mapped to
     nnoremap <Leader>cs :ThesaurusQueryReplaceCurrentWord<CR>
 ```
 
-This routine check the synonyms of  the word under cursor and replace it with
+This routine check the synonyms of the word under cursor and replace it with
 the candidate chosen by user. The corresponding non-replacing routine is
 defined as `ThesaurusQueryLookupCurrentWord`. User may choose to use it if you
 prefer the split buffer display of result over the word replacement routine.
 
-Another might-be-useful routine is the one to look up for words covered in
-visual mode,
+----------------
+
+Another might-be-useful routine is the one to query synonym for and replace
+a multi-word phrase covered in visual mode.
 
 ```
-    vnoremap <Leader>cs y:Thesaurus <C-r>"<CR>
+    vnoremap <Leader>cs y:ThesaurusQueryReplace <C-r>"<CR>
 ```
 
-this routine don't offer replacement by default. Because my current replacement
-script is a simple one liner, it couldn't deal with many flexible situations as
-yet.
+The phrase covered in visual mode can be in a same line, or wrapped in two or
+more lines.
+
+---------------
 
 Also, this plugin support Vim's builtin `completefunc` insert mode autocomplete
 function. To invoke it, use keybinding `ctrl-x ctrl-u` in insert mode. This

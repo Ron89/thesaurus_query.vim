@@ -23,8 +23,7 @@ else
     finish
 endif
 
-" --------------------------------
-" legacy settings (depreciated, do NOT use)
+" legacy settings (depreciated, do NOT use) {{{
 
 if exists("g:thesaurus_query#display_list_all_time")
     let g:tq_display_list_all_time = g:thesaurus_query#display_list_all_time
@@ -60,10 +59,9 @@ endif
 
 let s:tq_separator_regexp = "[^\^ \t:=+\\-_\\/;`'\"!@#$%&*\(\)\\[\\]{}|,<\.>?~]"
 
+" }}}
 
-" --------------------------------
-"  Setting up default values & Initialize
-" --------------------------------
+"  Setting up default values & Initialize {{{
 
 if !exists("g:tq_display_list_all_time")
     let g:tq_display_list_all_time = 0
@@ -143,18 +141,16 @@ if !exists("g:tq_enabled_backends")
     let g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","datamuse_com","mthesaur_txt"]
 endif
 
+" }}}
 
-" --------------------------------
-"  Function(s)
-" --------------------------------
+"  Function(s) {{{
 
 " Trim input_string before query
 function! s:Trim(input_string)
-    let l:str = substitute(a:input_string, '[\r\n:]', '', '')
-    return substitute(l:str, '^\s*\(.\{-}\)\s*$', '\1', '')
+    let l:str = substitute(a:input_string, '[ \t]*[\r\n:][ \t]*', ' ', 'g')
+    return substitute(l:str, '^[ \t]*\(.\{-}\)[ \t]*$', '\1', '')
 endfunction
 
-" command|[content]|command
 function! thesaurus_query#echo_HL(message_for_echo)
     let l:index = 0
     for item in split(a:message_for_echo, "|")
@@ -167,12 +163,16 @@ function! thesaurus_query#echo_HL(message_for_echo)
     endfor
 endfunction
 
+" Import Python libs {{{
+
 exec s:tq_use_python.'import sys'
 exec s:tq_use_python.'import os'
 exec s:tq_use_python.'import vim'
 exec s:tq_use_python."sys.path.append(vim.eval('expand(\"<sfile>:h\")'))"
 exec s:tq_use_python.'import thesaurus_query.thesaurus_query as tq_interface'
 exec s:tq_use_python.'from thesaurus_query.tq_common_lib import decode_utf_8'
+
+" }}}
 
 function! thesaurus_query#Thesaurus_Query_Init()
     exec s:tq_use_python.'tq_framework = tq_interface.Thesaurus_Query_Handler()'
@@ -183,7 +183,7 @@ function! thesaurus_query#Thesaurus_Query_Restore_Handler()
     exec s:tq_use_python.'tq_framework.restore_thesaurus_query_handler()'
 endfunction
 
-function! thesaurus_query#Thesaurus_Query_Lookup(word, replace)
+function! thesaurus_query#Thesaurus_Query_Lookup(word, replace) " {{{
 " a:word        word to be looked up
 " a:replace     flag:
 "                       0 - don't replace word under cursor
@@ -201,7 +201,7 @@ if s:tq_use_python=='python3 '
 python3<<endOfPython
 # mark for exit function if no candidate is found
 if not tq_synonym_result:
-    vim.command("echom 'No synonym found for \"{}\".'".format(vim.eval("l:word")))
+    vim.command("echom 'No synonym found for \"{}\".'".format(vim.eval("l:trimmed_word")))
     vim.command("let l:syno_found=0")
 # if replace flag is on, prompt user to choose after populating candidate list
 elif vim.eval('l:replace') != '0':
@@ -211,7 +211,7 @@ else
 python<<endOfPython
 # mark for exit function if no candidate is found
 if not tq_synonym_result:
-    vim.command("echom 'No synonym found for \"{}\".'".format(vim.eval("l:word")))
+    vim.command("echom 'No synonym found for \"{}\".'".format(vim.eval("l:trimmed_word")))
     vim.command("let l:syno_found=0")
 # if replace flag is on, prompt user to choose after populating candidate list
 elif vim.eval('l:replace') != '0':
@@ -231,7 +231,9 @@ endif
     exec s:tq_use_python.'del tq_synonym_result'
 endfunction
 
-function! thesaurus_query#auto_complete_integrate(findstart, base)
+" }}}
+
+function! thesaurus_query#auto_complete_integrate(findstart, base) "{{{
     if a:findstart
         let l:line = getline('.')
         let l:start = col('.') - 1
@@ -278,6 +280,9 @@ endif
         return l:synoList
     endif
 endfunction
+" }}}
+
+" }}}
 
 call thesaurus_query#Thesaurus_Query_Init()
 
