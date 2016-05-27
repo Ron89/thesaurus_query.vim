@@ -4,7 +4,7 @@
 # Original idea: Anton Beloglazov <http://beloglazov.info/>
 
 import vim
-from .tq_common_lib import decode_utf_8, encode_utf_8, send_string_to_vim
+from .tq_common_lib import decode_utf_8, send_string_to_vim, get_variable
 
 class Thesaurus_Query_Handler:
     '''
@@ -96,19 +96,6 @@ class Thesaurus_Query_Handler:
         if local_as_primary=="1":
             self.query_backend_priority.remove("mthesaur_txt")
             self.query_backend_priority.insert(0,"mthesaur_txt")
-
-def get_variable(v_name):
-    '''
-    obtain vim variable, buffer variable first, global variable second.
-    if no variable exists, return -1
-    '''
-    if vim.eval("exists('b:'.'{}')".format(v_name))=='0':
-        if vim.eval("exists('g:'.'{}')".format(v_name))=='0':
-            return -1
-        else:
-            return vim.eval('g:'+v_name)
-    else:
-        return vim.eval('b:'+v_name)
 
 def truncate_synonym_list(synonym_list):
     truncated_flag = 0

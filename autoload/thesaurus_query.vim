@@ -97,15 +97,20 @@ if !exists("g:tq_truncation_on_syno_list_size")
     let g:tq_truncation_on_syno_list_size = -1
 endif
 
-" This variable is used when initiating core query handler.  It determine
-" the priority between online thesaurus backend(based on Thesaurus.com) and
-" local thesaurus backend(based on mthesaur.txt). If
-" value is
+" DEPRECIATED!!! This variable is used when initiating core query handler.  It
+" determine the priority between online thesaurus backend(based on
+" Thesaurus.com) and local thesaurus backend(based on mthesaur.txt). If value
+" is
 "     0:      query with online backend first.
 "     1:      query with local backend first.
 "                                                     default=0
 if !exists("g:tq_use_local_thesaurus_source_as_primary")
     let g:tq_use_local_thesaurus_source_as_primary = 0
+endif
+
+" Timeout time for online backends, preventing long no-responding time.
+if !exists("g:tq_online_backends_timeout")
+    let g:tq_online_backends_timeout = 1
 endif
 
 " This variable is used when initiating core query handler

@@ -9,8 +9,9 @@ except ImportError:
     from urllib.request import urlopen
     from urllib.error import URLError
 import json
+import socket
 import codecs
-from .tq_common_lib import fixurl, decode_utf_8
+from .tq_common_lib import fixurl, decode_utf_8, get_variable
 #import vim
 
 query_result_trunc=50
@@ -42,20 +43,23 @@ def datamuse_api_wrapper(target, query_method, max_return=query_result_trunc):
     query_method:
         synonym, antonym, suggest, right_content, left_content
     '''
+    time_out_choice = float(get_variable('tq_online_backends_timeout'))
     case_mapper={"synonym":u"words?rel_syn=",
-            "suggest":u"sug?s=",
-            "antonym":u"words?rel_ant=",
-            "right_content":u"words?rc=",
-            "left_content":u"words?lc="
-            }
+                 "suggest":u"sug?s=",
+                 "antonym":u"words?rel_ant=",
+                 "right_content":u"words?rc=",
+                 "left_content":u"words?lc="
+                }
     try:
         response = urlopen(fixurl(
-                u'http://api.datamuse.com/{}{}&max={}'.format(
-                    case_mapper[query_method], target, max_return
-                    )).decode('ASCII'))
+            u'http://api.datamuse.com/{}{}&max={}'.format(
+                case_mapper[query_method], target, max_return
+                )).decode('ASCII'), timeout = time_out_choice)
         reader = codecs.getreader('utf-8')
         result_list = json.load(reader(response))
         response.close()
+    except socket.timeout:  # timeout only means underperforming
+        return 1
     except URLError:
 #        print(u"Internet Error. The word \"{}\" has not been found on datamuse!\n".format(target))
         return -1

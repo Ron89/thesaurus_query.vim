@@ -5,6 +5,8 @@
 
 ** V0.4																																																										:unreleased:
 *** Added
+    - Timeout feature for shorter waiting time. Timeout will not demote the
+      backend.
     - =<Leader>cs= for thesaurus_query functionality.
     - Add German(=de=) support (Issue #12)
     - Add Python3 support, and set as default. Python2 still supported.

@@ -12,7 +12,8 @@ except ImportError:
 
 import re
 import vim
-from .tq_common_lib import decode_utf_8, fixurl
+import socket
+from .tq_common_lib import decode_utf_8, fixurl, get_variable
 #from online_thesaurus_lookup import online_thesaurus_lookup
 
 class word_query_handler_thesaurus_lookup:
@@ -40,7 +41,6 @@ class word_query_handler_thesaurus_lookup:
         self.syno_list=[]
         query_result_raw = online_thesaurus_lookup(word)
         self.query_result = StringIO(query_result_raw)
-
 
     def synonym_found(self):
         first_line = self.query_result.readline()
@@ -102,10 +102,14 @@ def online_thesaurus_lookup(target):
     Direct query from thesaurus.com. All returns are decoded with utf-8.
     '''
     output = u""
+    time_out_choice = float(get_variable('tq_online_backends_timeout'))
+
     try:
-        response = urlopen(fixurl(u'http://www.thesaurus.com/browse/{}'.format(target)).decode('ASCII'))
+        response = urlopen(fixurl(u'http://www.thesaurus.com/browse/{}'.format(target)).decode('ASCII'), timeout = time_out_choice)
         parser = StringIO(decode_utf_8(response.read()))
         response.close()
+    except socket.timeout:  # timeout only means underperforming
+        return u"Timeout!"
     except HTTPError:
         output = u"The word \"{}\" has not been found on dictionary.com!\n".format(target)
         return output

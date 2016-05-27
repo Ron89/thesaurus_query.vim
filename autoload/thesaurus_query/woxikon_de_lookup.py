@@ -18,7 +18,8 @@ except ImportError:
     from io import StringIO
 
 import re
-from .tq_common_lib import decode_utf_8, encode_utf_8, fixurl
+import socket
+from .tq_common_lib import decode_utf_8, encode_utf_8, fixurl, get_variable
 
 identifier="woxikon_de"
 language="de"
@@ -50,12 +51,14 @@ def woxikon_de_url_handler(target):
     '''
     Query jiport for sysnonym
     '''
+    time_out_choice = float(get_variable('tq_online_backends_timeout'))
     try:
-        response = urlopen(fixurl(u'http://synonyme.woxikon.de/synonyme/{}.php'.format(target)).decode('ASCII'))
+        response = urlopen(fixurl(u'http://synonyme.woxikon.de/synonyme/{}.php'.format(target)).decode('ASCII'), timeout = time_out_choice)
         web_content = StringIO(decode_utf_8(response.read()))
         response.close()
+    except socket.timeout:  # timeout only means underperforming
+        return 1
     except URLError:
-#        print "The word \"{}\" has not been found on jeck.ru!\n".format(target)
         return -1
     return web_content
 
