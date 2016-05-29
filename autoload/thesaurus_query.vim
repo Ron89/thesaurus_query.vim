@@ -16,8 +16,10 @@ set cpo&vim
 " environs setup
 if has("python3")
     let s:tq_use_python = 'python3 '
+    let s:tq_python_env = 'python3<<endOfPython'
 elseif has("python")
     let s:tq_use_python = 'python '
+    let s:tq_python_env = 'python<<endOfPython'
 else
     echoerr 'thesaurus_query framework require vim with python support.'
     finish
@@ -197,8 +199,8 @@ function! thesaurus_query#Thesaurus_Query_Lookup(word, replace) " {{{
 " query the current word
     exec s:tq_use_python.'tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")))'
 
-if s:tq_use_python=='python3 '
-python3<<endOfPython
+" Use Python environment for handling candidate displaying {{{
+exec s:tq_python_env
 # mark for exit function if no candidate is found
 if not tq_synonym_result:
     vim.command("echom 'No synonym found for \"{}\".'".format(vim.eval("l:trimmed_word")))
@@ -207,18 +209,7 @@ if not tq_synonym_result:
 elif vim.eval('l:replace') != '0':
     tq_interface.tq_replace_cursor_word_from_candidates(tq_synonym_result)
 endOfPython
-else
-python<<endOfPython
-# mark for exit function if no candidate is found
-if not tq_synonym_result:
-    vim.command("echom 'No synonym found for \"{}\".'".format(vim.eval("l:trimmed_word")))
-    vim.command("let l:syno_found=0")
-# if replace flag is on, prompt user to choose after populating candidate list
-elif vim.eval('l:replace') != '0':
-    tq_interface.tq_replace_cursor_word_from_candidates(tq_synonym_result)
-endOfPython
-endif
-
+" }}}
 
 " exit function if no candidate is found
     if !l:syno_found + l:replace*(!g:tq_display_list_all_time)
@@ -252,28 +243,19 @@ function! thesaurus_query#auto_complete_integrate(findstart, base) "{{{
         exec s:tq_use_python.'tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")))'
         exec s:tq_use_python.'tq_synonym_combined = [tq_iterator[1] for tq_iterator in tq_synonym_result]'
         exec s:tq_use_python.'tq_synonym_annexed = [tq_interface.tq_word_form_reverse(item) for syn_sublist in tq_synonym_combined for item in syn_sublist]'
-if s:tq_use_python=='python3 '
-python3<<endOfPython
-if tq_synonym_annexed:
-    tq_synonym_annexed.insert(0,decode_utf_8(vim.eval("a:base")))
-for tq_iterator in tq_synonym_annexed:
-    vim.command('call add(l:synoList, "{}")'.format(tq_interface.send_string_to_vim(tq_iterator)))
-# delete all variable used in the function, keep namespace clean
-if 'tq_iterator' in locals():
-    del tq_iterator
-endOfPython
-else
-python<<endOfPython
-if tq_synonym_annexed:
-    tq_synonym_annexed.insert(0,decode_utf_8(vim.eval("a:base")))
-for tq_iterator in tq_synonym_annexed:
-    vim.command('call add(l:synoList, "{}")'.format(tq_interface.send_string_to_vim(tq_iterator)))
-# delete all variable used in the function, keep namespace clean
-if 'tq_iterator' in locals():
-    del tq_iterator
-endOfPython
 
-endif
+" use Python environment for annexing found results {{{
+exec s:tq_python_env
+if tq_synonym_annexed:
+    tq_synonym_annexed.insert(0,decode_utf_8(vim.eval("a:base")))
+for tq_iterator in tq_synonym_annexed:
+    vim.command('call add(l:synoList, "{}")'.format(tq_interface.send_string_to_vim(tq_iterator)))
+# delete all variable used in the function, keep namespace clean
+if 'tq_iterator' in locals():
+    del tq_iterator
+endOfPython
+" }}}
+
         exec s:tq_use_python.'del tq_synonym_result'
         exec s:tq_use_python.'del tq_synonym_combined'
         exec s:tq_use_python.'del tq_synonym_annexed'
