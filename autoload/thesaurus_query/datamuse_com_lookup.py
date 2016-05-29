@@ -4,7 +4,7 @@
 
 try:
     from urllib2 import urlopen
-    from urllib2 import URLError
+    from urllib2 import URLError, HTTPError
 except ImportError:
     from urllib.request import urlopen
     from urllib.error import URLError, HTTPError
