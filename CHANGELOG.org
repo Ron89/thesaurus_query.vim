@@ -11,6 +11,7 @@
     - Add German(=de=) support (Issue #12)
     - Add Python3 support, and set as default. Python2 still supported.
 *** Changed
+    - Improve coloring for candidate choosing window.
     - Now visual mode synonym query also support replacing feature. And the
       replacing feature is set to default.
     - change =g:tq_use_python= to =s:tq_use_python=.

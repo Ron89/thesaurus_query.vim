@@ -153,7 +153,7 @@ def candidate_list_printing(result_IDed):
     '''
     for case in result_IDed:
         if case[0] != u"":
-            vim.command('call thesaurus_query#echo_HL("Keyword|Found as: |None|{}\\n")'.format(send_string_to_vim(case[0])))
+            vim.command('call thesaurus_query#echo_HL("Keyword|Found as: |Directory|{}|None|\\n")'.format(send_string_to_vim(case[0])))
         vim.command('call thesaurus_query#echo_HL("Keyword|Synonyms: |None|")')
         col_count = 10
         col_count_max = int(vim.eval("&columns"))

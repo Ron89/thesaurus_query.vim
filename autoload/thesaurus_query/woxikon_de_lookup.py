@@ -39,7 +39,9 @@ nested list = [PoS, list wordlist]
     target=target.replace(u" ", u"+")
     result_list=woxikon_de_url_handler(target)
     if result_list == -1:
-        return [-1,[]]
+        return [-1, []]
+    elif result_list == 1:
+        return [1, []]
     else:
         synonym_list = parser(result_list)
         if synonym_list:

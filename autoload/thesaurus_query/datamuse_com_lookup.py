@@ -34,6 +34,8 @@ nested list = [PoS, list wordlist]
     result_list=datamuse_api_wrapper(target, query_method=query_method)
     if result_list == -1:
         return [-1,[]]
+    elif result_list == 1:
+        return [1, []]
     else:
         return parser(result_list)
 
