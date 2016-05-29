@@ -10,7 +10,7 @@
 
 try:
     from urllib2 import urlopen
-    from urllib2 import URLError
+    from urllib2 import URLError, HTTPError
     from StringIO import StringIO
 except ImportError:
     from urllib.request import urlopen
@@ -38,8 +38,8 @@ nested list = [PoS, list wordlist]
     '''
     target=target.replace(u" ", u"+")
     result_list=jeck_ru_url_handler(target)
-    if result_list == 1:
-        return [1,[]]
+    if isinstance(result_list, int):
+        return [result_list, []]
     else:
         synonym_list = parser(result_list)
         if synonym_list:
@@ -56,10 +56,13 @@ def jeck_ru_url_handler(target):
         response = urlopen(fixurl(u'http://jeck.ru/tools/SynonymsDictionary/{}'.format(target)).decode('ASCII'), timeout = time_out_choice)
         web_content = StringIO(decode_utf_8(response.read()))
         response.close()
-    except socket.timeout:  # timeout only means underperforming
+    except HTTPError:
         return 1
-    except URLError:
-#        print "The word \"{}\" has not been found on jeck.ru!\n".format(target)
+    except URLError as err:
+        if isinstance(err.reason, socket.timeout):  # timeout error?
+            return 1
+        return -1   # any other error
+    except socket.timeout:  # if timeout error not captured by URLError
         return 1
     return web_content
 

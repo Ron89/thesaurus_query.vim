@@ -10,7 +10,7 @@
 
 try:
     from urllib2 import urlopen
-    from urllib2 import URLError
+    from urllib2 import URLError, HTTPError
     from StringIO import StringIO
 except ImportError:
     from urllib.request import urlopen
@@ -58,10 +58,14 @@ def woxikon_de_url_handler(target):
         response = urlopen(fixurl(u'http://synonyme.woxikon.de/synonyme/{}.php'.format(target)).decode('ASCII'), timeout = time_out_choice)
         web_content = StringIO(decode_utf_8(response.read()))
         response.close()
-    except socket.timeout:  # timeout only means underperforming
+    except HTTPError:
         return 1
-    except URLError:
-        return -1
+    except URLError as err:
+        if isinstance(err.reason, socket.timeout):  # timeout error?
+            return 1
+        return -1   # other error
+    except socket.timeout:  # timeout error failed to be captured by URLError
+        return 1
     return web_content
 
 

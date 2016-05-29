@@ -7,7 +7,7 @@ try:
     from urllib2 import URLError
 except ImportError:
     from urllib.request import urlopen
-    from urllib.error import URLError
+    from urllib.error import URLError, HTTPError
 import json
 import socket
 import codecs
@@ -60,11 +60,15 @@ def datamuse_api_wrapper(target, query_method, max_return=query_result_trunc):
         reader = codecs.getreader('utf-8')
         result_list = json.load(reader(response))
         response.close()
-    except socket.timeout:  # timeout only means underperforming
+    except HTTPError:
         return 1
-    except URLError:
+    except URLError as err:
+        if isinstance(err.reason, socket.timeout):
+            return 1
 #        print(u"Internet Error. The word \"{}\" has not been found on datamuse!\n".format(target))
         return -1
+    except socket.timeout:  # timeout only means underperforming
+        return 1
     return result_list
 
 

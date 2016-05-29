@@ -14,6 +14,7 @@ import re
 import vim
 import socket
 from .tq_common_lib import decode_utf_8, fixurl, get_variable
+from .tq_common_lib import send_string_to_vim
 #from online_thesaurus_lookup import online_thesaurus_lookup
 
 class word_query_handler_thesaurus_lookup:
@@ -108,14 +109,16 @@ def online_thesaurus_lookup(target):
         response = urlopen(fixurl(u'http://www.thesaurus.com/browse/{}'.format(target)).decode('ASCII'), timeout = time_out_choice)
         parser = StringIO(decode_utf_8(response.read()))
         response.close()
-    except socket.timeout:  # timeout only means underperforming
-        return u"Timeout!"
     except HTTPError:
         output = u"The word \"{}\" has not been found on dictionary.com!\n".format(target)
         return output
-    except URLError:
+    except URLError as err:
+        if isinstance(err.reason, socket.timeout):
+            return u"Timeout!"
         output = u"Internet Error. The word \"{}\" has not been found on dictionary.com!\n".format(target)
         return output
+    except socket.timeout:  # timeout only means underperforming
+        return 1
 
     end_tag_count=2
     while True:
