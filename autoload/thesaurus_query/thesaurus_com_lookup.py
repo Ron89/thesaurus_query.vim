@@ -118,7 +118,7 @@ def online_thesaurus_lookup(target):
         output = u"Internet Error. The word \"{}\" has not been found on dictionary.com!\n".format(target)
         return output
     except socket.timeout:  # timeout only means underperforming
-        return 1
+        return u"Timeout!"
 
     end_tag_count=2
     while True:
