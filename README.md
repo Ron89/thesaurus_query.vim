@@ -16,6 +16,7 @@ This plugin is written in Python. So **+Python or +Python3 version of Vim is
 required**.
 
 ## What's New
+
  * Timeout mechanism to reduce online-thesaurus query time. Default value is
    `1.0` (second), so that user with slow internet could still has reliable
    performance. For users with faster internet, you may want to lower the value
@@ -24,6 +25,12 @@ required**.
    ```
    let g:tq_online_backends_timeout = 0.3
    ```
+
+----------------
+
+ * Now query invoked from Visual mode (still by `<leader>cs`) also support word
+   replacement feature. If invoked in this manner, user selected candidate will
+   replace the word/phrase covered in visual mode.
 
 ----------------
 
