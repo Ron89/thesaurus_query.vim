@@ -110,7 +110,7 @@ endif
 
 " Timeout time for online backends, preventing long no-responding time.
 if !exists("g:tq_online_backends_timeout")
-    let g:tq_online_backends_timeout = 1
+    let g:tq_online_backends_timeout = 1.0
 endif
 
 " This variable is used when initiating core query handler

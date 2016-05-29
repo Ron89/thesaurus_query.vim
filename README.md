@@ -16,18 +16,16 @@ This plugin is written in Python. So **+Python or +Python3 version of Vim is
 required**.
 
 ## What's New
- * Multi-language Thesaurus Query feature is added since Version 0.3.0.
-   Currently **English, Russian and German** are supported. By default, only
-   English backends are activated. Users may activate Russian Thesaurus
-   backends by
+ * Timeout mechanism to reduce online-thesaurus query time. Default value is
+   `1.0` (second), so that user with slow internet could still has reliable
+   performance. For users with faster internet, you may want to lower the value
+   (mine is `0.3`).
+
    ```
-   let g:tq_language = 'ru'
+   let g:tq_online_backends_timeout = 0.3
    ```
-   or activate both English and German backends by
-   ```
-   let g:tq_language = ['de', 'en']
-   ```
-   For detail, please refer to my [Documentation](https://github.com/Ron89/thesaurus_query.vim/blob/master/doc/thesaurus_query.txt).
+
+----------------
 
  * Now aside from our `spell` like thesaurus choosing interface, invoked from
    normal mode, you may also query thesaurus in Insert mode. The functionality
@@ -95,7 +93,7 @@ resources for matchings.
 To ensure stability of the plugin's functionality, under the hood, this plugin
 uses multiple backends sequentially to query for a synonym. Backends function
 independently, hence the plugin will be functional as long as one of the three
-backends is behaving properly. 
+backends is behaving properly.
 
 * **thesaurus\_com** queries from [Thesaurus.com](http://thesaurus.com/) for
   synonym, so internet connection is required for this backend's functionality.
@@ -171,6 +169,27 @@ this plugin know the location of your `mthesaur.txt` file by adding the line
 
 into your `.vimrc`.
 
+#### Online Backends Timeout Mechanism
+
+Timeout mechanism (configurable with `g:tq_online_backends_timeout`) is added
+to all online query backends to reduce query time(in seconds). Default value is
+`1.0` (second), so that user with slow internet could still has reliable
+performance. For users with faster internet, you may want to lower the value
+(mine is `0.3`).
+
+   ```
+   let g:tq_online_backends_timeout = 0.3
+   ```
+
+**Q:** Why would this help?
+**A:** Usually when thesaurus is found, the server respond quickly. However,
+when the word is not found, it will take a while before server return 404
+error. And our plugin will freeze Vim before the error is returned. By setting
+timeout, we may cut the waiting time down and start query from next backend
+sooner. So that waiting-time for user can be drastically reduced if set
+properly.
+
+
 ### Truncate query result in candidate window
 
 Synonym replacing interface(shown in first screenshot) is the key feature of
@@ -218,7 +237,7 @@ Several key improvements were made comparing to his plugin:
 - added fallback backend to ensure functionality even when server down or lack
   of internet connection.
 - added multilanguage support. With proper backends, it is possible to extend
-  the functionality of this plugin to any western letter based languages. 
+  the functionality of this plugin to any western letter based languages.
 
 ## TODO List
 
