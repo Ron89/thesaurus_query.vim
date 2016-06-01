@@ -140,7 +140,7 @@ endif
 " priority.
 "       * Please be careful not to mis-spell when setting this variable.
 if !exists("g:tq_enabled_backends")
-    let g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","datamuse_com","mthesaur_txt"]
+    let g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","mthesaur_txt"]
 endif
 
 " }}}
@@ -228,7 +228,7 @@ function! thesaurus_query#auto_complete_integrate(findstart, base) "{{{
     if a:findstart
         let l:line = getline('.')
         let l:start = col('.') - 1
-        while start > 0 && l:line[l:start - 1] =~ s:tq_separator_regexp
+        while l:start > 0 && l:line[l:start - 1] =~ s:tq_separator_regexp
             let l:start -= 1
         endwhile
         return l:start

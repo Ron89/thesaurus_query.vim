@@ -119,10 +119,13 @@ g:tq_use_vim_autocompletefunc~
 g:tq_enabled_backends~
     this variable is offered by core query handler. It's a list of
     query_backends user want to enable, with the sequence of user prefered
-    priority. Please be careful not to mis-spell when setting this variable. >
-        let g:tq_enabled_backends = ["jeck_ru", \
+    priority. Please be careful not to mis-spell when setting this variable.
+    available options: `woxikon_de`, `jeck_ru`, `thesaurus_com`,
+    `datamuse_com`, `mthesaur_txt`
+    >
+        let g:tq_enabled_backends = ["woxikon_de", \
+                                     "jeck_ru", \
                                      "thesaurus_com", \
-                                     "datamuse_com", \
                                      "mthesaur_txt"]
 <
 

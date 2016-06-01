@@ -18,12 +18,12 @@ required**.
 ## What's New
 
  * Timeout mechanism to reduce online-thesaurus query time. Default value is
-   `1.0` (second), so that user with slow internet could still has reliable
-   performance. For users with faster internet, you may want to lower the value
-   (mine is `0.3`).
+   `1.0` (second), so that user using slower internet or having long response
+   time with certain backend servers could still has reliable performance. For
+   users with faster internet, you may want to lower the value (mine is `0.4`).
 
    ```
-   let g:tq_online_backends_timeout = 0.3
+   let g:tq_online_backends_timeout = 0.4
    ```
 
 ----------------
@@ -130,15 +130,14 @@ backends is behaving properly.
   website didn't provide standard API to use. Hence functionality of this
   backend depends on whether the website owner will change the webpage design.
 
-**By default, The sequence of query is thesaurus\_com -> datamuse\_com ->
-mthesaur\_txt** Next query will be conducted only when the previous query
-return empty sysnonym list or failed to query. You may remove unwanted backend
-or lower their priority by removing them/putting them on latter position in
-variable
+**By default, The sequence of query is thesaurus\_com -> mthesaur\_txt**. Next
+query will be conducted only when the previous query return empty sysnonym list
+or failed to query. You may remove unwanted backend or lower their priority by
+removing them/putting them on latter position in variable
 `g:tq_enabled_backends`. Its default is
 
 ```
-    g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","datamuse_com","mthesaur_txt"]
+    g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","mthesaur_txt"]
 ```
 
 Backend **woxikon\_de**, **jeck\_ru** are currently **not activated by
@@ -180,12 +179,12 @@ into your `.vimrc`.
 
 Timeout mechanism (configurable with `g:tq_online_backends_timeout`) is added
 to all online query backends to reduce query time(in seconds). Default value is
-`1.0` (second), so that user with slow internet could still has reliable
-performance. For users with faster internet, you may want to lower the value
-(mine is `0.3`).
+`1.0` (second), so that user using slower internet or having long response time
+with certain backend servers could still has reliable performance.  For users
+with faster internet, you may want to lower the value (mine is `0.4`).
 
    ```
-   let g:tq_online_backends_timeout = 0.3
+   let g:tq_online_backends_timeout = 0.4
    ```
 
 **Q:** Why would this help?
@@ -195,6 +194,15 @@ error. And our plugin will freeze Vim before the error is returned. By setting
 timeout, we may cut the waiting time down and start query from next backend
 sooner. So that waiting-time for user can be drastically reduced if set
 properly.
+
+**Q:** What does it mean by **long response time to certain servers**
+**A:** Depending on where you are, some thesaurus query service might not have
+server built up close to you. In this case, the response time between you and
+the server might varied greatly. For example, `woxikon_de` might only have
+server in Germany. And I am in Singapore. Based on my experience, it might take
+`400ms-1.0s` for the server to respond to my request. If I want to use its
+service reliably, I might want to set the timeout to `1.0` (second), so that
+most of the valid query can yield response before timeout.
 
 
 ### Truncate query result in candidate window
