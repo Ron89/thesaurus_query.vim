@@ -76,7 +76,8 @@ prefer the split buffer display of result over the word replacement routine.
 ----------------
 
 Another might-be-useful routine is the one to query synonym for and replace
-a multi-word phrase covered in visual mode.
+a multi-word phrase covered in visual mode, using the same key mapping
+`<Leader>cs`
 
 ```
     vnoremap <Leader>cs y:ThesaurusQueryReplace <C-r>"<CR>
@@ -92,6 +93,14 @@ function. To invoke it, use keybinding `ctrl-x ctrl-u` in insert mode. This
 function resembles Vim's own thesaurus checking function, but using online
 resources for matchings.
 
+---------------
+
+Finally, this plugin support thesaurus checkup for manually input through
+command mode command `:Thesaurus`.
+
+```
+    :Thesaurus your phrase
+```
 
 ## Configuration
 

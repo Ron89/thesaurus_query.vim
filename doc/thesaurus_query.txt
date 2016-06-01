@@ -57,7 +57,7 @@ Internet is required for online query backend to be functional;
 ===============================================================================
 3. Usage                                                             *tq-usage*
 
-The plugin provides three ways of using.
+The plugin provides several ways of using.
 
 :ThesaurusQueryReplaceCurrentWord         *:ThesaurusQueryReplaceCurrentWord*
     This command checkup the word under cursor and attempt to replace it with
@@ -85,7 +85,7 @@ The functionalities are also mapped to key-bindings, if `g:tq_map_keys=1` as
 default (Note: since this plugin is active for all buffers, the use of
 `<LocalLeader>`is now depreciated):
     nnoremap <unique> <Leader>cs :ThesaurusQueryReplaceCurrentWord<CR>
-    vnoremap <unique> <Leader>cs y:Thesaurus <C-r>"<CR>
+    vnoremap <unique> <Leader>cs "ky:ThesaurusQueryReplace <C-r>k<CR>
     nnoremap <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
     vnoremap <LocalLeader>cs "ky:ThesaurusQueryReplace <C-r>k<CR>
 
