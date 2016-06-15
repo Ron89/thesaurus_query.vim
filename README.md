@@ -196,6 +196,7 @@ with faster internet, you may want to lower the value (mine is `0.4`).
    ```
 
 **Q:** Why would this help?
+
 **A:** Usually when thesaurus is found, the server respond quickly. However,
 when the word is not found, it will take a while before server return 404
 error. And our plugin will freeze Vim before the error is returned. By setting
@@ -204,6 +205,7 @@ sooner. So that waiting-time for user can be drastically reduced if set
 properly.
 
 **Q:** What does it mean by **long response time to certain servers**
+
 **A:** Depending on where you are, some thesaurus query service might not have
 server built up close to you. In this case, the response time between you and
 the server might varied greatly. For example, `woxikon_de` might only have
