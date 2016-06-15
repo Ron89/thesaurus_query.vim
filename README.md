@@ -15,6 +15,8 @@ and post an issue with your suggestion.
 This plugin is written in Python. So **+Python or +Python3 version of Vim is
 required**.
 
+![](http://i.imgur.com/3QXxUp7.gif)
+
 ## What's New
 
  * Timeout mechanism to reduce online-thesaurus query time. Default value is
@@ -38,9 +40,6 @@ required**.
    normal mode, you may also query thesaurus in Insert mode. The functionality
    is made possible via `completefunc`. To use it, use keybinding `ctrl-x
    ctrl-u` under insert mode, when cursor is at the end of a word.
-
-
-![](http://i.imgur.com/2e50XYP.png)
 
 ## Installation
 
