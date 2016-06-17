@@ -203,7 +203,7 @@ function! thesaurus_query#Thesaurus_Query_Lookup(word, replace) " {{{
 exec s:tq_python_env
 # mark for exit function if no candidate is found
 if not tq_synonym_result:
-    vim.command("echom 'No synonym found for \"{}\".'".format(vim.eval("l:trimmed_word")))
+    vim.command("echom 'No synonym found for \"{0}\".'".format(vim.eval("l:trimmed_word")))
     vim.command("let l:syno_found=0")
 # if replace flag is on, prompt user to choose after populating candidate list
 elif vim.eval('l:replace') != '0':
@@ -249,7 +249,7 @@ exec s:tq_python_env
 if tq_synonym_annexed:
     tq_synonym_annexed.insert(0,decode_utf_8(vim.eval("a:base")))
 for tq_iterator in tq_synonym_annexed:
-    vim.command('call add(l:synoList, "{}")'.format(tq_interface.send_string_to_vim(tq_iterator)))
+    vim.command('call add(l:synoList, "{0}")'.format(tq_interface.send_string_to_vim(tq_iterator)))
 # delete all variable used in the function, keep namespace clean
 if 'tq_iterator' in locals():
     del tq_iterator

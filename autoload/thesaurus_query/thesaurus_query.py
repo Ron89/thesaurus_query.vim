@@ -142,8 +142,8 @@ def tq_candidate_list_populate(candidates):
         result_IDed.append([syno_case[0],[]])
         for word_curr in syno_case[1]:
             word_curr = tq_word_form_reverse(word_curr)
-            result_IDed[-1][1].append(u"({}){}".format(word_ID, word_curr))
-            waitlist.append(u"{}".format(word_curr))
+            result_IDed[-1][1].append(u"({0}){1}".format(word_ID, word_curr))
+            waitlist.append(u"{0}".format(word_curr))
             word_ID+=1
     return [word_ID, waitlist, result_IDed]
 
@@ -153,16 +153,16 @@ def candidate_list_printing(result_IDed):
     '''
     for case in result_IDed:
         if case[0] != u"":
-            vim.command('call thesaurus_query#echo_HL("Keyword|Found as: |Directory|{}|None|\\n")'.format(send_string_to_vim(case[0])))
+            vim.command('call thesaurus_query#echo_HL("Keyword|Found as: |Directory|{0}|None|\\n")'.format(send_string_to_vim(case[0])))
         vim.command('call thesaurus_query#echo_HL("Keyword|Synonyms: |None|")')
         col_count = 10
         col_count_max = int(vim.eval("&columns"))
         for synonym_i in case[1]:
             if (col_count+len(synonym_i)+1)<col_count_max:
-                vim.command('echon "{} "'.format(send_string_to_vim(synonym_i)))
+                vim.command('echon "{0} "'.format(send_string_to_vim(synonym_i)))
                 col_count += len(synonym_i)+1
             else:
-                vim.command('echon "\n          {} "'.format(send_string_to_vim(synonym_i)))
+                vim.command('echon "\n          {0} "'.format(send_string_to_vim(synonym_i)))
                 col_count = 10 + len(synonym_i)+1
         vim.command('echon "\n"')
 
@@ -176,8 +176,8 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
 
     [candidate_num, thesaurus_wait_list, syno_result_IDed] = tq_candidate_list_populate(candidates)
 
-    vim.command("echon \"In line: ... \"|echohl Keyword|echon \"{}\"|echohl None |echon \" ...\n\"".format(vim.current.line.replace('\\','\\\\').replace('"','\\"')))
-    vim.command("call thesaurus_query#echo_HL(\"None|Candidates for |WarningMSG|{}\\n|None\")".format(vim.eval("l:trimmed_word")))
+    vim.command("echon \"In line: ... \"|echohl Keyword|echon \"{0}\"|echohl None |echon \" ...\n\"".format(vim.current.line.replace('\\','\\\\').replace('"','\\"')))
+    vim.command("call thesaurus_query#echo_HL(\"None|Candidates for |WarningMSG|{0}\\n|None\")".format(vim.eval("l:trimmed_word")))
 
     candidate_list_printing(syno_result_IDed)
 
@@ -298,15 +298,15 @@ def tq_generate_thesaurus_buffer(candidates):
     del tq_thesaurus_buffer[:]
     line_count=0
     tq_thesaurus_buffer.append([""])
-    tq_thesaurus_buffer[line_count]="Result for word \"{}\" (press \"q\" to close this split)".format(vim.eval('l:word'))
+    tq_thesaurus_buffer[line_count]="Result for word \"{0}\" (press \"q\" to close this split)".format(vim.eval('l:word'))
     line_count+=1
     for case in candidates:
         tq_thesaurus_buffer.append([""])
         if not case[0]:
-            tq_thesaurus_buffer[line_count]='Synonyms: {}'.format(send_string_to_vim(", ".join(case[1])))
+            tq_thesaurus_buffer[line_count]='Synonyms: {0}'.format(send_string_to_vim(", ".join(case[1])))
             line_count+=1
             continue
-        tq_thesaurus_buffer[line_count:line_count+2]=['Found_as: {}'.format(send_string_to_vim(case[0])), 'Synonyms: {}'.format(send_string_to_vim(", ".join(case[1])))]
+        tq_thesaurus_buffer[line_count:line_count+2]=['Found_as: {0}'.format(send_string_to_vim(case[0])), 'Synonyms: {}'.format(send_string_to_vim(", ".join(case[1])))]
         line_count+=2
     vim.command("setlocal bufhidden=")
     vim.command("silent g/^Synonyms:/ normal! 0Vgq")
@@ -315,6 +315,6 @@ def tq_generate_thesaurus_buffer(candidates):
     vim.command("setlocal filetype=thesaurus")
     vim.command("normal! gg")
     vim.command("setlocal nomodifiable")
-#    tq_current_buffer_goto = vim.eval('bufwinnr("{}")'.format(tq_current_buffer))
-#    vim.command('exec {} . "wincmd w"'.format(tq_current_buffer_goto))
+#    tq_current_buffer_goto = vim.eval('bufwinnr("{0}")'.format(tq_current_buffer))
+#    vim.command('exec {0} . "wincmd w"'.format(tq_current_buffer_goto))
 

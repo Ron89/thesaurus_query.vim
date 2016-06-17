@@ -90,8 +90,8 @@ def get_variable(v_name):
     obtain vim variable, buffer variable first, global variable second.
     if no variable exists, return -1
     '''
-    if vim.eval("exists('b:'.'{}')".format(v_name))=='0':
-        if vim.eval("exists('g:'.'{}')".format(v_name))=='0':
+    if vim.eval("exists('b:'.'{0}')".format(v_name))=='0':
+        if vim.eval("exists('g:'.'{0}')".format(v_name))=='0':
             return -1
         else:
             return vim.eval('g:'+v_name)

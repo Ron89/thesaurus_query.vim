@@ -55,7 +55,7 @@ def woxikon_de_url_handler(target):
     '''
     time_out_choice = float(get_variable('tq_online_backends_timeout'))
     try:
-        response = urlopen(fixurl(u'http://synonyme.woxikon.de/synonyme/{}.php'.format(target)).decode('ASCII'), timeout = time_out_choice)
+        response = urlopen(fixurl(u'http://synonyme.woxikon.de/synonyme/{0}.php'.format(target)).decode('ASCII'), timeout = time_out_choice)
         web_content = StringIO(decode_utf_8(response.read()))
         response.close()
     except HTTPError:

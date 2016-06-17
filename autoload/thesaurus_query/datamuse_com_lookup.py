@@ -54,7 +54,7 @@ def datamuse_api_wrapper(target, query_method, max_return=query_result_trunc):
                 }
     try:
         response = urlopen(fixurl(
-            u'http://api.datamuse.com/{}{}&max={}'.format(
+            u'http://api.datamuse.com/{0}{1}&max={2}'.format(
                 case_mapper[query_method], target, max_return
                 )).decode('ASCII'), timeout = time_out_choice)
         reader = codecs.getreader('utf-8')
@@ -65,7 +65,7 @@ def datamuse_api_wrapper(target, query_method, max_return=query_result_trunc):
     except URLError as err:
         if isinstance(err.reason, socket.timeout):
             return 1
-#        print(u"Internet Error. The word \"{}\" has not been found on datamuse!\n".format(target))
+#        print(u"Internet Error. The word \"{0}\" has not been found on datamuse!\n".format(target))
         return -1
     except socket.timeout:  # timeout only means underperforming
         return 1

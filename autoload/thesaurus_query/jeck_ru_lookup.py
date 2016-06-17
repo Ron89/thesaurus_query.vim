@@ -53,7 +53,7 @@ def jeck_ru_url_handler(target):
     '''
     time_out_choice = float(get_variable('tq_online_backends_timeout'))
     try:
-        response = urlopen(fixurl(u'http://jeck.ru/tools/SynonymsDictionary/{}'.format(target)).decode('ASCII'), timeout = time_out_choice)
+        response = urlopen(fixurl(u'http://jeck.ru/tools/SynonymsDictionary/{0}'.format(target)).decode('ASCII'), timeout = time_out_choice)
         web_content = StringIO(decode_utf_8(response.read()))
         response.close()
     except HTTPError:
@@ -75,7 +75,7 @@ def parser(webcontent):
         if not line_curr:
             break
 #        if "no thesaurus results" in line_curr:
-#            output = "The word \"{}\" has not been found on jeck.ru!\n".format(target)
+#            output = "The word \"{0}\" has not been found on jeck.ru!\n".format(target)
 #            break
 #        if "Всего" in line_curr and ("синонимов" in line_curr or "синонима" in line_curr):
         if u"На странице нет нецензурных слов." in line_curr:
@@ -94,12 +94,12 @@ def parser(webcontent):
 #                continue
 #            elif len(fields)<10:
 #                if "txt" in fields[1]:
-#                    output+="\nDefinition: {}. ".format(fields[2])
+#                    output+="\nDefinition: {0}. ".format(fields[2])
 #                    continue
 #                elif "ttl" in fields[1]:
-#                    output+="{}\nSynonyms:\n".format(fields[2])
+#                    output+="{0}\nSynonyms:\n".format(fields[2])
 #                    continue
 #            elif "www.thesaurus.com" in fields[3]:
-#                output+="{} {}\n".format(fields[6], fields[14])
+#                output+="{0} {1}\n".format(fields[6], fields[14])
     webcontent.close()
     return synonym_list

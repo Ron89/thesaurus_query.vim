@@ -106,16 +106,16 @@ def online_thesaurus_lookup(target):
     time_out_choice = float(get_variable('tq_online_backends_timeout'))
 
     try:
-        response = urlopen(fixurl(u'http://www.thesaurus.com/browse/{}'.format(target)).decode('ASCII'), timeout = time_out_choice)
+        response = urlopen(fixurl(u'http://www.thesaurus.com/browse/{0}'.format(target)).decode('ASCII'), timeout = time_out_choice)
         parser = StringIO(decode_utf_8(response.read()))
         response.close()
     except HTTPError:
-        output = u"The word \"{}\" has not been found on dictionary.com!\n".format(target)
+        output = u"The word \"{0}\" has not been found on dictionary.com!\n".format(target)
         return output
     except URLError as err:
         if isinstance(err.reason, socket.timeout):
             return u"Timeout!"
-        output = u"Internet Error. The word \"{}\" has not been found on dictionary.com!\n".format(target)
+        output = u"Internet Error. The word \"{0}\" has not been found on dictionary.com!\n".format(target)
         return output
     except socket.timeout:  # timeout only means underperforming
         return u"Timeout!"
@@ -126,7 +126,7 @@ def online_thesaurus_lookup(target):
         if not line_curr:
             break
         if u"no thesaurus results" in line_curr:
-            output = u"The word \"{}\" has not been found on thesaurus.com!\n".format(target)
+            output = u"The word \"{0}\" has not been found on thesaurus.com!\n".format(target)
             break
         if u"synonym-description" in line_curr:
             end_tag_count=0
@@ -140,12 +140,12 @@ def online_thesaurus_lookup(target):
                 continue
             elif len(fields)<10:
                 if u"txt" in fields[1]:
-                    output+=u"\nDefinition: {}. ".format(fields[2])
+                    output+=u"\nDefinition: {0}. ".format(fields[2])
                     continue
                 elif u"ttl" in fields[1]:
-                    output+=u"{}\nSynonyms:\n".format(fields[2])
+                    output+=u"{0}\nSynonyms:\n".format(fields[2])
                     continue
             elif u"www.thesaurus.com" in fields[3]:
-                output+=u"{} {}\n".format(fields[6], fields[14])
+                output+=u"{0} {1}\n".format(fields[6], fields[14])
     parser.close()
     return output
