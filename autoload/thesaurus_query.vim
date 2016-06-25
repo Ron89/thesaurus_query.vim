@@ -167,12 +167,19 @@ endfunction
 
 " Import Python libs {{{
 
-exec s:tq_use_python.'import sys'
-exec s:tq_use_python.'import os'
-exec s:tq_use_python.'import vim'
-exec s:tq_use_python."sys.path.append(vim.eval('expand(\"<sfile>:h\")'))"
-exec s:tq_use_python.'import thesaurus_query.thesaurus_query as tq_interface'
-exec s:tq_use_python.'from thesaurus_query.tq_common_lib import decode_utf_8'
+exec s:tq_python_env
+import sys, os, vim
+
+for p in vim.eval("&runtimepath").split(','):
+	dname = os.path.join(p, "autoload")
+	if os.path.exists(os.path.join(dname, "thesaurus_query")):
+		if dname not in sys.path:
+			sys.path.append(dname)
+			break
+import thesaurus_query.thesaurus_query as tq_interface
+from thesaurus_query.tq_common_lib import decode_utf_8
+
+endOfPython
 
 " }}}
 
