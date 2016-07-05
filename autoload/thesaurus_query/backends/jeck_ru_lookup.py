@@ -19,7 +19,7 @@ except ImportError:
 
 import re
 import socket
-from thesaurus_query.tq_common_lib import decode_utf_8, encode_utf_8, fixurl, get_variable
+from ..tq_common_lib import decode_utf_8, encode_utf_8, fixurl, get_variable
 
 identifier="jeck_ru"
 language="ru"

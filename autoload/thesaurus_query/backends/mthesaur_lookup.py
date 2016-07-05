@@ -15,7 +15,7 @@ synonym list = [def, list wordlist]
 
 import vim
 import os
-from thesaurus_query.tq_common_lib import decode_utf_8
+from ..tq_common_lib import decode_utf_8
 
 identifier="mthesaur_txt"
 language="en"

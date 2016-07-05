@@ -25,8 +25,8 @@ except ImportError:
 import re
 import vim
 import socket
-from thesaurus_query.tq_common_lib import decode_utf_8, fixurl, get_variable
-from thesaurus_query.tq_common_lib import send_string_to_vim
+from ..tq_common_lib import decode_utf_8, fixurl, get_variable
+from ..tq_common_lib import send_string_to_vim
 #from online_thesaurus_lookup import online_thesaurus_lookup
 
 identifier="thesaurus_com"

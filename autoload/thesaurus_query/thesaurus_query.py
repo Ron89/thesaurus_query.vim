@@ -5,8 +5,8 @@
 
 import vim
 import re
-import thesaurus_query.backends as tq_backends
-from thesaurus_query.tq_common_lib import decode_utf_8, send_string_to_vim, get_variable
+from . import backends as tq_backends
+from .tq_common_lib import decode_utf_8, send_string_to_vim, get_variable
 
 class Thesaurus_Query_Handler:
     '''
