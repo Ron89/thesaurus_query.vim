@@ -19,7 +19,7 @@ except ImportError:
 
 import re
 import socket
-from .tq_common_lib import decode_utf_8, encode_utf_8, fixurl, get_variable
+from thesaurus_query.tq_common_lib import decode_utf_8, encode_utf_8, fixurl, get_variable
 
 identifier="woxikon_de"
 language="de"
@@ -37,19 +37,19 @@ nested list = [PoS, list wordlist]
     wordlist = [word_0, word_1, ...]: list of words belonging to a same definition
     '''
     target=target.replace(u" ", u"+")
-    result_list=woxikon_de_url_handler(target)
+    result_list=_woxikon_de_url_handler(target)
     if result_list == -1:
         return [-1, []]
     elif result_list == 1:
         return [1, []]
     else:
-        synonym_list = parser(result_list)
+        synonym_list = _parser(result_list)
         if synonym_list:
             return [0, synonym_list]
         else:
             return [1, []]
 
-def woxikon_de_url_handler(target):
+def _woxikon_de_url_handler(target):
     '''
     Query jiport for sysnonym
     '''
@@ -69,7 +69,7 @@ def woxikon_de_url_handler(target):
     return web_content
 
 
-def parser(webcontent):
+def _parser(webcontent):
     end_tag_count=4
     synonym_list = []
     while True:

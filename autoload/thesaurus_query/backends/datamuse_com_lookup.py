@@ -11,7 +11,7 @@ except ImportError:
 import json
 import socket
 import codecs
-from .tq_common_lib import fixurl, decode_utf_8, get_variable
+from thesaurus_query.tq_common_lib import fixurl, decode_utf_8, get_variable
 #import vim
 
 query_result_trunc=50
@@ -31,16 +31,16 @@ nested list = [PoS, list wordlist]
     wordlist = [word_0, word_1, ...]: list of words belonging to a same definition
     '''
     target=target.replace(u" ", u"+")
-    result_list=datamuse_api_wrapper(target, query_method=query_method)
+    result_list=_datamuse_api_wrapper(target, query_method=query_method)
     if result_list == -1:
         return [-1,[]]
     elif result_list == 1:
         return [1, []]
     else:
-        return parser(result_list)
+        return _parser(result_list)
 
 
-def datamuse_api_wrapper(target, query_method, max_return=query_result_trunc):
+def _datamuse_api_wrapper(target, query_method, max_return=query_result_trunc):
     '''
     query_method:
         synonym, antonym, suggest, right_content, left_content
@@ -72,7 +72,7 @@ def datamuse_api_wrapper(target, query_method, max_return=query_result_trunc):
     return result_list
 
 
-def parser(target_list):
+def _parser(target_list):
     target_list.sort(key=lambda x: x[u'score'], reverse=True)
     result = {}
     for word in target_list:

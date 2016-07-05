@@ -19,7 +19,7 @@ except ImportError:
 
 import re
 import socket
-from .tq_common_lib import decode_utf_8, encode_utf_8, fixurl, get_variable
+from thesaurus_query.tq_common_lib import decode_utf_8, encode_utf_8, fixurl, get_variable
 
 identifier="jeck_ru"
 language="ru"
@@ -37,17 +37,17 @@ nested list = [PoS, list wordlist]
     wordlist = [word_0, word_1, ...]: list of words belonging to a same definition
     '''
     target=target.replace(u" ", u"+")
-    result_list=jeck_ru_url_handler(target)
+    result_list=_jeck_ru_url_handler(target)
     if isinstance(result_list, int):
         return [result_list, []]
     else:
-        synonym_list = parser(result_list)
+        synonym_list = _parser(result_list)
         if synonym_list:
             return [0, [[u"", synonym_list]]]
         else:
             return [1, []]
 
-def jeck_ru_url_handler(target):
+def _jeck_ru_url_handler(target):
     '''
     Query jiport for sysnonym
     '''
@@ -66,8 +66,7 @@ def jeck_ru_url_handler(target):
         return 1
     return web_content
 
-
-def parser(webcontent):
+def _parser(webcontent):
     end_tag_count=4
     synonym_list = []
     while True:

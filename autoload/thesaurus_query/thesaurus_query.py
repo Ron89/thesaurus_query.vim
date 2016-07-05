@@ -5,7 +5,8 @@
 
 import vim
 import re
-from .tq_common_lib import decode_utf_8, send_string_to_vim, get_variable
+import thesaurus_query.backends as tq_backends
+from thesaurus_query.tq_common_lib import decode_utf_8, send_string_to_vim, get_variable
 
 class Thesaurus_Query_Handler:
     '''
@@ -17,30 +18,7 @@ class Thesaurus_Query_Handler:
     def __init__(self, cache_size_max=100):
         self.wordlist_size_max = cache_size_max
         self.restore_thesaurus_query_handler()
-        self.query_backend_define()
-
-    def query_backend_define(self):
-        """
-        Define the query routine used.
-        """
-        from .mthesaur_lookup import word_query_mthesaur_lookup
-        from .thesaurus_com_lookup import word_query_handler_thesaurus_lookup as word_query_thesaurus_com_lookup
-        from . import datamuse_com_lookup
-        from . import jeck_ru_lookup
-        from . import woxikon_de_lookup
-        self.query_backends = {}
-        # initiate all available backends and load them to self.query_backends
-        backend_thesaurus_com = word_query_thesaurus_com_lookup()
-        backend_datamuse_com = datamuse_com_lookup
-        backend_mthesaur_txt = word_query_mthesaur_lookup()
-        backend_jeck_ru = jeck_ru_lookup
-        backend_woxikon_de = woxikon_de_lookup
-        self.query_backends[backend_thesaurus_com.identifier] = backend_thesaurus_com
-        self.query_backends[backend_datamuse_com.identifier] = backend_datamuse_com
-        self.query_backends[backend_mthesaur_txt.identifier] = backend_mthesaur_txt
-        self.query_backends[backend_jeck_ru.identifier] = backend_jeck_ru
-        self.query_backends[backend_woxikon_de.identifier] = backend_woxikon_de
-
+        self.query_backends = tq_backends.query_backends
 
     def query(self, word):
         if word in self.word_list:  # search word_list first to save query time
