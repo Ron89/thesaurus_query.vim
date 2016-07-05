@@ -35,24 +35,51 @@ _header_length=11    # length of "Definition:", current header of definition
 _relavent_val_pos=9
 _syno_pos=11
 
+class _word_query_handler_thesaurus_lookup:
+    '''
+    handler for lookup method: "online_thesaurus_lookup.py". When query_from_source is called, return:
+       [status, [[def_0, [synonym_0, synonym_1, ...]],  [def_1, [synonym_0, synonym_1, ...]], ...]]
+    status:
+        0: normal,  synonym found, list will be returned as
+        1: normal, synonym not found, return empty synonym list
+        -1: unexpected result from query, return empty synonym list
+    synonym list = [def, list wordlist]
+        def('str'): definition the synonyms belong to
+        wordlist = [synonym_0, synonym_1, ...]: list of words belonging to a same definition
+    '''
 
-def query(word):
-    _query_result = _query_cmd_handler(word)
-    syno_list=[]
+    def __init__(self):
+#        self.query_source_cmd = os.path.dirname(os.path.realpath(__file__))+"/online_thesaurus_lookup.sh"
+        pass
 
-    def syno_populating():
+    def query_cmd_handler(self, word):
+        self.syno_list=[]
+        query_result_raw = _online_thesaurus_lookup(word)
+        self.query_result = StringIO(query_result_raw)
+
+    def synonym_found(self):
+        first_line = self.query_result.readline()
+        if first_line != u'\n':
+            if u"Internet Error." in first_line:
+                self.query_result.close()
+                return -1
+            self.query_result.close()
+            return 1
+        return 0
+
+    def syno_populating(self):
         word_dic={}
         syno_list_curr=[]
-        _query_result.readline()  # skip the line 'Synonyms:'
+        self.query_result.readline()  # skip the line 'Synonyms:'
         while True:
-            line_curr = _query_result.readline()
-            if line_curr[:_relavent_val_pos] != u"relevant-":
+            self.line_curr = self.query_result.readline()
+            if self.line_curr[:_relavent_val_pos] != u"relevant-":
                 break
-            line_curr=line_curr.rstrip(u'\n')
-            if line_curr[_relavent_val_pos] in word_dic.keys():
-                word_dic[line_curr[_relavent_val_pos]].append(line_curr[_syno_pos:])
+            self.line_curr=self.line_curr.rstrip(u'\n')
+            if self.line_curr[_relavent_val_pos] in word_dic.keys():
+                word_dic[self.line_curr[_relavent_val_pos]].append(self.line_curr[_syno_pos:])
             else:
-                word_dic[line_curr[_relavent_val_pos]]=[line_curr[_syno_pos:]]
+                word_dic[self.line_curr[_relavent_val_pos]]=[self.line_curr[_syno_pos:]]
         truncation_on_relavance=int(vim.eval("g:tq_truncation_on_relavance")) # truncate on which relavance level?
         for key in sorted(word_dic, reverse=True):
             if int(key) <= truncation_on_relavance:
@@ -61,40 +88,30 @@ def query(word):
         del word_dic
         return [not not syno_list_curr, syno_list_curr]
 
-    def process_query_result():
+    def process_query_result(self):
         status = True
-        line_curr=_query_result.readline()
-        while not (not line_curr or not status):
-            if line_curr[:_header_length] == u'Definition:':
-                line_curr=line_curr.rstrip(u'\n')
-                definition_curr = line_curr[_header_length+1:]
-                syno_list.append([definition_curr, []])
-                [status, syno_list[-1][1]] = syno_populating()
+        self.line_curr=self.query_result.readline()
+        while not (not self.line_curr or not status):
+            if self.line_curr[:_header_length] == u'Definition:':
+                self.line_curr=self.line_curr.rstrip(u'\n')
+                definition_curr = self.line_curr[_header_length+1:]
+                self.syno_list.append([definition_curr, []])
+                [status, self.syno_list[-1][1]] = self.syno_populating()
             else:
-                line_curr=_query_result.readline()
-        _query_result.close()
-        return status and not not syno_list
+                self.line_curr=self.query_result.readline()
+        self.query_result.close()
+        return status and not not self.syno_list
+    def query(self,word):
+        self.query_cmd_handler(word)
+        query_status = self.synonym_found()
+        if query_status!=0:
+            return [query_status, self.syno_list]
+        if self.process_query_result():
+            return [0, self.syno_list]
+        return [1, []]
 
-    query_status = _synonym_found(_query_result)
-    if query_status!=0:
-        return [query_status, syno_list]
-    if process_query_result():
-        return [0, syno_list]
-    return [1, []]
-
-def _synonym_found(query_result):
-    first_line = query_result.readline()
-    if first_line != u'\n':
-        if u"Internet Error." in first_line:
-            query_result.close()
-            return -1
-        query_result.close()
-        return 1
-    return 0
-
-def _query_cmd_handler(word):
-    query_result_raw = _online_thesaurus_lookup(word)
-    return StringIO(query_result_raw)
+_querier = _word_query_handler_thesaurus_lookup()
+query = _querier.query
 
 def _online_thesaurus_lookup(target):
     '''
