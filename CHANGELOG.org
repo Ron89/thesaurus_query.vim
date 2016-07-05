@@ -4,9 +4,12 @@
   This log is kept according to the [[http://keepachangelog.com/][Keep a CHANGELOG]] manifesto
 
 ** V0.5																																																										:unreleased:
+*** Changed
+    - Implemented dynamic backend-managing mechanism. Now adding new backends
+      is as simple as dropping the backend file into folder
+      =./autoload/thesaurus_query/backends=
 *** Fixed
     - String =zero length field in format= issue with Python2.6.
-
 ** V0.4																																																												:released:
 *** Added
     - Timeout feature for shorter waiting time. Timeout will not demote the
