@@ -8,6 +8,7 @@ CONTENTS                                                  *thesaurus_query.vim*
     2. Requirements ....................................... |tq-requirements|
     3. Usage ..................................................... |tq-usage|
     4. Customization ..................................... |tq-Customization|
+    4.1 Global variables .............................. |tq-global-variables|
         `g:tq_display_list_all_time`
         `g:tq_map_keys`
         `g:tq_use_vim_autocompletefunc`
@@ -20,12 +21,14 @@ CONTENTS                                                  *thesaurus_query.vim*
         `g:tq_truncation_on_relavance`
         `g:tq_truncation_on_definition_num`
         `g:tq_truncation_on_syno_list_size`
+    4.2 Make Your Own Backend ........................... |tq-backend-format|
     5. Licence.................................................. |tq-licence|
 ===============================================================================
 
 
 ===============================================================================
 1. Intro                                                             *tq-intro*
+
 This is a plugin for user to lookup synonyms of any word under cursor and
 replace it with an user chosen synonym. It also accept word covered in visual
 mode or manual input. But for the latter two cases, auto-replacement function
@@ -93,7 +96,9 @@ default (Note: since this plugin is active for all buffers, the use of
 ===============================================================================
 4. Customization                                             *tq-Customization*
 
-Currently there are 5 global variables used to customize the behavior.
+4.1 Global variables                                      *tq-global-variables*
+
+Currently I designed several global variables used to customize the behavior.
 
 g:tq_display_list_all_time~
     Determine if a minibuffer is still used when user decided to use the
@@ -203,6 +208,49 @@ g:tq_truncation_on_syno_list_size~
     interface, thesaurus split will NOT be truncated. >
          let g:tq_truncation_on_syno_list_size = -1
 <
+-------------------------------------------------------------------------------
+
+4.2 Make Your Own Backend                                   *tq-backend-format*
+
+Since v0.5.0, we have made backend importing dynamic. If none of the exising
+backends suite your need, you can always make your own backend and put it in
+folder `${Plugin_Root}/autoload/thesaurus_query/backends`. The backend is
+written in Python. File name should always have `_lookup` in it. For example,
+the backend I wrote for synonym query in thesaurus.com is
+`thesaurus_com_lookup.py`. I shall call these files backend files
+
+The backend file should follow the following format:
+  - Each `_lookup.py` file must have variable `identifier`, `language` and
+    function `query(target_word)` defined in it.
+  - `identifier` defines the name of the backend, how it will be recognized by
+    the plugin. Eg. `identifier=thesaurus_com_lookup`.
+  - `language` defines the language of which the backend is supposed to query.
+    Eg. if the plugin is supposed to query from English synonym sources, the
+    file should have `language=en` in it.
+    `query(target_word)` is supposed to query synonym for `target_word` and
+    return synonym list in format as follows: >
+    return [status, nested_list]
+    # status:
+    #     0:  normal,  result found, list will be returned as a nested list
+    #     1:  normal, result not found, return empty list
+    #     -1: unexpected result from query, return empty list
+    # nested_list = [Classifier, list wordlist] # grouped synonym list with
+    #                                           # description
+    #     Classifier('str'): Description the current wordlist. Can be empty
+    #                        string.
+    #     wordlist = [word_0, word_1, ...]: list of words belonging to the
+    #                                       group
+<
+After putting the backend file into
+``${Plugin_Root}/autoload/thesaurus_query/backends`, it will be recognized the
+next time the plugin is initiated. To use your plugin, add your backend's
+`identifier` to Vim variable `g/b:tq_enabled_backends`, and activate the
+language by adding its corresponding `language` to `g/b:tq_language`. Eg. to
+enable `thesaurus_com_lookup.py` , we have >
+    g:tq_enabled_backends = [ ..., 'thesaurus_com', ... ]
+    g:tq_language = [..., 'en', ...]
+set as default.
+
 
 ===============================================================================
 5. Licence                                                         *tq-licence*

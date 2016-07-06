@@ -19,6 +19,15 @@ required**.
 
 ## What's New
 
+ * Implemented dynamic import for backends. From `v0.5.0`, to add customized
+   backend, you need only adding the properlly written backend(see
+   documentation for detail) into
+   `${Plugin_Root}/autoload/thesaurus_query/backends`. And you can enable it by
+   add it's `identifier` and `language` to list `g/b:tq_enabled_backends` and
+   `g/b:tq_language`, respectively.
+
+----------------
+
  * Timeout mechanism to reduce online-thesaurus query time. Default value is
    `1.0` (second), so that user using slower internet or having long response
    time with certain backend servers could still has reliable performance. For
@@ -34,12 +43,6 @@ required**.
    replacement feature. If invoked in this manner, user selected candidate will
    replace the word/phrase covered in visual mode.
 
-----------------
-
- * Now aside from our `spell` like thesaurus choosing interface, invoked from
-   normal mode, you may also query thesaurus in Insert mode. The functionality
-   is made possible via `completefunc`. To use it, use keybinding `ctrl-x
-   ctrl-u` under insert mode, when cursor is at the end of a word.
 
 ## Installation
 
