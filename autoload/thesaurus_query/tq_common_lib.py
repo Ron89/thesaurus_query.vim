@@ -1,6 +1,12 @@
 import sys
 import urllib
-import vim
+try:
+    import vim
+    independent_session = False
+except ImportError:
+    independent_session = True
+
+
 
 if sys.version_info < (3,0):
     import urlparse
@@ -85,15 +91,26 @@ def fixurl(url):
         netloc = b''.join((user,colon1,pass_,at,host,colon2,port))
     return urlparse.urlunsplit((scheme,netloc,path,query,fragment))
 
-def get_variable(v_name):
+def get_variable(v_name, default=None):
     '''
-    obtain vim variable, buffer variable first, global variable second.
-    if no variable exists, return -1
+    return: vim_variable  # buffer variable tried first, global variable second
+            default       # if no variable exists, or module used independently
+                          # from Vim session.
     '''
+    if independent_session:
+        return default
     if vim.eval("exists('b:'.'{0}')".format(v_name))=='0':
         if vim.eval("exists('g:'.'{0}')".format(v_name))=='0':
-            return -1
+            if vim.eval("exists('{0}')".format(v_name))=='0':
+                return default
+            else:
+                return vim.eval(v_name)
         else:
             return vim.eval('g:'+v_name)
     else:
         return vim.eval('b:'+v_name)
+
+def vim_command(command):
+    if independent_session:
+        return None
+    vim.command(command)

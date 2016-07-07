@@ -3,10 +3,15 @@
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
 # Original idea: Anton Beloglazov <http://beloglazov.info/>
 
-import vim
+try:
+    import vim
+    independent_session = False
+except ImportError:
+    independent_session = True
+
 import re
 from . import backends as tq_backends
-from .tq_common_lib import decode_utf_8, send_string_to_vim, get_variable
+from .tq_common_lib import decode_utf_8, send_string_to_vim, get_variable, vim_command
 
 class Thesaurus_Query_Handler:
     '''
@@ -28,13 +33,11 @@ class Thesaurus_Query_Handler:
         good_backends=[]
         faulty_backends=[]
         for query_backend_curr in self.query_backend_priority:  # query each of the backend list till found
-            specified_language = get_variable("tq_language")
-            if specified_language!="All":
-                if specified_language==-1:
-                    if self.query_backends[query_backend_curr].language!='en':
-                        continue
-                elif self.query_backends[query_backend_curr].language not in specified_language:
-                    continue
+            specified_language = get_variable("tq_language", ['en'])
+            if specified_language!="All" and \
+                    (self.query_backends[query_backend_curr].language not in \
+                        specified_language):
+                continue
             [state, synonym_list]=self.query_backends[query_backend_curr].query(word)
             if state == -1:
                 error_encountered = 1
@@ -46,14 +49,15 @@ class Thesaurus_Query_Handler:
         for faulty in faulty_backends:
             self.query_backend_priority.remove(faulty)
         self.query_backend_priority+=faulty_backends
-        if int(vim.eval("g:tq_raise_backend_priority_if_synonym_found")) == 1:
+        if int(get_variable("tq_raise_backend_priority_if_synonym_found",
+                            0)) == 1:
             for good in good_backends:
                 self.query_backend_priority.remove(good)
             self.query_backend_priority=good_backends+self.query_backend_priority
         if error_encountered == 1:
-            vim.command('echohl WarningMSG | echon "WARNING: " | echohl None | echon "one or more query backends report error. Please check on thesaurus source(s).\n"')
+            vim_command('echohl WarningMSG | echon "WARNING: " | echohl None | echon "one or more query backends report error. Please check on thesaurus source(s).\n"')
         if 'state' not in locals():
-            vim.command('echohl WarningMSG | echon "WARNING: " | echohl None | echon "No thesaurus source is used. Please check on your configuration on g:tq_enabled_backends and g:tq_language or b:tq_language.\n"')
+            vim_command('echohl WarningMSG | echon "WARNING: " | echohl None | echon "No thesaurus source is used. Please check on your configuration on g:tq_enabled_backends and g:tq_language or b:tq_language.\n"')
             return []
         if state == 0:  # save to word_list buffer only when synonym is found
             self.word_list[word]=synonym_list
@@ -63,23 +67,28 @@ class Thesaurus_Query_Handler:
         return synonym_list
 
     def restore_thesaurus_query_handler(self):
-        self.query_backend_priority = vim.eval("g:tq_enabled_backends")
+        self.query_backend_priority = get_variable(
+            "tq_enabled_backends",
+            ["woxikon_de","jeck_ru","thesaurus_com","mthesaur_txt"])
         self.word_list = {}  # hold wordlist obtained in previous query
         self.word_list_keys = []  # hold all keys for wordlist
                                   # in old->new order
         # depreciated variable
-        if vim.eval('exists("g:tq_use_local_thesaurus_source_as_primary")'):
-            local_as_primary = vim.eval("g:tq_use_local_thesaurus_source_as_primary")
-        else:
-            local_as_primary = None
+
+        local_as_primary = get_variable(
+            'tq_use_local_thesaurus_source_as_primary')
         if local_as_primary=="1":
             self.query_backend_priority.remove("mthesaur_txt")
             self.query_backend_priority.insert(0,"mthesaur_txt")
 
 def truncate_synonym_list(synonym_list):
     truncated_flag = 0
-    truncate_on_definition = int(vim.eval("g:tq_truncation_on_definition_num"))  # number of definitions retained in output
-    truncate_syno_list = int(vim.eval("g:tq_truncation_on_syno_list_size"))   # number of synonyms retained for each definition in output
+    # number of definitions retained in output
+    truncate_on_definition = int(
+        get_variable("tq_truncation_on_definition_num", -1))
+    # number of synonyms retained for each definition in output
+    truncate_syno_list = int(
+        get_variable("tq_truncation_on_syno_list_size", -1))
     output_buffer = []
     if truncate_on_definition > 0:
         if truncate_on_definition<=len(synonym_list):
@@ -102,6 +111,8 @@ def tq_word_form_reverse(target_word):
     '''
     adjust candidate according to trimmed word
     '''
+    if independent_session:     # this module don't work in Vim independent session
+        return None
     wordOriginal = decode_utf_8(vim.eval('l:trimmed_word'))
     if wordOriginal.isupper():
         return target_word.upper()
@@ -129,20 +140,22 @@ def candidate_list_printing(result_IDed):
     '''
     Print candidate list to the messagebox
     '''
+    if independent_session:     # this module don't work in Vim independent session
+        return None
     for case in result_IDed:
         if case[0] != u"":
-            vim.command('call thesaurus_query#echo_HL("Keyword|Found as: |Directory|{0}|None|\\n")'.format(send_string_to_vim(case[0])))
-        vim.command('call thesaurus_query#echo_HL("Keyword|Synonyms: |None|")')
+            vim_command('call thesaurus_query#echo_HL("Keyword|Found as: |Directory|{0}|None|\\n")'.format(send_string_to_vim(case[0])))
+        vim_command('call thesaurus_query#echo_HL("Keyword|Synonyms: |None|")')
         col_count = 10
         col_count_max = int(vim.eval("&columns"))
         for synonym_i in case[1]:
             if (col_count+len(synonym_i)+1)<col_count_max:
-                vim.command('echon "{0} "'.format(send_string_to_vim(synonym_i)))
+                vim_command('echon "{0} "'.format(send_string_to_vim(synonym_i)))
                 col_count += len(synonym_i)+1
             else:
-                vim.command('echon "\n          {0} "'.format(send_string_to_vim(synonym_i)))
+                vim_command('echon "\n          {0} "'.format(send_string_to_vim(synonym_i)))
                 col_count = 10 + len(synonym_i)+1
-        vim.command('echon "\n"')
+        vim_command('echon "\n"')
 
 def tq_replace_cursor_word_from_candidates(candidate_list):
     '''
@@ -150,12 +163,14 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
     synonyms. Then ask user to choose suitable candidate to replace word under
     cursor.
     '''
+    if independent_session:     # this module don't work in Vim independent session
+        return None
     [truncated_flag, candidates] = truncate_synonym_list(candidate_list)
 
     [candidate_num, thesaurus_wait_list, syno_result_IDed] = tq_candidate_list_populate(candidates)
 
-    vim.command("echon \"In line: ... \"|echohl Keyword|echon \"{0}\"|echohl None |echon \" ...\n\"".format(vim.current.line.replace('\\','\\\\').replace('"','\\"')))
-    vim.command("call thesaurus_query#echo_HL(\"None|Candidates for |WarningMSG|{0}\\n|None\")".format(vim.eval("l:trimmed_word")))
+    vim_command("echon \"In line: ... \"|echohl Keyword|echon \"{0}\"|echohl None |echon \" ...\n\"".format(vim.current.line.replace('\\','\\\\').replace('"','\\"')))
+    vim_command("call thesaurus_query#echo_HL(\"None|Candidates for |WarningMSG|{0}\\n|None\")".format(vim.eval("l:trimmed_word")))
 
     candidate_list_printing(syno_result_IDed)
 
@@ -182,10 +197,10 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
     try:
         thesaurus_user_choice=int(thesaurus_user_choice)
     except ValueError:
-        vim.command('call thesaurus_query#echo_HL("WarningMSG|\n\nInvalid Input! |None|Ending synonym replacing session without making changes.")')
+        vim_command('call thesaurus_query#echo_HL("WarningMSG|\n\nInvalid Input! |None|Ending synonym replacing session without making changes.")')
         return
     if thesaurus_user_choice>=candidate_num or thesaurus_user_choice<0:
-        vim.command('call thesaurus_query#echo_HL("WarningMSG|\n\nInvalid Input! |None|Ending synonym replacing session without making changes.")')
+        vim_command('call thesaurus_query#echo_HL("WarningMSG|\n\nInvalid Input! |None|Ending synonym replacing session without making changes.")')
         return
     current_line = vim.current.line
     current_cursor = vim.current.window.cursor
@@ -261,16 +276,17 @@ def tq_generate_thesaurus_buffer(candidates):
     generate a buffer showing all found synonyms in the candidate list from
     query
     '''
-#    tq_current_buffer = vim.current.buffer.name
-    vim.command("silent! let l:thesaurus_window = bufwinnr('^thesaurus: ')")
+    if independent_session:     # this module don't work in Vim independent session
+        return None
+    vim_command("silent! let l:thesaurus_window = bufwinnr('^thesaurus: ')")
     if int(vim.eval("l:thesaurus_window")) > -1:
-        vim.command('exec l:thesaurus_window . "wincmd w"')
+        vim_command('exec l:thesaurus_window . "wincmd w"')
     else:
-        vim.command('exec ":silent keepalt belowright split thesaurus:\\\\ " . l:word_fname')
-    vim.command('exec ":silent file thesaurus:\\\\ " . l:word_fname . "\\\\ (press\\\\ q\\\\ to\\\\ close\\\\ this\\\\ split.)"')
+        vim_command('exec ":silent keepalt belowright split thesaurus:\\\\ " . l:word_fname')
+    vim_command('exec ":silent file thesaurus:\\\\ " . l:word_fname . "\\\\ (press\\\\ q\\\\ to\\\\ close\\\\ this\\\\ split.)"')
 
-    vim.command('setlocal noswapfile nobuflisted nospell nowrap modifiable')
-    vim.command('setlocal buftype=nofile')
+    vim_command('setlocal noswapfile nobuflisted nospell nowrap modifiable')
+    vim_command('setlocal buftype=nofile')
 
     tq_thesaurus_buffer = vim.current.buffer
     del tq_thesaurus_buffer[:]
@@ -286,13 +302,11 @@ def tq_generate_thesaurus_buffer(candidates):
             continue
         tq_thesaurus_buffer[line_count:line_count+2]=['Found_as: {0}'.format(send_string_to_vim(case[0])), 'Synonyms: {}'.format(send_string_to_vim(", ".join(case[1])))]
         line_count+=2
-    vim.command("setlocal bufhidden=")
-    vim.command("silent g/^Synonyms:/ normal! 0Vgq")
-    vim.command("exec 'resize ' . (line('$'))")
-    vim.command("nnoremap <silent> <buffer> q :q<CR>")
-    vim.command("setlocal filetype=thesaurus")
-    vim.command("normal! gg")
-    vim.command("setlocal nomodifiable")
-#    tq_current_buffer_goto = vim.eval('bufwinnr("{0}")'.format(tq_current_buffer))
-#    vim.command('exec {0} . "wincmd w"'.format(tq_current_buffer_goto))
+    vim_command("setlocal bufhidden=")
+    vim_command("silent g/^Synonyms:/ normal! 0Vgq")
+    vim_command("exec 'resize ' . (line('$'))")
+    vim_command("nnoremap <silent> <buffer> q :q<CR>")
+    vim_command("setlocal filetype=thesaurus")
+    vim_command("normal! gg")
+    vim_command("setlocal nomodifiable")
 

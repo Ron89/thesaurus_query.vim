@@ -23,7 +23,6 @@ except ImportError:
     from io import StringIO
 
 import re
-import vim
 import socket
 from ..tq_common_lib import decode_utf_8, fixurl, get_variable
 from ..tq_common_lib import send_string_to_vim
@@ -80,27 +79,30 @@ class _word_query_handler_thesaurus_lookup:
                 word_dic[self.line_curr[_relavent_val_pos]].append(self.line_curr[_syno_pos:])
             else:
                 word_dic[self.line_curr[_relavent_val_pos]]=[self.line_curr[_syno_pos:]]
-        truncation_on_relavance=int(vim.eval("g:tq_truncation_on_relavance")) # truncate on which relavance level?
+        # truncate on which relavance level?
+        truncation_on_relavance=int(
+            get_variable("tq_truncation_on_relavance", '0')) 
         for key in sorted(word_dic, reverse=True):
             if int(key) <= truncation_on_relavance:
                 continue
             syno_list_curr=syno_list_curr+word_dic[key]     # sorted
         del word_dic
-        return [not not syno_list_curr, syno_list_curr]
+        return syno_list_curr
 
     def process_query_result(self):
         status = True
         self.line_curr=self.query_result.readline()
-        while not (not self.line_curr or not status):
+        while self.line_curr and status:
             if self.line_curr[:_header_length] == u'Definition:':
                 self.line_curr=self.line_curr.rstrip(u'\n')
                 definition_curr = self.line_curr[_header_length+1:]
                 self.syno_list.append([definition_curr, []])
-                [status, self.syno_list[-1][1]] = self.syno_populating()
+                self.syno_list[-1][1] = self.syno_populating()
+                status = bool(status)
             else:
                 self.line_curr=self.query_result.readline()
         self.query_result.close()
-        return status and not not self.syno_list
+        return status and bool(self.syno_list)
     def query(self,word):
         self.query_cmd_handler(word)
         query_status = self.synonym_found()
@@ -118,7 +120,7 @@ def _online_thesaurus_lookup(target):
     Direct query from thesaurus.com. All returns are decoded with utf-8.
     '''
     output = u""
-    time_out_choice = float(get_variable('tq_online_backends_timeout'))
+    time_out_choice = float(get_variable('tq_online_backends_timeout', '1.0'))
 
     try:
         response = urlopen(fixurl(u'http://www.thesaurus.com/browse/{0}'.format(target)).decode('ASCII'), timeout = time_out_choice)

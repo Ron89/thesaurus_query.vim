@@ -13,9 +13,8 @@ synonym list = [def, list wordlist]
     wordlist = [synonym_0, synonym_1, ...]: list of words belonging to a same definition
 '''
 
-import vim
 import os
-from ..tq_common_lib import decode_utf_8
+from ..tq_common_lib import decode_utf_8, get_variable
 
 identifier="mthesaur_txt"
 language="en"
@@ -47,12 +46,14 @@ def _mthesaur_file_locate():
     if os.path.exists(_mthesaur_file):
         _mthesaur_verified = 1
         return
-    if os.path.exists(os.path.expanduser(vim.eval("g:tq_mthesaur_file"))):
-        _mthesaur_file = os.path.expanduser(vim.eval("g:tq_mthesaur_file"))
+    _mthesaur_file = get_variable(
+        "tq_mthesaur_file",
+        "~/.vim/thesaurus/mthesaur.txt")
+    if os.path.exists(os.path.expanduser(_mthesaur_file)):
         _mthesaur_verified = 1
         return
 
-    for _mthesaur_file in vim.eval("&thesaurus").split(','):
+    for _mthesaur_file in get_variable("&thesaurus").split(','):
         if "mthesaur.txt" in _mthesaur_file:
             _mthesaur_file=os.path.expanduser(_mthesaur_file)
             _mthesaur_verified = 1

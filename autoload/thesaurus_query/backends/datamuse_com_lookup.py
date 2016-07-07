@@ -12,7 +12,6 @@ import json
 import socket
 import codecs
 from ..tq_common_lib import fixurl, decode_utf_8, get_variable
-#import vim
 
 query_result_trunc=50
 identifier="datamuse_com"
