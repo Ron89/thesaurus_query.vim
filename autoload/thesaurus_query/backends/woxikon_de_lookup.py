@@ -24,6 +24,8 @@ from ..tq_common_lib import decode_utf_8, encode_utf_8, fixurl, get_variable
 identifier="woxikon_de"
 language="de"
 
+_timeout_period_default = 10.0
+
 def query(target):
     ''' return result as list. relavance from high to low in each PoS.
 Lookup routine for datamuse.com. When query_from_source is called, return:
@@ -53,7 +55,8 @@ def _woxikon_de_url_handler(target):
     '''
     Query jiport for sysnonym
     '''
-    time_out_choice = float(get_variable('tq_online_backends_timeout'))
+    time_out_choice = float(get_variable(
+        'tq_online_backends_timeout', _timeout_period_default))
     try:
         response = urlopen(fixurl(u'http://synonyme.woxikon.de/synonyme/{0}.php'.format(target)).decode('ASCII'), timeout = time_out_choice)
         web_content = StringIO(decode_utf_8(response.read()))

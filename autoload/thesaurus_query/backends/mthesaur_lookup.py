@@ -20,13 +20,13 @@ identifier="mthesaur_txt"
 language="en"
 
 _mthesaur_file="./mthesaurus.txt"
-_mthesaur_verified = 0
+_mthesaur_verified = False
 
 def query(word):
-    if _mthesaur_verified == 0:
+    if not _mthesaur_verified:
         return [-1, []]
     match_found = 0
-    thesaur_file = open(_mthesaur_file, 'r')
+    thesaur_file = open(os.path.expanduser(_mthesaur_file), 'r')
     while True:
         line_curr=decode_utf_8(thesaur_file.readline())
         if not line_curr:
@@ -44,21 +44,21 @@ def query(word):
 def _mthesaur_file_locate():
     global _mthesaur_file, _mthesaur_verified
     if os.path.exists(_mthesaur_file):
-        _mthesaur_verified = 1
+        _mthesaur_verified = True
         return
     _mthesaur_file = get_variable(
         "tq_mthesaur_file",
         "~/.vim/thesaurus/mthesaur.txt")
     if os.path.exists(os.path.expanduser(_mthesaur_file)):
-        _mthesaur_verified = 1
+        _mthesaur_verified = True
         return
 
     for _mthesaur_file in get_variable("&thesaurus").split(','):
         if "mthesaur.txt" in _mthesaur_file:
             _mthesaur_file=os.path.expanduser(_mthesaur_file)
-            _mthesaur_verified = 1
+            _mthesaur_verified = True
             return
-    _mthesaur_verified = 0
+    _mthesaur_verified = False
 
 
 # initiation ------------
