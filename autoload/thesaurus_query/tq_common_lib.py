@@ -114,3 +114,8 @@ def vim_command(command):
     if independent_session:
         return None
     vim.command(command)
+
+def vim_eval(command):
+    if independent_session:
+        return None
+    return vim.eval(command)

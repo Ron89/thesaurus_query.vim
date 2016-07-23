@@ -11,7 +11,7 @@ except ImportError:
 
 import re
 from . import backends as tq_backends
-from .tq_common_lib import decode_utf_8, send_string_to_vim, get_variable, vim_command
+from .tq_common_lib import decode_utf_8, send_string_to_vim, get_variable, vim_command, vim_eval
 
 class Thesaurus_Query_Handler:
     '''
@@ -136,27 +136,6 @@ def tq_candidate_list_populate(candidates):
             word_ID+=1
     return [word_ID, waitlist, result_IDed]
 
-def candidate_list_printing(result_IDed):
-    '''
-    Print candidate list to the messagebox
-    '''
-    if independent_session:     # this module don't work in Vim independent session
-        return None
-    for case in result_IDed:
-        if case[0] != u"":
-            vim_command('call thesaurus_query#echo_HL("Keyword|Found as: |Directory|{0}|None|\\n")'.format(send_string_to_vim(case[0])))
-        vim_command('call thesaurus_query#echo_HL("Keyword|Synonyms: |None|")')
-        col_count = 10
-        col_count_max = int(vim.eval("&columns"))
-        for synonym_i in case[1]:
-            if (col_count+len(synonym_i)+1)<col_count_max:
-                vim_command('echon "{0} "'.format(send_string_to_vim(synonym_i)))
-                col_count += len(synonym_i)+1
-            else:
-                vim_command('echon "\n          {0} "'.format(send_string_to_vim(synonym_i)))
-                col_count = 10 + len(synonym_i)+1
-        vim_command('echon "\n"')
-
 def tq_replace_cursor_word_from_candidates(candidate_list):
     '''
     Using vim's color message box to populate a candidate list from found
@@ -165,6 +144,28 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
     '''
     if independent_session:     # this module don't work in Vim independent session
         return None
+
+    def candidate_list_printing(result_IDed):
+        '''
+        Print candidate list to the messagebox
+        '''
+        if independent_session:     # this module don't work in Vim independent session
+            return None
+        for case in result_IDed:
+            if case[0] != u"":
+                vim_command('call thesaurus_query#echo_HL("Keyword|Found as: |Directory|{0}|None|\\n")'.format(send_string_to_vim(case[0])))
+            vim_command('call thesaurus_query#echo_HL("Keyword|Synonyms: |None|")')
+            col_count = 10
+            col_count_max = int(vim.eval("&columns"))
+            for synonym_i in case[1]:
+                if (col_count+len(synonym_i)+1)<col_count_max:
+                    vim_command('echon "{0} "'.format(send_string_to_vim(synonym_i)))
+                    col_count += len(synonym_i)+1
+                else:
+                    vim_command('echon "\n          {0} "'.format(send_string_to_vim(synonym_i)))
+                    col_count = 10 + len(synonym_i)+1
+            vim_command('echon "\n"')
+
     [truncated_flag, candidates] = truncate_synonym_list(candidate_list)
 
     [candidate_num, thesaurus_wait_list, syno_result_IDed] = tq_candidate_list_populate(candidates)
@@ -270,7 +271,6 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
                         current_cursor[1]-relative_pos+len(word_original):
                         ]
 
-
 def tq_generate_thesaurus_buffer(candidates):
     '''
     generate a buffer showing all found synonyms in the candidate list from
@@ -285,25 +285,50 @@ def tq_generate_thesaurus_buffer(candidates):
         vim_command('exec ":silent keepalt belowright split thesaurus:\\\\ " . l:word_fname')
     vim_command('exec ":silent file thesaurus:\\\\ " . l:word_fname . "\\\\ (press\\\\ q\\\\ to\\\\ close\\\\ this\\\\ split.)"')
 
-    vim_command('setlocal noswapfile nobuflisted nospell nowrap modifiable')
+    vim_command('setlocal noswapfile nobuflisted nospell nowrap modifiable nonumber foldcolumn=0')
+    if vim_eval('exists("+relativenumber")')=='1':
+        vim_command('setlocal norelativenumber')
     vim_command('setlocal buftype=nofile')
 
+# obtain window dimension:
+    win_width = int(vim_eval('winwidth(0)'))
+
+# initialize buffer
     tq_thesaurus_buffer = vim.current.buffer
     del tq_thesaurus_buffer[:]
-    line_count=0
-    tq_thesaurus_buffer.append([""])
-    tq_thesaurus_buffer[line_count]="Result for word \"{0}\" (press \"q\" to close this split)".format(vim.eval('l:word'))
-    line_count+=1
+
+    def candidate_list_printing(word_list):
+        """ Append a list of synonyms to the end of buffer,
+        Acceptable structure:
+            [ word1, word2, word3, ... ]
+        """
+        tq_thesaurus_buffer.append([""])
+        tq_thesaurus_buffer[-1]='Synonyms: '
+        column_curr = 10
+        word_list_size = len(word_list)
+
+        for word_curr in enumerate(word_list):
+            if column_curr+len(word_curr[1])+2 >= win_width:
+                tq_thesaurus_buffer.append(["          "])
+                column_curr = 10
+            if word_curr[0]<word_list_size-1 :
+                tq_thesaurus_buffer[-1]+= \
+                    send_string_to_vim(word_curr[1])+', '
+                column_curr += len(word_curr[1])+2
+            else:
+                tq_thesaurus_buffer[-1]+= \
+                    send_string_to_vim(word_curr[1])
+
+    tq_thesaurus_buffer[-1]="Result for word \"{0}\" (press \"q\" to close this split)".format(vim.eval('l:word'))
     for case in candidates:
         tq_thesaurus_buffer.append([""])
         if not case[0]:
-            tq_thesaurus_buffer[line_count]='Synonyms: {0}'.format(send_string_to_vim(", ".join(case[1])))
-            line_count+=1
+            candidate_list_printing(case[1])
             continue
-        tq_thesaurus_buffer[line_count:line_count+2]=['Found_as: {0}'.format(send_string_to_vim(case[0])), 'Synonyms: {}'.format(send_string_to_vim(", ".join(case[1])))]
-        line_count+=2
+        tq_thesaurus_buffer.append([""])
+        tq_thesaurus_buffer[-1]='Found_as: {0}'.format(send_string_to_vim(case[0]))
+        candidate_list_printing(case[1])
     vim_command("setlocal bufhidden=")
-    vim_command("silent g/^Synonyms:/ normal! 0Vgq")
     vim_command("exec 'resize ' . (line('$'))")
     vim_command("nnoremap <silent> <buffer> q :q<CR>")
     vim_command("setlocal filetype=thesaurus")
