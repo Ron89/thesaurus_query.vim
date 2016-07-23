@@ -59,7 +59,7 @@ class Thesaurus_Query_Handler:
         if 'state' not in locals():
             vim_command('echohl WarningMSG | echon "WARNING: " | echohl None | echon "No thesaurus source is used. Please check on your configuration on g:tq_enabled_backends and g:tq_language or b:tq_language.\n"')
             return []
-        if state == 0:  # save to word_list buffer only when synonym is found
+        if state == 0 :  # save to word_list buffer only when synonym is found
             self.word_list[word]=synonym_list
             self.word_list_keys.append(word)
             if len(self.word_list_keys) > self.wordlist_size_max:
@@ -170,7 +170,7 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
     [candidate_num, thesaurus_wait_list, syno_result_IDed] = tq_candidate_list_populate(candidates)
 
     vim_command("echon \"In line: ... \"|echohl Keyword|echon \"{0}\"|echohl None |echon \" ...\n\"".format(vim.current.line.replace('\\','\\\\').replace('"','\\"')))
-    vim_command("call thesaurus_query#echo_HL(\"None|Candidates for |WarningMSG|{0}\\n|None\")".format(vim.eval("l:trimmed_word")))
+    vim_command("echohl None| echon \"Candidates for \"| echohl WarningMSG | echon \"{0}\\n\" | echohl None".format(vim.eval("l:trimmed_word").replace('\\','\\\\').replace('"','\\"')))
 
     candidate_list_printing(syno_result_IDed)
 
@@ -211,8 +211,8 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
         '''
         state = False
         letter_iter = - current_line[current_cursor[1]:].find(target_word)
-        if current_line[
-                current_cursor[1]: current_cursor[1]-letter_iter].isspace():
+        if (letter_iter!=1) and not current_line[
+                current_cursor[1]: current_cursor[1]-letter_iter].isalpha():
             state = True
         else:
             for letter_iter in range(len(target_word)):
@@ -227,7 +227,7 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
     def remove_wrapped_part(target_word, layer):
         ''' Recursively remove wrapped content from the following lines
         '''
-        def scan_current_layer():
+        def scan_current_layer(find_tail):
             tail_found = False
             overlap_size = 0
             result_word = target_word
@@ -235,22 +235,27 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
             line_split = vim.current.buffer[current_cursor[0]-1+layer].split()
             for overlap_size in range(
                     1, min( len(word_split)+1, len(line_split)+1)):
-                if word_split[-overlap_size:] == line_split[:overlap_size]:
-                    tail_found = True
+                if word_split[-overlap_size:-1] == line_split[:overlap_size-1]:
+                    if find_tail:
+                        if word_split[-1] in line_split[overlap_size-1]:
+                            tail_found = True
+                    elif word_split[-1] == line_split[overlap_size-1]:
+                        tail_found = True
+                if tail_found:
                     result_word = ' '.join(
                         word_split[:len(word_split)-overlap_size])
                     vim.current.buffer[
                         current_cursor[0]-1+layer]=re.sub(
                             " ".join(
-                                line_split[ : overlap_size])+r'\s*', '',
+                                word_split[-overlap_size : ])+r'\s*', '',
                             vim.current.buffer[ current_cursor[0]-1+layer]
                             , 1)
                     break
             return (tail_found, result_word)
-        current_layer_tailored, remainder_target = scan_current_layer()
+        current_layer_tailored, remainder_target = scan_current_layer(True)
         if not current_layer_tailored:
             target_word = remove_wrapped_part(target_word, layer+1)
-            current_layer_tailored, remainder_target = scan_current_layer()
+            current_layer_tailored, remainder_target = scan_current_layer(False)
             if not current_layer_tailored:
                 return target_word
         return remainder_target

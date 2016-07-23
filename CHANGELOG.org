@@ -9,6 +9,8 @@
       is as simple as dropping the backend file into folder
       =./autoload/thesaurus_query/backends=
 *** Fixed
+    - Fix multiple bugs encountered when querying for words/phrases surrounded
+      by non-space symbols or contain non-space symbols.
     - String =zero length field in format= issue with Python2.6.
 ** V0.4																																																												:released:
 *** Added

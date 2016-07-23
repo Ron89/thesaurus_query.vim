@@ -210,7 +210,7 @@ function! thesaurus_query#Thesaurus_Query_Lookup(word, replace) " {{{
 exec s:tq_python_env
 # mark for exit function if no candidate is found
 if not tq_synonym_result:
-    vim.command("echom 'No synonym found for \"{0}\".'".format(vim.eval("l:trimmed_word")))
+    vim.command("echom \"No synonym found for \\\"{0}\\\".\"".format(vim.eval("l:trimmed_word").replace('\\','\\\\').replace('"','\\"')))
     vim.command("let l:syno_found=0")
 # if replace flag is on, prompt user to choose after populating candidate list
 elif vim.eval('l:replace') != '0':
