@@ -5,6 +5,7 @@
 
 ** V0.5																																																										:unreleased:
 *** Changed
+    - Improved syntax of =part of speech= in split synonym display
     - Improved split window display for synonym candidates.
     - Implemented dynamic backend-managing mechanism. Now adding new backends
       is as simple as dropping the backend file into folder
