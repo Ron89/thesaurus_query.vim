@@ -1,7 +1,6 @@
-# Python backend for looking up words in an online thesaurus. Idea from
-# project vim-online_thesaurus by Anton Beloglazov <http://beloglazov.info/>.
+# Python backend for looking up words in an online thesaurus. 
+#
 # Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
-# Original idea: Anton Beloglazov <http://beloglazov.info/>
 
 try:
     import vim
@@ -14,18 +13,24 @@ from . import backends as tq_backends
 from .tq_common_lib import decode_utf_8, send_string_to_vim, get_variable, vim_command, vim_eval
 
 class Thesaurus_Query_Handler:
-    '''
-    It holds and manages wordlist from previous query. It also interface the
-    query request from vim with default query routine or other user defined
-    routine when word is not already in the wordlist.
+    ''' Handler for thesaurus_query
+    Description:
+        It holds and manages wordlist from previous query. It also interface
+        the query request from vim with default query routine or other user
+        defined routine when word is not already in the wordlist.
     '''
 
     def __init__(self, cache_size_max=100):
+        ''' Initialize handler, load all available backends. '''
         self.wordlist_size_max = cache_size_max
         self.restore_thesaurus_query_handler()
         self.query_backends = tq_backends.query_backends
 
     def query(self, word):
+        """ Query from enabled backend one by one until synonym found
+        return:
+            synonym_list
+        """
         if word in self.word_list:  # search word_list first to save query time
             return self.word_list[word]
 
@@ -82,6 +87,13 @@ class Thesaurus_Query_Handler:
             self.query_backend_priority.insert(0,"mthesaur_txt")
 
 def truncate_synonym_list(synonym_list):
+    """ Truncate synonym_list according to user truncation settings
+    return:
+        [truncated_flag, truncated_list]
+        truncated_flag:
+            0 -> no truncation is made
+            1 -> valid truncation is made
+    """
     truncated_flag = 0
     # number of definitions retained in output
     truncate_on_definition = int(
@@ -108,9 +120,7 @@ def truncate_synonym_list(synonym_list):
     return [truncated_flag, output_buffer]
 
 def tq_word_form_reverse(target_word):
-    '''
-    adjust candidate according to trimmed word
-    '''
+    ''' adjust candidate to match trimmed word's case(upper/lower/mixed) '''
     if independent_session:     # this module don't work in Vim independent session
         return None
     wordOriginal = decode_utf_8(vim.eval('l:trimmed_word'))
@@ -121,8 +131,9 @@ def tq_word_form_reverse(target_word):
     return target_word
 
 def tq_candidate_list_populate(candidates):
-    '''
-    generate waitlist and result_IDed to be shown on message_box
+    ''' generate IDed waitlist and prepare it to show on message_box
+    return:
+        [largest_ID, candidate_waitlist, IDed_candidate_waitlist]
     '''
     waitlist = []
     result_IDed = []
@@ -137,10 +148,11 @@ def tq_candidate_list_populate(candidates):
     return [word_ID, waitlist, result_IDed]
 
 def tq_replace_cursor_word_from_candidates(candidate_list):
-    '''
-    Using vim's color message box to populate a candidate list from found
-    synonyms. Then ask user to choose suitable candidate to replace word under
-    cursor.
+    ''' populate candidate list, replace target word/phrase with candidate
+    Description:
+        Using vim's color message box to populate a candidate list from found
+        synonyms. Then ask user to choose suitable candidate to replace word
+        under cursor.
     '''
     if independent_session:     # this module don't work in Vim independent session
         return None
@@ -277,10 +289,7 @@ def tq_replace_cursor_word_from_candidates(candidate_list):
                         ]
 
 def tq_generate_thesaurus_buffer(candidates):
-    '''
-    generate a buffer showing all found synonyms in the candidate list from
-    query
-    '''
+    ''' generate a buffer in Vim to show all found synonyums from query '''
     if independent_session:     # this module don't work in Vim independent session
         return None
     vim_command("silent! let l:thesaurus_window = bufwinnr('^thesaurus: ')")
