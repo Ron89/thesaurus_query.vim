@@ -308,17 +308,17 @@ def tq_generate_thesaurus_buffer(candidates):
             [ word1, word2, word3, ... ]
         """
         tq_thesaurus_buffer.append([""])
-        tq_thesaurus_buffer[-1]='Synonyms: '
+        tq_thesaurus_buffer[-1]='Synonyms:'
         column_curr = 10
         word_list_size = len(word_list)
 
         for word_curr in enumerate(word_list):
             if column_curr+len(word_curr[1])+2 >= win_width:
-                tq_thesaurus_buffer.append(["          "])
+                tq_thesaurus_buffer.append(["         "])
                 column_curr = 10
             if word_curr[0]<word_list_size-1 :
                 tq_thesaurus_buffer[-1]+= \
-                    send_string_to_vim(word_curr[1])+', '
+                    send_string_to_vim(''.join([' ', word_curr[1], ',']))
                 column_curr += len(word_curr[1])+2
             else:
                 tq_thesaurus_buffer[-1]+= \
