@@ -3,7 +3,7 @@
 
   This log is kept according to the [[http://keepachangelog.com/][Keep a CHANGELOG]] manifesto
 
-** V0.5																																																										:unreleased:
+** V0.5																																																												:released:
 *** Changed
     - Improved syntax of =part of speech= in split synonym display
     - Improved split window display for synonym candidates.
