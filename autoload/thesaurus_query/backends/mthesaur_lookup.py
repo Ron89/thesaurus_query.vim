@@ -19,10 +19,9 @@ from ..tq_common_lib import decode_utf_8, get_variable
 identifier="mthesaur_txt"
 language="en"
 
-_mthesaur_file="./mthesaurus.txt"
-_mthesaur_verified = False
-
 def query(word):
+    _mthesaur_verified , _mthesaur_file = _mthesaur_file_locate()
+    print _mthesaur_verified, _mthesaur_file
     if not _mthesaur_verified:
         return [-1, []]
     match_found = 0
@@ -42,23 +41,18 @@ def query(word):
     return [1, []]
 
 def _mthesaur_file_locate():
-    global _mthesaur_file, _mthesaur_verified
-    if os.path.exists(_mthesaur_file):
-        _mthesaur_verified = True
-        return
-    _mthesaur_file = get_variable(
+    verified_file = get_variable(
         "tq_mthesaur_file",
         "~/.vim/thesaurus/mthesaur.txt")
-    if os.path.exists(os.path.expanduser(_mthesaur_file)):
-        _mthesaur_verified = True
-        return
+    if os.path.exists(os.path.expanduser(verified_file)):
+        return (True, verified_file)
 
-    for _mthesaur_file in get_variable("&thesaurus").split(','):
-        if "mthesaur.txt" in _mthesaur_file:
-            _mthesaur_file=os.path.expanduser(_mthesaur_file)
-            _mthesaur_verified = True
-            return
-    _mthesaur_verified = False
+    for thesaurus_file in get_variable("&thesaurus").split(','):
+        if "mthesaur.txt" in thesaurus_file:
+            if os.path.exists(os.path.expanduser(thesaurus_file)):
+                verified_file = os.path.expanduser(thesaurus_file)
+                return (True, verified_file)
+    return (False, None)
 
 
 # initiation ------------

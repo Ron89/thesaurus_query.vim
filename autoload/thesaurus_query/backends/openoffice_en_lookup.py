@@ -21,7 +21,6 @@ identifier="openoffice_en"
 language = "en"
 
 _oo_file = "/usr/share/myspell/dicts/th_en_US_v2"
-_oo_verified = False
 
 def query(word):
     if not _oo_file_access():
