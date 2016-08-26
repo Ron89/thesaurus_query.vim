@@ -59,8 +59,8 @@ class Thesaurus_Query_Handler:
             for good in good_backends:
                 self.query_backend_priority.remove(good)
             self.query_backend_priority=good_backends+self.query_backend_priority
-        if error_encountered == 1:
-            vim_command('echohl WarningMSG | echon "WARNING: " | echohl None | echon "one or more query backends report error. Please check on thesaurus source(s).\n"')
+#       if error_encountered == 1:
+#           vim_command('echohl WarningMSG | echon "WARNING: " | echohl None | echon "one or more query backends report error. Please check on thesaurus source(s).\n"')
         if 'state' not in locals():
             vim_command('echohl WarningMSG | echon "WARNING: " | echohl None | echon "No thesaurus source is used. Please check on your configuration on g:tq_enabled_backends and g:tq_language or b:tq_language.\n"')
             return []

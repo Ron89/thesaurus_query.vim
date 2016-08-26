@@ -21,7 +21,6 @@ language="en"
 
 def query(word):
     _mthesaur_verified , _mthesaur_file = _mthesaur_file_locate()
-    print _mthesaur_verified, _mthesaur_file
     if not _mthesaur_verified:
         return [-1, []]
     match_found = 0
