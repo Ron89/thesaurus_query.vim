@@ -19,6 +19,22 @@ required**.
 
 ## What's New
 
+ * Implemented and set as default a new local English backend `openoffice_en`
+   using OpenOffice's Thesaurus database for thesaurus source. If you are using
+   Linux and has installed OpenOffice from official repo, you should have index
+   file `th_en_US_v2.idx` and database file`th_en_US_v2.dat`
+   `/usr/share/myspell/dicts`, and this plugin should work outright. But if
+   not, you should manually indicate database on your machine by setting
+   variable `g:tq_openoffice_en_file`. Eg, if your indes and database (2 files)
+   are `~/Downloads/MyThes-1.0/th_en_US_new[.idx,.dat]` then you should set
+   your variable as
+   ```
+   let g:tq_openoffice_en_file="~/Downloads/MyThes-1.0/th_en_US_new"
+
+   ```
+
+----------------
+
  * Implemented dynamic import for backends. From `v0.5.0`, to add customized
    backend, you need only adding the properlly written backend(see
    documentation for detail) into
@@ -36,12 +52,6 @@ required**.
    ```
    let g:tq_online_backends_timeout = 0.4
    ```
-
-----------------
-
- * Now query invoked from Visual mode (still by `<leader>cs`) also support word
-   replacement feature. If invoked in this manner, user selected candidate will
-   replace the word/phrase covered in visual mode.
 
 
 ## Installation
@@ -110,7 +120,7 @@ command mode command `:Thesaurus`.
 
 To ensure stability of the plugin's functionality, under the hood, this plugin
 uses multiple backends sequentially to query for a synonym. Backends function
-independently, hence the plugin will be functional as long as one of the three
+independently, hence the plugin will be functional as long as one of the these
 backends is behaving properly.
 
 * **thesaurus\_com** queries from [Thesaurus.com](http://thesaurus.com/) for
@@ -122,9 +132,19 @@ backends is behaving properly.
   its officially provided API. The returned synonym list is usually quite
   relavant with reasonable quality. But the synonyms list tend to be short, so
   it might leave out some less-frequently-used synonyms.
-* **mthesaur\_txt** queries from local `mthesaur.txt`. It is an useful option
-  when you don't have any internet access at all. For this backend to work, be
-  sure to download the file from
+* **openoffice\_en** queries from local thesaurus database provided by
+  OpenOffice. It is an useful option when you don't have any internet access at
+  all. If you are using Linux and has installed OpenOffice from official repo,
+  you should have index file `th_en_US_v2.idx` and database
+  file`th_en_US_v2.dat` `/usr/share/myspell/dicts`, and this plugin should work
+  outright. But if not, you should manually indicate database on your machine
+  by setting variable `g:tq_openoffice_en_file`. Eg, if your indes and database
+  (2 files) are `~/Downloads/MyThes-1.0/th_en_US_new[.idx,.dat]` then you
+  should set your variable as `let
+  g:tq_openoffice_en_file="~/Downloads/MyThes-1.0/th_en_US_new"`
+* **mthesaur\_txt** queries from local `mthesaur.txt`. It is another useful
+  option when you don't have any internet access at all. For this backend to
+  work, be sure to download the file from
   [gutenberg.org](http://www.gutenberg.org/files/3202/files/) and place it
   under "~/.vim/thesaurus". If you place the file elsewhere, change global
   variable |g:tq_mthesaur_file| to point to the file you
@@ -275,3 +295,4 @@ Several key improvements were made comparing to his plugin:
    a timeout limit.
 3. Implement algorithm to make synonym candidates in a same form(tense,
    plurality, etc.). This could take a while... :-|
+4. Update documentation

@@ -140,7 +140,7 @@ endif
 " priority.
 "       * Please be careful not to mis-spell when setting this variable.
 if !exists("g:tq_enabled_backends")
-    let g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","mthesaur_txt"]
+    let g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","openoffice_en","mthesaur_txt"]
 endif
 
 " }}}

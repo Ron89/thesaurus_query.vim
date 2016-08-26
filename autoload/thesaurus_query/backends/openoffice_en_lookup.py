@@ -55,9 +55,12 @@ def query(word):
     return [0, query_result]
 
 def _strip_descriptor(string):
+    """ Strip additional information (usually wrapped in parenthesis) of the
+    candidate from the candidate itself.
+    """
     if string.find(u"(")!=-1:
-        return string[:string.find(u"(")]
-    return string
+        return string[:string.find(u"(")].strip()
+    return string.strip()
 
 def _oo_file_access():
     index_file, data_file = _data_pair()

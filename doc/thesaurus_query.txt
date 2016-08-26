@@ -16,6 +16,7 @@ CONTENTS                                                  *thesaurus_query.vim*
         `g:tq_online_backends_timeout`
         `b/g:tq_language`
         `g:tq_use_local_thesaurus_source_as_primary`
+        `g:tq_openoffice_en_file`
         `g:tq_mthesaur_file`
         `g:raise_backend_priority_if_synonym_found`
         `g:tq_truncation_on_relavance`
@@ -34,10 +35,23 @@ replace it with an user chosen synonym. It also accept word covered in visual
 mode or manual input. But for the latter two cases, auto-replacement function
 is not activated by default.
 
-Two backends are used for this plugin:
+Multiple backends are used for this plugin, by default, three are enabled:
     *   Online backend querys from [Thesaurus.com](http://thesaurus.com/) for
         synonym, so internet connection is required for this backend's
         functionality.
+
+    *   Local backend querys from OpenOffice's MyThes thesaurus source. If you
+        have OpenOffice (Not LibreOffice) installed on your Machine, the files
+        should be `/usr/share/myspell/dicts/th_en_US_v2[.idx,.dat]`, and the
+        backend would function properly. But if OpenOffice isn't provided by
+        the distro-repo or if the thesaurus database is provided elsewhere,
+        you'll need to manually indicate the database location in your system
+        by setting `g:tq_openoffice_en_file`. E.g. If my database files are
+        `~/Downloads/Mythes-1.0/th_en_US_new[.idx,.dat]`, my setting needs to
+        be >
+        let g:tq_openoffice_en_file="~/Downloads/MyThes-1.0/th_en_US_new"
+<
+
     *   Local backend querys from `mthesaur.txt`. For this backend to work,
         be sure to download the file from
         [gutenberg.org](http://www.gutenberg.org/files/3202/files/) and place
@@ -131,6 +145,7 @@ g:tq_enabled_backends~
         let g:tq_enabled_backends = ["woxikon_de", \
                                      "jeck_ru", \
                                      "thesaurus_com", \
+                                     "openoffice_en", \
                                      "mthesaur_txt"]
 <
 
@@ -165,6 +180,14 @@ g:tq_use_local_thesaurus_source_as_primary~
             0:      query with online backend first.
             1:      query with local backend first. >
         let g:tq_use_local_thesaurus_source_as_primary=0
+<
+
+g:tq_openoffice_en_file~
+    this variable is offered by openoffice_en_lookup. Used to determine
+    locate OpenOffice thesaurus plugin's index and database file from your
+    computer. If no database file is found from indicated location, this
+    backend will report error. >
+        let g:tq_openoffice_en_file="/usr/share/myspell/dicts/th_en_US_v2"
 <
 
 g:tq_mthesaur_file~
