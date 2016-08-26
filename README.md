@@ -161,14 +161,14 @@ backends is behaving properly.
   website didn't provide standard API to use. Hence functionality of this
   backend depends on whether the website owner will change the webpage design.
 
-**By default, The sequence of query is thesaurus\_com -> mthesaur\_txt**. Next
+**By default, The sequence of query is thesaurus\_com -> openoffice\_en -> mthesaur\_txt**. Next
 query will be conducted only when the previous query return empty sysnonym list
 or failed to query. You may remove unwanted backend or lower their priority by
 removing them/putting them on latter position in variable
 `g:tq_enabled_backends`. Its default is
 
 ```
-    g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","mthesaur_txt"]
+    g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","openoffice_en","mthesaur_txt"]
 ```
 
 Backend **woxikon\_de**, **jeck\_ru** are currently **not activated by
