@@ -7,6 +7,9 @@
 *** Added
 - =openoffice_en= backend, using OpenOffice's thesaurus extension as thesaurus
   source.
+*** Fixed
+- Bugs in source checking logic of =mthesaur_txt= routine when variable
+  =&thesaurus= is searched
 ** V0.5                                                           :released:
 *** Changed
     - Improved syntax of =part of speech= in split synonym display
