@@ -116,7 +116,9 @@ class Thesaurus_Query_Handler:
             if not self.last_valid_result:
                 vim_command('echohl WarningMSG | echon "WARNING: " | echohl None | echon "No thesaurus source is used. Please check on your configuration on g:tq_enabled_backends and g:tq_language or b:tq_language.\n"')
             return self.last_valid_result
-        if synonym_list:    # update last valid result if positive result is found
+        if not synonym_list:    # update last valid result if positive result is found
+            return self.last_valid_result
+        else:
             self.last_valid_result=synonym_list
 
         return synonym_list
