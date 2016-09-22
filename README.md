@@ -19,6 +19,16 @@ required**.
 
 ## What's New
 
+ * Implemented **n**ext/**p**revious backend switching functionality in Candidate
+   choosing interface. Allow user to compare synonym results from different
+   backends and choose the most satisfying result.
+   
+   **Note** Due to limitation of Vim's `redraw` function, sometimes the message
+   box becomes too small and candidate list could not be fully displayed. This
+   usually happens after several rounds of backend switching. As a temporary
+   workaround, when this happens, you can simply type `<whitespace>` to force
+   message to be fully displayed.
+
  * Implemented and set as default a new local English backend `openoffice_en`
    using OpenOffice's Thesaurus database for thesaurus source. If you are using
    Linux and has installed OpenOffice from official repo, you should have index

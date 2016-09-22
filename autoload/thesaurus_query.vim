@@ -171,11 +171,11 @@ exec s:tq_python_env
 import sys, os, vim
 
 for p in vim.eval("&runtimepath").split(','):
-	dname = os.path.join(p, "autoload")
-	if os.path.exists(os.path.join(dname, "thesaurus_query")):
-		if dname not in sys.path:
-			sys.path.append(dname)
-			break
+    dname = os.path.join(p, "autoload")
+    if os.path.exists(os.path.join(dname, "thesaurus_query")):
+        if dname not in sys.path:
+            sys.path.append(dname)
+            break
 import thesaurus_query.thesaurus_query as tq_interface
 from thesaurus_query.tq_common_lib import decode_utf_8
 
@@ -203,20 +203,36 @@ function! thesaurus_query#Thesaurus_Query_Lookup(word, replace) " {{{
     let l:word_fname = fnameescape(l:word)
     let l:syno_found = 1  " initialize the value
 
-" query the current word
-    exec s:tq_use_python.'tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")))'
 
-" Use Python environment for handling candidate displaying {{{
 exec s:tq_python_env
+# query the current word
+tq_framework.session_terminate()
+tq_framework.session_init()
+
+tq_continue_query = 1
+
+while tq_continue_query>0:
+    vim.command("redraw")
+    tq_next_query_direction = True if tq_continue_query==1 else False
+    tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")), tq_next_query_direction)
+# Use Python environment for handling candidate displaying {{{
 # mark for exit function if no candidate is found
-if not tq_synonym_result:
-    vim.command("echom \"No synonym found for \\\"{0}\\\".\"".format(vim.eval("l:trimmed_word").replace('\\','\\\\').replace('"','\\"')))
-    vim.command("let l:syno_found=0")
+    if not tq_synonym_result:
+        vim.command("echom \"No synonym found for \\\"{0}\\\".\"".format(vim.eval("l:trimmed_word").replace('\\','\\\\').replace('"','\\"')))
+        vim.command("let l:syno_found=0")
+        tq_framework.session_terminate()
+        tq_continue_query = 0
 # if replace flag is on, prompt user to choose after populating candidate list
-elif vim.eval('l:replace') != '0':
-    tq_interface.tq_replace_cursor_word_from_candidates(tq_synonym_result)
+    elif vim.eval('l:replace') != '0':
+        tq_continue_query = tq_interface.tq_replace_cursor_word_from_candidates(tq_synonym_result, tq_framework.good_backends[-1])
+    else:
+        tq_continue_query = 0
+        tq_framework.session_terminate()
+
+del tq_continue_query
+del tq_next_query_direction
+# }}}
 endOfPython
-" }}}
 
 " exit function if no candidate is found
     if !l:syno_found + l:replace*(!g:tq_display_list_all_time)
@@ -247,6 +263,7 @@ function! thesaurus_query#auto_complete_integrate(findstart, base) "{{{
             return
         endif
         let l:synoList = []
+        exec s:tq_use_python.'tq_framework.session_terminate()'
         exec s:tq_use_python.'tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")))'
         exec s:tq_use_python.'tq_synonym_combined = [tq_iterator[1] for tq_iterator in tq_synonym_result]'
         exec s:tq_use_python.'tq_synonym_annexed = [tq_interface.tq_word_form_reverse(item) for syn_sublist in tq_synonym_combined for item in syn_sublist]'
