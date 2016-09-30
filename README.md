@@ -19,6 +19,20 @@ required**.
 
 ## What's New
 
+ * Implemented Chinese thesaurus query method based on
+   [cilin.txt](https://github.com/shijiebei2009/Algorithms/blob/master/src/main/resources/cilin.txt).
+   This backend is still in testing phase hence not added into default
+   backends. To use, copy this file to `~/.vim/thesaurus/cilin.txt`, and enable
+   the backend by setting (following setting will enable cilin.txt as Chinese
+   sourse and thesaurus.com and mthesaur.txt as English source.)
+
+   ```
+   let g:tq_language = ['cn', 'en']
+   let g:tq_enabled_backends = ["cilin_txt", "thesaurus_com", "mthesaur.txt"]
+   ```
+
+----------------
+
  * Implemented **n**ext/**p**revious backend switching functionality in Candidate
    choosing interface. Allow user to compare synonym results from different
    backends and choose the most satisfying result.
@@ -28,6 +42,8 @@ required**.
    usually happens after several rounds of backend switching. As a temporary
    workaround, when this happens, you can simply type `<whitespace>` to force
    message to be fully displayed.
+
+----------------
 
  * Implemented and set as default a new local English backend `openoffice_en`
    using OpenOffice's Thesaurus database for thesaurus source. If you are using
