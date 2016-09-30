@@ -299,7 +299,6 @@ def tq_replace_cursor_word_from_candidates(candidate_list, source_backend=None):
             state = True
         else:
             for letter_iter in range(len(target_word)):
-                print(len(target_word))
                 if current_line[
                         current_cursor[1]-letter_iter:
                         current_cursor[1]-letter_iter+len(target_word)] == \
