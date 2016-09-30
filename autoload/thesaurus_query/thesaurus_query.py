@@ -10,8 +10,10 @@ except ImportError:
 
 import re
 from . import backends as tq_backends
-from .tq_common_lib import decode_utf_8, send_string_to_vim, get_variable, vim_command, vim_eval
+import unicodedata as _unicode_data
+from .tq_common_lib import decode_utf_8, encode_utf_8, send_string_to_vim, get_variable, vim_command, vim_eval
 
+_double_width_type = ["Lo"]
 query_session=list()
 
 class Thesaurus_Query_Handler:
@@ -194,6 +196,13 @@ def tq_candidate_list_populate(candidates):
             word_ID+=1
     return [word_ID, waitlist, result_IDed]
 
+def _double_width_char_count(word):
+    dw_count = 0
+    for char in word:
+        if _unicode_data.category(char) in _double_width_type:
+            dw_count += 1
+    return dw_count
+
 def tq_replace_cursor_word_from_candidates(candidate_list, source_backend=None):
     ''' populate candidate list, replace target word/phrase with candidate
     Description:
@@ -222,12 +231,12 @@ def tq_replace_cursor_word_from_candidates(candidate_list, source_backend=None):
             col_count = 10
             col_count_max = int(vim.eval("&columns"))
             for synonym_i in case[1]:
-                if (col_count+len(synonym_i)+1)<col_count_max:
+                if (col_count+len(synonym_i)+_double_width_char_count(synonym_i)+1)<col_count_max:
                     vim_command('echon "{0} "'.format(send_string_to_vim(synonym_i)))
-                    col_count += len(synonym_i)+1
+                    col_count += len(synonym_i)+_double_width_char_count(synonym_i)+1
                 else:
                     vim_command('echon "\n          {0} "'.format(send_string_to_vim(synonym_i)))
-                    col_count = 10 + len(synonym_i)+1
+                    col_count = 10 + len(synonym_i)+_double_width_char_count(synonym_i)+1
             vim_command('echon "\n"')
 
     [truncated_flag, candidates] = truncate_synonym_list(candidate_list)
@@ -236,7 +245,7 @@ def tq_replace_cursor_word_from_candidates(candidate_list, source_backend=None):
 
     vim_command("echon \"In line: ... \"|echohl Keyword|echon \"{0}\"|echohl None |echon \" ...\n\"".format(vim.current.line.replace('\\','\\\\').replace('"','\\"')))
     vim_command("echohl None| echon \"Candidates for \"| echohl WarningMSG | echon \"{0}\" | echohl None | echon \", found by backend: \" | echohl Keyword | echon \"{1}\n\"".format(
-        vim.eval("l:trimmed_word").replace('\\','\\\\').replace('"','\\"'), 
+        vim.eval("l:trimmed_word").replace('\\','\\\\').replace('"','\\"'),
         source_backend
     ))
 
@@ -252,7 +261,7 @@ def tq_replace_cursor_word_from_candidates(candidate_list, source_backend=None):
             else:
                 thesaurus_user_choice = vim.eval("input('Type number and <Enter> (results truncated, Type `A<Enter>` to browse all resultsin split;\nempty cancels; 'n': use next backend; 'p' use previous backend): ')")
         except KeyboardInterrupt:
-            return None 
+            return None
         return thesaurus_user_choice
 
     thesaurus_user_choice = obtain_user_choice(truncated_flag)
@@ -276,22 +285,23 @@ def tq_replace_cursor_word_from_candidates(candidate_list, source_backend=None):
         vim_command("redraw")
         vim_command('call thesaurus_query#echo_HL("WarningMSG|Invalid Input! |None|Ending synonym replacing session without making changes.")')
         return 0
-    current_line = vim.current.line
+    current_line = encode_utf_8(vim.current.line)
     current_cursor = vim.current.window.cursor
-    word_original = vim.eval("l:trimmed_word")
+    word_original = encode_utf_8(vim.eval("l:trimmed_word"))
 
     def find_word_over_cursor(target_word):
         ''' Try locate the word on current line
         '''
         state = False
         letter_iter = - current_line[current_cursor[1]:].find(target_word)
-        if (letter_iter!=1) and not current_line[
-                current_cursor[1]: current_cursor[1]-letter_iter].isalpha():
+        if (letter_iter!=1) and not decode_utf_8(current_line[
+                current_cursor[1]: current_cursor[1]-letter_iter]).isalpha():
             state = True
         else:
             for letter_iter in range(len(target_word)):
+                print(len(target_word))
                 if current_line[
-                        current_cursor[1]-letter_iter :
+                        current_cursor[1]-letter_iter:
                         current_cursor[1]-letter_iter+len(target_word)] == \
                         target_word:
                     state = True
@@ -302,13 +312,16 @@ def tq_replace_cursor_word_from_candidates(candidate_list, source_backend=None):
         ''' Recursively remove wrapped content from the following lines
         '''
         def scan_current_layer(find_tail):
+            '''
+            for letter based languages that space used for separator
+            '''
             tail_found = False
             overlap_size = 0
             result_word = target_word
             word_split = target_word.split()
             line_split = vim.current.buffer[current_cursor[0]-1+layer].split()
             for overlap_size in range(
-                    1, min( len(word_split)+1, len(line_split)+1)):
+                    1, min(len(word_split)+1, len(line_split)+1)):
                 if word_split[-overlap_size:-1] == line_split[:overlap_size-1]:
                     if find_tail:
                         if word_split[-1] in line_split[overlap_size-1]:
@@ -319,11 +332,12 @@ def tq_replace_cursor_word_from_candidates(candidate_list, source_backend=None):
                     result_word = ' '.join(
                         word_split[:len(word_split)-overlap_size])
                     vim.current.buffer[
-                        current_cursor[0]-1+layer]=re.sub(
-                            " ".join(
-                                word_split[-overlap_size : ])+r'\s*', '',
-                            vim.current.buffer[ current_cursor[0]-1+layer]
-                            , 1)
+                        current_cursor[0]-1+layer]=send_string_to_vim(
+                            re.sub(
+                                " ".join(
+                                    word_split[-overlap_size:])+r'\s*', '',
+                                decode_utf_8(vim.current.buffer[current_cursor[0]-1+layer]), 1
+                            ))
                     break
             return (tail_found, result_word)
         current_layer_tailored, remainder_target = scan_current_layer(True)
@@ -342,12 +356,12 @@ def tq_replace_cursor_word_from_candidates(candidate_list, source_backend=None):
             unwrapped)
 
     vim.current.buffer[current_cursor[0]-1] = \
-            current_line[:current_cursor[1]-relative_pos] + \
+            send_string_to_vim(current_line[:current_cursor[1]-relative_pos]) + \
             send_string_to_vim(
                 thesaurus_wait_list[thesaurus_user_choice]) + \
-                    current_line[
+                    send_string_to_vim(current_line[
                         current_cursor[1]-relative_pos+len(word_original):
-                        ]
+                        ])
     return 0
 
 def tq_generate_thesaurus_buffer(candidates):
@@ -384,13 +398,13 @@ def tq_generate_thesaurus_buffer(candidates):
         word_list_size = len(word_list)
 
         for word_curr in enumerate(word_list):
-            if column_curr+len(word_curr[1])+2 >= win_width:
+            if column_curr+len(word_curr[1])+_double_width_char_count(word_curr[1])+2 >= win_width:
                 tq_thesaurus_buffer.append(["         "])
                 column_curr = 10
-            if word_curr[0]<word_list_size-1 :
+            if word_curr[0]<word_list_size-1:
                 tq_thesaurus_buffer[-1]+= \
                     send_string_to_vim(''.join([' ', word_curr[1], ',']))
-                column_curr += len(word_curr[1])+2
+                column_curr += len(word_curr[1])+_double_width_char_count(word_curr[1])+2
             else:
                 tq_thesaurus_buffer[-1]+= \
                     send_string_to_vim(word_curr[1])
@@ -410,4 +424,3 @@ def tq_generate_thesaurus_buffer(candidates):
     vim_command("setlocal filetype=thesaurus")
     vim_command("normal! gg")
     vim_command("setlocal nomodifiable")
-
