@@ -28,7 +28,7 @@ required**.
 
    ```
    let g:tq_language = ['cn', 'en']
-   let g:tq_enabled_backends = ["cilin_txt", "thesaurus_com", "mthesaur.txt"]
+   let g:tq_enabled_backends = ["cilin_txt", "thesaurus_com", "mthesaur_txt"]
    ```
 
 ----------------
