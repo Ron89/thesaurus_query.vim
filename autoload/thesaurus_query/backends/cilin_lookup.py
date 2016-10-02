@@ -16,20 +16,22 @@ synonym list = [def, list wordlist]
 import os
 from ..tq_common_lib import decode_utf_8, get_variable
 
-identifier="mthesaur_txt"
-language="en"
+identifier="cilin_txt"
+language="cn"
+
+_header_len=9  # length of line number information
 
 def query(word):
-    _mthesaur_verified , _mthesaur_file = _mthesaur_file_locate()
-    if not _mthesaur_verified:
+    _cilin_verified, _cilin_file = _cilin_file_locate()
+    if not _cilin_verified:
         return [-1, []]
     match_found = 0
-    thesaur_file = open(os.path.expanduser(_mthesaur_file), 'r')
+    thesaur_file = open(os.path.expanduser(_cilin_file), 'r')
     while True:
-        line_curr=decode_utf_8(thesaur_file.readline())
+        line_curr=decode_utf_8(thesaur_file.readline())[_header_len:]
         if not line_curr:
             break
-        synonym_list = line_curr.rstrip(u"\r\n").split(u',')
+        synonym_list = line_curr.rstrip(u"\r\n").split(u' ')
         if word in synonym_list:
             match_found = 1
             synonym_list.remove(word)
@@ -39,15 +41,15 @@ def query(word):
         return [0, [[u"", synonym_list]]]
     return [1, []]
 
-def _mthesaur_file_locate():
+def _cilin_file_locate():
     verified_file = get_variable(
-        "tq_mthesaur_file",
-        "~/.vim/thesaurus/mthesaur.txt")
+        "tq_cilin_txt_file",
+        "~/.vim/thesaurus/cilin.txt")
     if os.path.exists(os.path.expanduser(verified_file)):
         return (True, verified_file)
 
     for thesaurus_file in get_variable("&thesaurus").split(','):
-        if "mthesaur.txt" in thesaurus_file:
+        if "cilin.txt" in thesaurus_file:
             if os.path.exists(os.path.expanduser(thesaurus_file)):
                 verified_file = os.path.expanduser(thesaurus_file)
                 return (True, verified_file)
@@ -55,4 +57,4 @@ def _mthesaur_file_locate():
 
 
 # initiation ------------
-_mthesaur_file_locate()
+_cilin_file_locate()

@@ -6,11 +6,11 @@ This is a plugin for user to *lookup* synonyms of any word under cursor or
 phrase covered in visual mode, and *replace it* with an user chosen synonym. It
 also accepts word/phrases from manual input for synonym checkup.
 
-**Notice:** Currently this plugin Supports only English, Russian (ru) and
-German (de) thesaurus query. If you want to use the plugin for other languages,
-or if you're not satisfied with the performance of current backends and know of
-some online synonym services that I can integrate into the plugin, please come
-and post an issue with your suggestion.
+**Notice:** Currently this plugin Supports only English, Chinese (cn), Russian
+(ru) and German (de) thesaurus query. If you want to use the plugin for other
+languages, or if you're not satisfied with the performance of current backends
+and know of some online synonym services that I can integrate into the plugin,
+please come and post an issue with your suggestion.
 
 This plugin is written in Python. So **+Python or +Python3 version of Vim is
 required**.
@@ -18,6 +18,48 @@ required**.
 ![](http://i.imgur.com/3QXxUp7.gif)
 
 ## What's New
+
+ * Implemented Chinese thesaurus query method based on
+   [cilin.txt](https://github.com/shijiebei2009/Algorithms/blob/master/src/main/resources/cilin.txt).
+   This backend is still in testing phase hence not added into default
+   backends. To use, copy this file to `~/.vim/thesaurus/cilin.txt`, and enable
+   the backend by setting (following setting will enable cilin.txt as Chinese
+   sourse and thesaurus.com and mthesaur.txt as English source.)
+
+   ```
+   let g:tq_language = ['cn', 'en']
+   let g:tq_enabled_backends = ["cilin_txt", "thesaurus_com", "mthesaur.txt"]
+   ```
+
+----------------
+
+ * Implemented **n**ext/**p**revious backend switching functionality in Candidate
+   choosing interface. Allow user to compare synonym results from different
+   backends and choose the most satisfying result.
+   
+   **Note** Due to limitation of Vim's `redraw` function, sometimes the message
+   box becomes too small and candidate list could not be fully displayed. This
+   usually happens after several rounds of backend switching. As a temporary
+   workaround, when this happens, you can simply type `<whitespace>` to force
+   message to be fully displayed.
+
+----------------
+
+ * Implemented and set as default a new local English backend `openoffice_en`
+   using OpenOffice's Thesaurus database for thesaurus source. If you are using
+   Linux and has installed OpenOffice from official repo, you should have index
+   file `th_en_US_v2.idx` and database file`th_en_US_v2.dat`
+   `/usr/share/myspell/dicts`, and this plugin should work outright. But if
+   not, you should manually indicate database on your machine by setting
+   variable `g:tq_openoffice_en_file`. Eg, if your indes and database (2 files)
+   are `~/Downloads/MyThes-1.0/th_en_US_new[.idx,.dat]` then you should set
+   your variable as
+   ```
+   let g:tq_openoffice_en_file="~/Downloads/MyThes-1.0/th_en_US_new"
+
+   ```
+
+----------------
 
  * Implemented dynamic import for backends. From `v0.5.0`, to add customized
    backend, you need only adding the properlly written backend(see
@@ -36,12 +78,6 @@ required**.
    ```
    let g:tq_online_backends_timeout = 0.4
    ```
-
-----------------
-
- * Now query invoked from Visual mode (still by `<leader>cs`) also support word
-   replacement feature. If invoked in this manner, user selected candidate will
-   replace the word/phrase covered in visual mode.
 
 
 ## Installation
@@ -110,7 +146,7 @@ command mode command `:Thesaurus`.
 
 To ensure stability of the plugin's functionality, under the hood, this plugin
 uses multiple backends sequentially to query for a synonym. Backends function
-independently, hence the plugin will be functional as long as one of the three
+independently, hence the plugin will be functional as long as one of the these
 backends is behaving properly.
 
 * **thesaurus\_com** queries from [Thesaurus.com](http://thesaurus.com/) for
@@ -122,9 +158,19 @@ backends is behaving properly.
   its officially provided API. The returned synonym list is usually quite
   relavant with reasonable quality. But the synonyms list tend to be short, so
   it might leave out some less-frequently-used synonyms.
-* **mthesaur\_txt** queries from local `mthesaur.txt`. It is an useful option
-  when you don't have any internet access at all. For this backend to work, be
-  sure to download the file from
+* **openoffice\_en** queries from local thesaurus database provided by
+  OpenOffice. It is an useful option when you don't have any internet access at
+  all. If you are using Linux and has installed OpenOffice from official repo,
+  you should have index file `th_en_US_v2.idx` and database
+  file`th_en_US_v2.dat` `/usr/share/myspell/dicts`, and this plugin should work
+  outright. But if not, you should manually indicate database on your machine
+  by setting variable `g:tq_openoffice_en_file`. Eg, if your indes and database
+  (2 files) are `~/Downloads/MyThes-1.0/th_en_US_new[.idx,.dat]` then you
+  should set your variable as `let
+  g:tq_openoffice_en_file="~/Downloads/MyThes-1.0/th_en_US_new"`
+* **mthesaur\_txt** queries from local `mthesaur.txt`. It is another useful
+  option when you don't have any internet access at all. For this backend to
+  work, be sure to download the file from
   [gutenberg.org](http://www.gutenberg.org/files/3202/files/) and place it
   under "~/.vim/thesaurus". If you place the file elsewhere, change global
   variable |g:tq_mthesaur_file| to point to the file you
@@ -132,6 +178,19 @@ backends is behaving properly.
   g:tq_mthesaur_file="~/.config/nvim/thesaurus/mthesaur.txt"` into
   your `.vimrc` file if your `mthesaur.txt` is placed in folder
   "~/.config/nvim/thesaurus/".
+* **cilin\_txt** queries from local `cilin.txt`. It makes use of a Chinese
+  thesaurus source "cilin.txt". For this backend to
+  work, be sure to download the file from
+  [this github
+  repo](https://github.com/shijiebei2009/Algorithms/blob/master/src/main/resources/cilin.txt)
+  and place it under "~/.vim/thesaurus". If you place the file elsewhere,
+  change global variable |g:tq_cilin_txt_file| to point to the file you
+  downloaded, eg. put the following line `let
+  g:tq_cilin_txt_file="~/.config/nvim/thesaurus/cilin.txt"` into your `.vimrc`
+  file if your `cilin.txt` is placed in folder "~/.config/nvim/thesaurus/".
+  Note that if you downloaded "cilin.txt" from elsewhere, make sure that your
+  source `cilin.txt` is utf-8 encoded. Or the plugin won't function correctly
+  with the file.
 * **jeck\_ru** is a *Russian* thesaurus backend. It queries
   [jeck.ru](http://jeck.ru/tools/SynonymsDictionary) for synonym resources.
   This website didn't provide standard API to use. Hence functionality of this
@@ -141,14 +200,14 @@ backends is behaving properly.
   website didn't provide standard API to use. Hence functionality of this
   backend depends on whether the website owner will change the webpage design.
 
-**By default, The sequence of query is thesaurus\_com -> mthesaur\_txt**. Next
+**By default, The sequence of query is thesaurus\_com -> openoffice\_en -> mthesaur\_txt**. Next
 query will be conducted only when the previous query return empty sysnonym list
 or failed to query. You may remove unwanted backend or lower their priority by
 removing them/putting them on latter position in variable
 `g:tq_enabled_backends`. Its default is
 
 ```
-    g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","mthesaur_txt"]
+    g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","openoffice_en","mthesaur_txt"]
 ```
 
 Backend **woxikon\_de**, **jeck\_ru** are currently **not activated by
@@ -275,3 +334,4 @@ Several key improvements were made comparing to his plugin:
    a timeout limit.
 3. Implement algorithm to make synonym candidates in a same form(tense,
    plurality, etc.). This could take a while... :-|
+4. Update documentation

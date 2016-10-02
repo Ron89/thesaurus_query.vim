@@ -3,14 +3,32 @@
 
   This log is kept according to the [[http://keepachangelog.com/][Keep a CHANGELOG]] manifesto
 
-** V0.5																																																										:unreleased:
+** V0.6										 :released:
+*** Added
+- Chinese thesaurus query support based on [[https://github.com/shijiebei2009/Algorithms/blob/master/src/main/resources/cilin.txt][cilin.txt]]
+- backend forward/backward switching functionality (only available in normal
+  mode Candidate Choosing Interface)
+- =openoffice_en= backend, using OpenOffice's thesaurus extension as thesaurus
+  source.
+*** Fixed
+- Bugs in miscounting utf-8 character length when replacing existing phrase with
+  user chosen one.
+- Bugs in source checking logic of =mthesaur_txt= routine when variable
+  =&thesaurus= is searched
+*** Removed
+- word_list cache saving results found in previous query sessions
+** V0.5                                                           :released:
 *** Changed
+    - Improved syntax of =part of speech= in split synonym display
+    - Improved split window display for synonym candidates.
     - Implemented dynamic backend-managing mechanism. Now adding new backends
       is as simple as dropping the backend file into folder
       =./autoload/thesaurus_query/backends=
 *** Fixed
+    - Fix multiple bugs encountered when querying for words/phrases surrounded
+      by non-space symbols or contain non-space symbols.
     - String =zero length field in format= issue with Python2.6.
-** V0.4																																																												:released:
+** V0.4                                                           :released:
 *** Added
     - Timeout feature for shorter waiting time. Timeout will not demote the
       backend.
@@ -35,7 +53,7 @@
     - the issue that makes redefining variable mid-session ineffective
     - fix out-of-boundary exception when query empty string with completefunc
       (insert mode completion)
-** V0.3																																																												:released:
+** V0.3                                                           :released:
 *** Added
     - multi-language thesaurus query support, currently English('en') and
       Russian('ru') are supported
@@ -55,7 +73,7 @@
     - fix out-of-bound user input exception in candidate choosing.
     - add =KeyboardInterrupt= exception handler for candidate choosing.(closes
       Issue #8)
-** V0.2																																																												:released:
+** V0.2                                                           :released:
 *** Added
     - datamuse query routine
     - implement backend enable/disable by =g:thesaurus_query#enabled_backends=
@@ -65,7 +83,7 @@
 *** Removed
     - variable =g:thesaurus_query#use_alternative_backend=
 *** Fixed
-** v0.1.1										 :released:
+** v0.1.1                                                         :released:
    - add feature: lowering query priority of mal-functional backend;
    - add feature: recognize case(all upper case | first letter upper case | all
      lower case) of phrase to be replaced, and adjust candidate list
@@ -74,5 +92,5 @@
      width.
    - fixed on-demand query(`:Thesaurus [your_word]`);
    - cleaned global scope variables;
-** v0.1.0																																																										:released:
+** v0.1.0                                                         :released:
    - initial release

@@ -17,6 +17,8 @@ query_result_trunc=50
 identifier="datamuse_com"
 language="en"
 
+_timeout_period_default = 1.0
+
 def query(target, query_method="synonym"):
     ''' return result as list. relavance from high to low in each PoS.
 Lookup routine for datamuse.com. When query_from_source is called, return:
@@ -44,7 +46,8 @@ def _datamuse_api_wrapper(target, query_method, max_return=query_result_trunc):
     query_method:
         synonym, antonym, suggest, right_content, left_content
     '''
-    time_out_choice = float(get_variable('tq_online_backends_timeout'))
+    time_out_choice = float(get_variable(
+        'tq_online_backends_timeout', _timeout_period_default))
     case_mapper={"synonym":u"words?rel_syn=",
                  "suggest":u"sug?s=",
                  "antonym":u"words?rel_ant=",

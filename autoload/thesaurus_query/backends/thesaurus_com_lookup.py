@@ -34,6 +34,8 @@ _header_length=11    # length of "Definition:", current header of definition
 _relavent_val_pos=9
 _syno_pos=11
 
+_timeout_period_default = 1.0
+
 class _word_query_handler_thesaurus_lookup:
     '''
     handler for lookup method: "online_thesaurus_lookup.py". When query_from_source is called, return:
@@ -120,7 +122,8 @@ def _online_thesaurus_lookup(target):
     Direct query from thesaurus.com. All returns are decoded with utf-8.
     '''
     output = u""
-    time_out_choice = float(get_variable('tq_online_backends_timeout', '1.0'))
+    time_out_choice = float(get_variable(
+        'tq_online_backends_timeout', _timeout_period_default))
 
     try:
         response = urlopen(fixurl(u'http://www.thesaurus.com/browse/{0}'.format(target)).decode('ASCII'), timeout = time_out_choice)

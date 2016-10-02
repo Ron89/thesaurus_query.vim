@@ -1,3 +1,7 @@
+# Supportive Python library for thesaurus_query.vim. 
+#
+# Author:       HE Chong [[chong.he.1989@gmail.com][E-mail]]
+
 import sys
 import urllib
 try:
@@ -22,17 +26,13 @@ else:
     urlpurlunsplit = urlparse.urlunsplit
 
 def decode_utf_8(string_in):
-    '''
-    safely decode string into unicode string
-    '''
+    ''' safely decode string into unicode string '''
     if sys.version_info < (3,0):
         return string_in.decode('utf-8') if not isinstance(string_in, unicode) else string_in
     return string_in.decode('utf-8') if not isinstance(string_in, str) else string_in
 
 def encode_utf_8(string_in):
-    '''
-    safely encode unicode string to string
-    '''
+    ''' safely encode unicode string to string '''
     if sys.version_info < (3,0):
         return string_in.encode('utf-8') if isinstance(string_in, unicode) else string_in
     return string_in.encode('utf-8') if isinstance(string_in, str) else string_in
@@ -49,7 +49,9 @@ def send_string_to_vim(string_in):
     return encode_utf_8(string_in)
 
 def fixurl(url):
-    ''' return url-compatible ascii string
+    ''' translate string into url compatible ascii string
+    return:
+        url-compatible_ascii_string
     code by Markus Jarderot
     '''
     url = decode_utf_8(url)
@@ -92,10 +94,11 @@ def fixurl(url):
     return urlparse.urlunsplit((scheme,netloc,path,query,fragment))
 
 def get_variable(v_name, default=None):
-    '''
-    return: vim_variable  # buffer variable tried first, global variable second
-            default       # if no variable exists, or module used independently
-                          # from Vim session.
+    ''' get variable from Vim
+    return:
+        vim_variable  # buffer variable tried first, global variable second
+        default       # if no variable exists, or module used independently
+                      # from Vim session.
     '''
     if independent_session:
         return default
@@ -111,6 +114,13 @@ def get_variable(v_name, default=None):
         return vim.eval('b:'+v_name)
 
 def vim_command(command):
+    """ wrapper for Vim command, do nothing if session is Vim independent """
     if independent_session:
         return None
     vim.command(command)
+
+def vim_eval(command):
+    """ wrapper for Vim eval, return None if session is Vim independent """
+    if independent_session:
+        return None
+    return vim.eval(command)
