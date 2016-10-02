@@ -36,23 +36,24 @@ mode or manual input. But for the latter two cases, auto-replacement function
 is not activated by default.
 
 Multiple backends are used for this plugin, by default, three are enabled:
-    *   Online backend querys from [Thesaurus.com](http://thesaurus.com/) for
+
+    *   "thesaurus_com" Online backend querys from
+        [Thesaurus.com](http://thesaurus.com/) for
         synonym, so internet connection is required for this backend's
         functionality.
 
-    *   Local backend querys from OpenOffice's MyThes thesaurus source. If you
-        have OpenOffice (Not LibreOffice) installed on your Machine, the files
-        should be `/usr/share/myspell/dicts/th_en_US_v2[.idx,.dat]`, and the
-        backend would function properly. But if OpenOffice isn't provided by
-        the distro-repo or if the thesaurus database is provided elsewhere,
+    *   "openoffice_en" querys from OpenOffice's thesaurus source. If
+        you have OpenOffice (Not LibreOffice) installed on your Machine, the
+        files should be `/usr/share/myspell/dicts/th_en_US_v2[.idx,.dat]`, and
+        the backend would function properly. But if OpenOffice isn't provided
+        by the distro-repo or if the thesaurus database is provided elsewhere,
         you'll need to manually indicate the database location in your system
         by setting `g:tq_openoffice_en_file`. E.g. If my database files are
         `~/Downloads/Mythes-1.0/th_en_US_new[.idx,.dat]`, my setting needs to
         be >
         let g:tq_openoffice_en_file="~/Downloads/MyThes-1.0/th_en_US_new"
 <
-
-    *   Local backend querys from `mthesaur.txt`. For this backend to work,
+    *   "mthesaur_txt" querys from `mthesaur.txt`. For this backend to work,
         be sure to download the file from
         [gutenberg.org](http://www.gutenberg.org/files/3202/files/) and place
         it under "~/.vim/thesaurus". If you place the file elsewhere, change
@@ -142,7 +143,8 @@ g:tq_enabled_backends~
     available options: `woxikon_de`, `jeck_ru`, `thesaurus_com`,
     `datamuse_com`, `mthesaur_txt`
     >
-        let g:tq_enabled_backends = ["woxikon_de", \
+        let g:tq_enabled_backends = ["cilin_txt", \
+                                     "woxikon_de", \
                                      "jeck_ru", \
                                      "thesaurus_com", \
                                      "openoffice_en", \
@@ -155,7 +157,8 @@ g:tq_online_backends_timeout~
 <
 
 g/b:tq_language~
-    Each query backend are associated with a Language(English, Russian, etc.)
+    Each query backend are associated with a Language: English (en), Chinese
+    (cn), German (de), Russian(ru), etc.
     This variable decides of all backends enabled by
     `g:tq_enabled_backends`, which one to be used in general(g:)
     session or specific buffer(b:), based on the language they are associatd
@@ -166,8 +169,8 @@ g/b:tq_language~
             `let g:tq_language='en'
         All backends, regardless of their specific language, are to be used
             let g:tq_language='All'
-        English and Russian Query Backends are to be used in current buffer:
-            let b:tq_language=['en', 'ru'] >
+        English and Chinese Query Backends are to be used in current buffer:
+            let b:tq_language=['en', 'cn'] >
         let g:tq_language=['en']
 <
 
@@ -180,6 +183,16 @@ g:tq_use_local_thesaurus_source_as_primary~
             0:      query with online backend first.
             1:      query with local backend first. >
         let g:tq_use_local_thesaurus_source_as_primary=0
+<
+
+g:tq_cilin_txt_file~
+    this variable is offered by tq_cilin_txt_lookup. Used to determine locate
+    `cilin.txt` file from your computer. If no `cilin.txt` is found at this
+    location, location specified in &thesaurus will be checked. Default
+    `cilin.txt` location would be "~/.vim/thesaurus/cilin.txt". Note that this
+    plugin recognize only utf-8 decoding, hence only utf-8 encoding `cilin`
+    will be correctly used. >
+        let g:tq_cilin_txt_file="~/.vim/thesaurus/cilin.txt"
 <
 
 g:tq_openoffice_en_file~

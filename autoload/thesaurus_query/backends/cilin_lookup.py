@@ -43,7 +43,7 @@ def query(word):
 
 def _cilin_file_locate():
     verified_file = get_variable(
-        "tq_cilin_file",
+        "tq_cilin_txt_file",
         "~/.vim/thesaurus/cilin.txt")
     if os.path.exists(os.path.expanduser(verified_file)):
         return (True, verified_file)

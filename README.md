@@ -178,6 +178,19 @@ backends is behaving properly.
   g:tq_mthesaur_file="~/.config/nvim/thesaurus/mthesaur.txt"` into
   your `.vimrc` file if your `mthesaur.txt` is placed in folder
   "~/.config/nvim/thesaurus/".
+* **cilin\_txt** queries from local `cilin.txt`. It makes use of a Chinese
+  thesaurus source "cilin.txt". For this backend to
+  work, be sure to download the file from
+  [this github
+  repo](https://github.com/shijiebei2009/Algorithms/blob/master/src/main/resources/cilin.txt)
+  and place it under "~/.vim/thesaurus". If you place the file elsewhere,
+  change global variable |g:tq_cilin_txt_file| to point to the file you
+  downloaded, eg. put the following line `let
+  g:tq_cilin_txt_file="~/.config/nvim/thesaurus/cilin.txt"` into your `.vimrc`
+  file if your `cilin.txt` is placed in folder "~/.config/nvim/thesaurus/".
+  Note that if you downloaded "cilin.txt" from elsewhere, make sure that your
+  source `cilin.txt` is utf-8 encoded. Or the plugin won't function correctly
+  with the file.
 * **jeck\_ru** is a *Russian* thesaurus backend. It queries
   [jeck.ru](http://jeck.ru/tools/SynonymsDictionary) for synonym resources.
   This website didn't provide standard API to use. Hence functionality of this
