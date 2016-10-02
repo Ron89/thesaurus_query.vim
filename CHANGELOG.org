@@ -3,7 +3,7 @@
 
   This log is kept according to the [[http://keepachangelog.com/][Keep a CHANGELOG]] manifesto
 
-** V0.6                                                         :unreleased:
+** V0.6										 :released:
 *** Added
 - Chinese thesaurus query support based on [[https://github.com/shijiebei2009/Algorithms/blob/master/src/main/resources/cilin.txt][cilin.txt]]
 - backend forward/backward switching functionality (only available in normal
