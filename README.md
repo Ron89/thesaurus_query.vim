@@ -2,84 +2,20 @@
 
 [![Join the chat at https://gitter.im/Ron89/thesaurus_query.vim](https://badges.gitter.im/Ron89/thesaurus_query.vim.svg)](https://gitter.im/Ron89/thesaurus_query.vim?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This is a plugin for user to *lookup* synonyms of any word under cursor or
-phrase covered in visual mode, and *replace it* with an user chosen synonym. It
-also accepts word/phrases from manual input for synonym checkup.
+This is a plugin for user to **lookup** synonyms of any word under cursor or
+phrase covered in visual mode, and **replace it** with an user chosen synonym.
+It also accepts word/phrases from manual input for synonym checkup.
 
-**Notice:** Currently this plugin Supports only English, Chinese (cn), Russian
-(ru) and German (de) thesaurus query. If you want to use the plugin for other
-languages, or if you're not satisfied with the performance of current backends
-and know of some online synonym services that I can integrate into the plugin,
-please come and post an issue with your suggestion.
+**Notice:** Currently this plugin Supports only English (en), Chinese (cn),
+Russian (ru) and German (de) thesaurus query. If you want to use the plugin for
+other languages, or if you're not satisfied with the performance of current
+backends and know of some online synonym services that I can integrate into the
+plugin, please come and post an issue with your suggestion.
 
 This plugin is written in Python. So **+Python or +Python3 version of Vim is
 required**.
 
 ![](http://i.imgur.com/3QXxUp7.gif)
-
-## What's New
-
- * Implemented Chinese thesaurus query method based on
-   [cilin.txt](https://github.com/shijiebei2009/Algorithms/blob/master/src/main/resources/cilin.txt).
-   This backend is still in testing phase hence not added into default
-   backends. To use, copy this file to `~/.vim/thesaurus/cilin.txt`, and enable
-   the backend by setting (following setting will enable cilin.txt as Chinese
-   sourse and thesaurus.com and mthesaur.txt as English source.)
-
-   ```
-   let g:tq_language = ['cn', 'en']
-   let g:tq_enabled_backends = ["cilin_txt", "thesaurus_com", "mthesaur.txt"]
-   ```
-
-----------------
-
- * Implemented **n**ext/**p**revious backend switching functionality in Candidate
-   choosing interface. Allow user to compare synonym results from different
-   backends and choose the most satisfying result.
-   
-   **Note** Due to limitation of Vim's `redraw` function, sometimes the message
-   box becomes too small and candidate list could not be fully displayed. This
-   usually happens after several rounds of backend switching. As a temporary
-   workaround, when this happens, you can simply type `<whitespace>` to force
-   message to be fully displayed.
-
-----------------
-
- * Implemented and set as default a new local English backend `openoffice_en`
-   using OpenOffice's Thesaurus database for thesaurus source. If you are using
-   Linux and has installed OpenOffice from official repo, you should have index
-   file `th_en_US_v2.idx` and database file`th_en_US_v2.dat`
-   `/usr/share/myspell/dicts`, and this plugin should work outright. But if
-   not, you should manually indicate database on your machine by setting
-   variable `g:tq_openoffice_en_file`. Eg, if your indes and database (2 files)
-   are `~/Downloads/MyThes-1.0/th_en_US_new[.idx,.dat]` then you should set
-   your variable as
-   ```
-   let g:tq_openoffice_en_file="~/Downloads/MyThes-1.0/th_en_US_new"
-
-   ```
-
-----------------
-
- * Implemented dynamic import for backends. From `v0.5.0`, to add customized
-   backend, you need only adding the properlly written backend(see
-   documentation for detail) into
-   `${Plugin_Root}/autoload/thesaurus_query/backends`. And you can enable it by
-   add it's `identifier` and `language` to list `g/b:tq_enabled_backends` and
-   `g/b:tq_language`, respectively.
-
-----------------
-
- * Timeout mechanism to reduce online-thesaurus query time. Default value is
-   `1.0` (second), so that user using slower internet or having long response
-   time with certain backend servers could still has reliable performance. For
-   users with faster internet, you may want to lower the value (mine is `0.4`).
-
-   ```
-   let g:tq_online_backends_timeout = 0.4
-   ```
-
-
 ## Installation
 
 Use your plugin manager of choice.
@@ -154,10 +90,6 @@ backends is behaving properly.
   The returned synonym list from this source has very high quality. But since
   `thesaurus.com` didn't actually provide official API. The functionality of
   this backend might fail when the website changes its design.
-* **datamuse\_com** queries from [datamuse.com](http://www.datamuse.com) using
-  its officially provided API. The returned synonym list is usually quite
-  relavant with reasonable quality. But the synonyms list tend to be short, so
-  it might leave out some less-frequently-used synonyms.
 * **openoffice\_en** queries from local thesaurus database provided by
   OpenOffice. It is an useful option when you don't have any internet access at
   all. If you are using Linux and has installed OpenOffice from official repo,
@@ -178,6 +110,10 @@ backends is behaving properly.
   g:tq_mthesaur_file="~/.config/nvim/thesaurus/mthesaur.txt"` into
   your `.vimrc` file if your `mthesaur.txt` is placed in folder
   "~/.config/nvim/thesaurus/".
+* **datamuse\_com** queries from [datamuse.com](http://www.datamuse.com) using
+  its officially provided API. The returned synonym list is usually quite
+  relavant with reasonable quality. But the synonyms list tend to be short, so
+  it might leave out some less-frequently-used synonyms.
 * **cilin\_txt** queries from local `cilin.txt`. It makes use of a Chinese
   thesaurus source "cilin.txt". For this backend to
   work, be sure to download the file from
@@ -214,7 +150,7 @@ Backend **woxikon\_de**, **jeck\_ru** are currently **not activated by
 default**, due to the default setting `g:tq_language='en'`. To enable Russian
 and German backend, add 'ru' and 'de' to the `tq_language` list:
 ```
-    g:tq_language=['en','ru', 'de']
+    g:tq_language=['en', 'ru', 'de']
 ```
 Or if you want to use only German thesaurus engine in specific/current buffer
 ```
@@ -323,15 +259,14 @@ Several key improvements were made comparing to his plugin:
 - added synonym replacing mechanism
 - added fallback backend to ensure functionality even when server down or lack
   of internet connection.
+- added alternative thesaurus sources and switching mechanism
 - added multilanguage support. With proper backends, it is possible to extend
   the functionality of this plugin to any western letter based languages.
 
 ## TODO List
 
-1. Add option to truncate the synonym list when its length is over a certain
-   threshold(need more feedback to decide parameters).
-2. Add more thesaurus source and try to parallelize the query process with
+1. Add more thesaurus source and try to parallelize the query process with
    a timeout limit.
-3. Implement algorithm to make synonym candidates in a same form(tense,
+2. Implement algorithm to make synonym candidates in a same form(tense,
    plurality, etc.). This could take a while... :-|
-4. Update documentation
+3. Update documentation

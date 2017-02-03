@@ -12,10 +12,12 @@ try:
     from urllib2 import urlopen
     from urllib2 import URLError, HTTPError
     from StringIO import StringIO
+    from HTMLParser import HTMLParser
 except ImportError:
     from urllib.request import urlopen
     from urllib.error import URLError, HTTPError
     from io import StringIO
+    from html.parser import HTMLParser
 
 import re
 import socket
@@ -25,6 +27,15 @@ identifier="woxikon_de"
 language="de"
 
 _timeout_period_default = 10.0
+
+try:
+    from html import unescape
+except ImportError:
+    try:
+        from html.parser import HTMLParser
+    except ImportError:
+        from HTMLParser import HTMLParser
+    unescape = HTMLParser().unescape
 
 def query(target):
     ''' return result as list. relavance from high to low in each PoS.
@@ -53,13 +64,13 @@ nested list = [PoS, list wordlist]
 
 def _woxikon_de_url_handler(target):
     '''
-    Query jiport for sysnonym
+    Query woxikon for sysnonym
     '''
     time_out_choice = float(get_variable(
         'tq_online_backends_timeout', _timeout_period_default))
     try:
-        response = urlopen(fixurl(u'http://synonyme.woxikon.de/synonyme/{0}.php'.format(target)).decode('ASCII'), timeout = time_out_choice)
-        web_content = StringIO(decode_utf_8(response.read()))
+        response = urlopen(fixurl(u'http://synonyms.woxikon.com/de/{0}'.format(target)).decode('ASCII'), timeout = time_out_choice)
+        web_content = StringIO(unescape(decode_utf_8(response.read())))
         response.close()
     except HTTPError:
         return 1
@@ -71,36 +82,40 @@ def _woxikon_de_url_handler(target):
         return 1
     return web_content
 
+def obtainGroups(webcontent, groupNum):
+    synonym_list = []
+    for group in range(groupNum):
+        while not re.search("synonyms-list-group", webcontent.readline(), re.UNICODE):
+            continue
+        meaning = re.search("Meaning: <b>([^<]+)</b>", webcontent.readline(), re.UNICODE).group(1)
+        webcontent.readline() # </div> line
+        webcontent.readline() # synonyms-list_content line
+        sublist = webcontent.readline().split(',')
+        subSynList = []
+        for wordContainer in sublist:
+            potential_synonym = re.search("<a href=[^>]+>([^<]+)</a>", wordContainer, re.UNICODE)
+            if potential_synonym:
+                subSynList.append(potential_synonym.group(1))
+        synonym_list.append([meaning, subSynList])
+    return synonym_list
 
 def _parser(webcontent):
     end_tag_count=4
-    synonym_list = []
-    while True:
+    pointer = webcontent.tell()
+    end = len(webcontent.getvalue())
+    while pointer<end:
         line_curr = webcontent.readline()
-        if not line_curr:
-            break
-        if u"Keine Synonyme gefunden" in line_curr:
-            break
-        if u"synonymsGroupNum" in line_curr:
-            end_tag_count=0
-            synonym_list.append([u"",[]])
-            continue
-        elif end_tag_count<4:
-            if u"</div>" in line_curr:
-                end_tag_count+=1
-            fields = re.split(u"<|>", line_curr)
-            if len(fields)>2:
-                if u'class="meaning"' in fields[1]:
-                    synonym_list[-1][0] = fields[6]
-                    continue
-                if u'class="groupWordType"' in line_curr:
-                    synonym_list[-1][0] = fields[2] + u' ' + synonym_list[-1][0]
-                    continue
-                if u'http://synonyme.woxikon.de/synonyme' in fields[1]:
-                    if u'strong' not in line_curr:
-                        synonym_list[-1][1].append(fields[2])
-            if end_tag_count==4:
-                if not synonym_list[-1][1]:
-                    del synonym_list[-1]
+        found = re.search("Found ([0-9]+) synonym[ a-z]+([0-9]+) group", line_curr, re.UNICODE)
+        notFound = re.search("<div class=\"no-results\">", line_curr, re.UNICODE)
+        if found:
+            groupNum = int(found.group(2))
+            synonymNum = int(found.group(1))
+            synonym_list = obtainGroups(webcontent, groupNum)
+            webcontent.close()
+            return synonym_list
+        if notFound:
+            webcontent.close()
+            return []
+
     webcontent.close()
     return synonym_list

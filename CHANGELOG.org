@@ -3,6 +3,9 @@
 
   This log is kept according to the [[http://keepachangelog.com/][Keep a CHANGELOG]] manifesto
 
+** V0.7                                                          :unreleased:
+*** Fixed
+    - Fixed problem caused by Woxikon html design change.
 ** V0.6										 :released:
 *** Added
 - Chinese thesaurus query support based on [[https://github.com/shijiebei2009/Algorithms/blob/master/src/main/resources/cilin.txt][cilin.txt]]
