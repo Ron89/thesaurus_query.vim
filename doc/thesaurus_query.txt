@@ -9,6 +9,7 @@ CONTENTS                                                  *thesaurus_query.vim*
     3. Usage ..................................................... |tq-usage|
     4. Customization ..................................... |tq-Customization|
     4.1 Global variables .............................. |tq-global-variables|
+        `g:tq_python_version`
         `g:tq_display_list_all_time`
         `g:tq_map_keys`
         `g:tq_use_vim_autocompletefunc`
@@ -114,6 +115,17 @@ default (Note: since this plugin is active for all buffers, the use of
 4.1 Global variables                                      *tq-global-variables*
 
 Currently I designed several global variables used to customize the behavior.
+
+
+g:tq_python_version~
+    Force using the version of Python for the plugin. By default, if Python3
+    support is detected, it will be used. If not, Plugin will make attempt to
+    use Python2. At least one of the Python need to be supported. Argument
+    value can be:
+            2: use Python2
+            3: use Python3 >
+        let g:tq_python_version=3
+
 
 g:tq_display_list_all_time~
     Determine if a minibuffer is still used when user decided to use the

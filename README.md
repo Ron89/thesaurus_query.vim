@@ -16,6 +16,16 @@ This plugin is written in Python. So **+Python or +Python3 version of Vim is
 required**.
 
 ![](http://i.imgur.com/3QXxUp7.gif)
+
+## What's new
+
+A new variable is designed to force use certain version of Python, e.g.
+
+```
+    let g:tq_python_version = 2
+```
+will force Plugin to use Python2 no matter if Python3 is supported.
+
 ## Installation
 
 Use your plugin manager of choice.

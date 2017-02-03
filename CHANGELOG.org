@@ -4,6 +4,9 @@
   This log is kept according to the [[http://keepachangelog.com/][Keep a CHANGELOG]] manifesto
 
 ** V0.7                                                          :unreleased:
+*** Added
+    - variable =g:tq_python_version= to force use user determined version of
+      Python, provided the version is supported
 *** Fixed
     - Fixed problem caused by Woxikon html design change.
 ** V0.6										 :released:

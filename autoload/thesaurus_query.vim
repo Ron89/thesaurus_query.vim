@@ -13,18 +13,6 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 
-" environs setup
-if has("python3")
-    let s:tq_use_python = 'python3 '
-    let s:tq_python_env = 'python3<<endOfPython'
-elseif has("python")
-    let s:tq_use_python = 'python '
-    let s:tq_python_env = 'python<<endOfPython'
-else
-    echoerr 'thesaurus_query framework require vim with python support.'
-    finish
-endif
-
 " legacy settings (depreciated, do NOT use) {{{
 
 if exists("g:thesaurus_query#display_list_all_time")
@@ -142,6 +130,43 @@ endif
 if !exists("g:tq_enabled_backends")
     let g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","openoffice_en","mthesaur_txt"]
 endif
+
+" }}}
+
+" Python environment setup {{{
+
+if !exists("g:tq_python_version")
+    if has("python3")
+        let s:tq_use_python = 'python3 '
+        let s:tq_python_env = 'python3<<endOfPython'
+    elseif has("python")
+        let s:tq_use_python = 'python '
+        let s:tq_python_env = 'python<<endOfPython'
+    else
+        echoerr 'thesaurus_query framework require vim with python support.'
+        finish
+    endif
+elseif g:tq_python_version==3
+    if has("python3")
+        let s:tq_use_python = 'python3 '
+        let s:tq_python_env = 'python3<<endOfPython'
+    else
+        echoerr 'Python3 use is forced by configuration, yet your Vim does not appear to have Python3 support'
+        finish
+    endif
+elseif g:tq_python_version==2
+    if has("python")
+        let s:tq_use_python = 'python '
+        let s:tq_python_env = 'python<<endOfPython'
+    else
+        echoerr 'Python2 use is forced by configuration, yet your Vim does not appear to have Python2 support'
+        finish
+    endif
+else
+    echoerr 'Invalid Python version indicated, Aborting...'
+    finish
+endif
+
 
 " }}}
 
