@@ -19,6 +19,20 @@ required**.
 
 ## What's new
 
+Added new Russian backend based
+on [yarn-synsets.csv](http://russianword.net/yarn-synsets.csv). To use, add
+`yarn_synsets` to Vim variable `g:tq_enabled_backends`, e.g.
+
+```
+    g:tq_enabled_backends=["yarn_synsets", "openoffice_en", "mthesaur_txt"]
+```
+
+also, add `ru` to variable `g:tq_language` and make sure that either
+`yarn-synsets.csv` in downloaded to `~/.vim/thesaurus` or where variable
+`g:tq_yarn-synsets_file` points at.
+
+-------
+
 A new variable is designed to force use certain version of Python, e.g.
 
 ```
@@ -137,6 +151,12 @@ backends is behaving properly.
   Note that if you downloaded "cilin.txt" from elsewhere, make sure that your
   source `cilin.txt` is utf-8 encoded. Or the plugin won't function correctly
   with the file.
+* **yarn\_synsets** is a *Russian* thesaurus backend. It
+  uses [yarn-synsets.csv](http://russianword.net/yarn-synsets.csv) as synonym
+  resource, providing a fast responding and decent thesaurus query solution.
+  Please place `yarn-synsets.csv` in `~/.vim/thesaurus`, or use variable
+  `g:tq_yarn-synsets_file` to indicate the location of `yarn-synsets.csv` in
+  your system.
 * **jeck\_ru** is a *Russian* thesaurus backend. It queries
   [jeck.ru](http://jeck.ru/tools/SynonymsDictionary) for synonym resources.
   This website didn't provide standard API to use. Hence functionality of this

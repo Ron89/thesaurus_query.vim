@@ -56,7 +56,7 @@ def query(word):
 
 def _synsets_file_locate():
     verified_file = get_variable(
-        "yarn_synsets_file",
+        "tq_yarn-synsets_file",
         "~/.vim/thesaurus/yarn-synsets.csv")
     if os.path.exists(os.path.expanduser(verified_file)):
         return (True, verified_file)

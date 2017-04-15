@@ -5,6 +5,8 @@
 
 ** V0.7                                                          :unreleased:
 *** Added
+    - added Russian synonym backend based on =yarn-synsets.csv=, backend
+      identifier =yarn_synsets=
     - variable =g:tq_python_version= to force use user determined version of
       Python, provided the version is supported
 *** Fixed

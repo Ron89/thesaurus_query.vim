@@ -157,6 +157,7 @@ g:tq_enabled_backends~
     >
         let g:tq_enabled_backends = ["cilin_txt", \
                                      "woxikon_de", \
+                                     "yarn_synsets", \
                                      "jeck_ru", \
                                      "thesaurus_com", \
                                      "openoffice_en", \
@@ -216,10 +217,17 @@ g:tq_openoffice_en_file~
 <
 
 g:tq_mthesaur_file~
-    this variable is offered by tq_local_mthesaur_lookup. Used to determine
-    locate `mthesaur.txt` file from your computer. If no `mthesaur.txt` is
-    found at this location, location specified in &thesaurus will be checked. >
+    this variable is offered by `mthesaur_txt`. Used to determine locate
+    `mthesaur.txt` file from your computer. If no `mthesaur.txt` is found at
+    this location, location specified in &thesaurus will be checked. >
         let g:tq_mthesaur_file="~/.vim/thesaurus/mthesaur.txt"
+<
+
+g:tq_yarn-synsets_file~
+    this variable is offered by backend `yarn_synsets`. Used to determine locate
+    `yarn-synsets.csv` file from your computer. If not indicated, default value
+    of `~/.vim/thesaurus/yarn-synsets.csv` is used >
+        let g:tq_yarn-synsets_file="~/.vim/thesaurus/yarn-synsets.csv"
 <
 
 g:raise_backend_priority_if_synonym_found~
