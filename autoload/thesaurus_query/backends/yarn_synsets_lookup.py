@@ -25,32 +25,39 @@ def query(word):
         return [-1, []]
     match_found = 0
     thesaur_file = open(os.path.expanduser(_synsets_file), 'r')
-    found_synList=[]
+    found_synDict=dict()
+    thesaur_file.readline()  # discard first line
     while True:
         line_curr=decode_utf_8(thesaur_file.readline())
         if not line_curr:
             break
         line_data = line_curr.rstrip().split(u',')
         synonym_list = line_data[1].split(u';')
-        if len(line_data):
-            grammar = "{0}, ".format(line_data[2])
-        else:
-            grammar = ""
+        grammar = line_data[2]
         wordDomain = line_data[3]
         if word in synonym_list:
             synonym_list.remove(word)
+            dict_keyword = u"{0}{1}".format(grammar, wordDomain) if \
+                    (len(grammar)*len(wordDomain)==0) else \
+                    u"{0}, {1}".format(grammar, wordDomain)
+            if synonym_list:
+                for synonym in synonym_list:
+                    if dict_keyword not in found_synDict:
+                        found_synDict[dict_keyword]=[synonym]
+                    elif synonym not in found_synDict[dict_keyword]:
+                        found_synDict[dict_keyword].append(synonym)
         else:
             continue
-        if len(synonym_list):
-            found_synList.append([
-                u"{0}{1}".format(grammar, wordDomain), synonym_list])
-            
+    found_synList = [[entryKey, found_synDict[entryKey]] 
+            for entryKey in found_synDict]
+    
+    # merge
     return [0 if len(found_synList) else 1, found_synList]
 
 def _synsets_file_locate():
     verified_file = get_variable(
         "yarn_synsets_file",
-        "~/.vim/thesaurus/yarn_synsets.csv")
+        "~/.vim/thesaurus/yarn-synsets.csv")
     if os.path.exists(os.path.expanduser(verified_file)):
         return (True, verified_file)
 
