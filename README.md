@@ -28,7 +28,7 @@ on [yarn-synsets.csv](http://russianword.net/yarn-synsets.csv). To use, add
 ```
 
 also, add `ru` to variable `g:tq_language` and make sure that either
-`yarn-synsets.csv` in downloaded to `\~/.vim/thesaurus` or where variable
+`yarn-synsets.csv` in downloaded to `~/.vim/thesaurus` or where variable
 `g:tq_yarn-synsets_file` points at.
 
 -------
@@ -45,7 +45,7 @@ will force Plugin to use Python2 no matter if Python3 is supported.
 Use your plugin manager of choice.
 
 - [Pathogen](https://github.com/tpope/vim-pathogen)
-  - `git clone https://github.com/ron89/thesaurus_query.vim \~/.vim/bundle/thesaurus_query.vim`
+  - `git clone https://github.com/ron89/thesaurus_query.vim ~/.vim/bundle/thesaurus_query.vim`
 - [Vundle](https://github.com/gmarik/vundle)
   - Add `Bundle 'ron89/thesaurus_query.vim'` to .vimrc
   - Run `:BundleInstall`
@@ -121,19 +121,19 @@ backends is behaving properly.
   file`th_en_US_v2.dat` `/usr/share/myspell/dicts`, and this plugin should work
   outright. But if not, you should manually indicate database on your machine
   by setting variable `g:tq_openoffice_en_file`. Eg, if your indes and database
-  (2 files) are `\~/Downloads/MyThes-1.0/th_en_US_new[.idx,.dat]` then you
+  (2 files) are `~/Downloads/MyThes-1.0/th_en_US_new[.idx,.dat]` then you
   should set your variable as `let
-  g:tq_openoffice_en_file="\~/Downloads/MyThes-1.0/th_en_US_new"`
+  g:tq_openoffice_en_file="~/Downloads/MyThes-1.0/th_en_US_new"`
 * **mthesaur\_txt** queries from local `mthesaur.txt`. It is another useful
   option when you don't have any internet access at all. For this backend to
   work, be sure to download the file from
   [gutenberg.org](http://www.gutenberg.org/files/3202/files/) and place it
-  under "\~/.vim/thesaurus". If you place the file elsewhere, change global
+  under `"~/.vim/thesaurus"`. If you place the file elsewhere, change global
   variable |g:tq_mthesaur_file| to point to the file you
   downloaded, eg. put the following line `let
-  g:tq_mthesaur_file="\~/.config/nvim/thesaurus/mthesaur.txt"` into
+  g:tq_mthesaur_file="~/.config/nvim/thesaurus/mthesaur.txt"` into
   your `.vimrc` file if your `mthesaur.txt` is placed in folder
-  "\~/.config/nvim/thesaurus/".
+  `"~/.config/nvim/thesaurus/"`.
 * **datamuse\_com** queries from [datamuse.com](http://www.datamuse.com) using
   its officially provided API. The returned synonym list is usually quite
   relavant with reasonable quality. But the synonyms list tend to be short, so
@@ -143,18 +143,18 @@ backends is behaving properly.
   work, be sure to download the file from
   [this github
   repo](https://github.com/shijiebei2009/Algorithms/blob/master/src/main/resources/cilin.txt)
-  and place it under "\~/.vim/thesaurus". If you place the file elsewhere,
+  and place it under `"~/.vim/thesaurus"`. If you place the file elsewhere,
   change global variable |g:tq_cilin_txt_file| to point to the file you
   downloaded, eg. put the following line `let
-  g:tq_cilin_txt_file="\~/.config/nvim/thesaurus/cilin.txt"` into your `.vimrc`
-  file if your `cilin.txt` is placed in folder "\~/.config/nvim/thesaurus/".
+  g:tq_cilin_txt_file="~/.config/nvim/thesaurus/cilin.txt"` into your `.vimrc`
+  file if your `cilin.txt` is placed in folder `"~/.config/nvim/thesaurus/"`.
   Note that if you downloaded "cilin.txt" from elsewhere, make sure that your
   source `cilin.txt` is utf-8 encoded. Or the plugin won't function correctly
   with the file.
 * **yarn\_synsets** is a *Russian* thesaurus backend. It
   uses [yarn-synsets.csv](http://russianword.net/yarn-synsets.csv) as synonym
   resource, providing a fast responding and decent thesaurus query solution.
-  Please place `yarn-synsets.csv` in `\~/.vim/thesaurus`, or use variable
+  Please place `yarn-synsets.csv` in `~/.vim/thesaurus`, or use variable
   `g:tq_yarn-synsets_file` to indicate the location of `yarn-synsets.csv` in
   your system.
 * **jeck\_ru** is a *Russian* thesaurus backend. It queries
@@ -202,7 +202,7 @@ internet connection. If user want to use `mthesaur.txt` for local thesaurus
 query independent from internet use, you will need to download
 `mthesaur.txt`(around 24MB) file from
 [gutenberg.org](http://www.gutenberg.org/files/3202/files/), and place it under
-folder "\~/.vim/thesaurus". If user place the file elsewhere, be sure to let
+folder `"~/.vim/thesaurus"`. If user place the file elsewhere, be sure to let
 this plugin know the location of your `mthesaur.txt` file by adding the line
 
 ```
