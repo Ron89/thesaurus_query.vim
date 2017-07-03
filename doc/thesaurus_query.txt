@@ -223,11 +223,11 @@ g:tq_mthesaur_file~
         let g:tq_mthesaur_file="~/.vim/thesaurus/mthesaur.txt"
 <
 
-g:tq_yarn-synsets_file~
+g:tq_yarn_synsets_file~
     this variable is offered by backend `yarn_synsets`. Used to determine locate
     `yarn-synsets.csv` file from your computer. If not indicated, default value
     of `~/.vim/thesaurus/yarn-synsets.csv` is used >
-        let g:tq_yarn-synsets_file="~/.vim/thesaurus/yarn-synsets.csv"
+        let g:tq_yarn_synsets_file="~/.vim/thesaurus/yarn-synsets.csv"
 <
 
 g:raise_backend_priority_if_synonym_found~

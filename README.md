@@ -29,7 +29,7 @@ on [yarn-synsets.csv](http://russianword.net/yarn-synsets.csv). To use, add
 
 also, add `ru` to variable `g:tq_language` and make sure that either
 `yarn-synsets.csv` in downloaded to `~/.vim/thesaurus` or where variable
-`g:tq_yarn-synsets_file` points at.
+`g:tq_yarn_synsets_file` points at.
 
 -------
 
@@ -155,7 +155,7 @@ backends is behaving properly.
   uses [yarn-synsets.csv](http://russianword.net/yarn-synsets.csv) as synonym
   resource, providing a fast responding and decent thesaurus query solution.
   Please place `yarn-synsets.csv` in `~/.vim/thesaurus`, or use variable
-  `g:tq_yarn-synsets_file` to indicate the location of `yarn-synsets.csv` in
+  `g:tq_yarn_synsets_file` to indicate the location of `yarn-synsets.csv` in
   your system.
 * **jeck\_ru** is a *Russian* thesaurus backend. It queries
   [jeck.ru](http://jeck.ru/tools/SynonymsDictionary) for synonym resources.
