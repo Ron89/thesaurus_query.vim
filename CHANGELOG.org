@@ -13,6 +13,7 @@
     - Fixed problem caused by Woxikon html design change.
     - Fixed incorrect variable name =g/b:tq_yarn-synsets_file= to
       =g/b:tq_yarn_synsets_file= (Issue #21)
+    - Clarified the use of =g:tq_map_keys= in customization.
 ** V0.6										 :released:
 *** Added
 - Chinese thesaurus query support based on [[https://github.com/shijiebei2009/Algorithms/blob/master/src/main/resources/cilin.txt][cilin.txt]]

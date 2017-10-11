@@ -107,6 +107,9 @@ default (Note: since this plugin is active for all buffers, the use of
     vnoremap <unique> <Leader>cs "ky:ThesaurusQueryReplace <C-r>k<CR>
     nnoremap <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
     vnoremap <LocalLeader>cs "ky:ThesaurusQueryReplace <C-r>k<CR>
+If user decided that `<Leader>cs` is better used for other purposes, you may
+set `g:tq_map_keys=0`, and add your own preferred key mappings to these
+functions.
 
 
 ===============================================================================
