@@ -261,7 +261,7 @@ def tq_replace_cursor_word_from_candidates(candidate_list, source_backend=None):
             else:
                 thesaurus_user_choice = vim.eval("input('Type number and <Enter> (results truncated, Type `A<Enter>` to browse all resultsin split;\nempty cancels; 'n': use next backend; 'p' use previous backend): ')")
         except KeyboardInterrupt:
-            return None
+            return 0
         return thesaurus_user_choice
 
     thesaurus_user_choice = obtain_user_choice(truncated_flag)
