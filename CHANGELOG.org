@@ -3,6 +3,10 @@
 
   This log is kept according to the [[http://keepachangelog.com/][Keep a CHANGELOG]] manifesto
 
+** V0.7                                                          :unreleased:
+*** Fixed
+    - Ctrl-C escape of synonym selection window now do not throw exception in
+      both Vim and NeoVim
 ** V0.6.2                                                         :released:
 *** Added
     - added Russian synonym backend based on =yarn-synsets.csv=, backend
