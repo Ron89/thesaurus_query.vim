@@ -7,6 +7,9 @@
 *** Fixed
     - Ctrl-C escape of synonym selection window now do not throw exception in
       both Vim and NeoVim
+*** Changed
+    - Made `datamuse_com` into one of the default active backend again to
+      alleviate the problem induced by thesaurus.com change in HTML format
 ** V0.6.2                                                         :released:
 *** Added
     - added Russian synonym backend based on =yarn-synsets.csv=, backend

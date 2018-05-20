@@ -133,6 +133,7 @@ if !exists("g:tq_enabled_backends")
                 \"yarn_synsets",
                 \"jeck_ru",
                 \"thesaurus_com",
+                \"datamuse_com",
                 \"openoffice_en",
                 \"mthesaur_txt"]
 endif
