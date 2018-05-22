@@ -36,10 +36,15 @@ replace it with an user chosen synonym. It also accept word covered in visual
 mode or manual input. But for the latter two cases, auto-replacement function
 is not activated by default.
 
-Multiple backends are used for this plugin, by default, three are enabled:
+Multiple backends are used for this plugin, by default, four are enabled:
 
     *   "thesaurus_com" Online backend querys from
         [Thesaurus.com](http://thesaurus.com/) for
+        synonym, so internet connection is required for this backend's
+        functionality.
+
+    *   "datamuse_com" Online backend querys from
+        [datamuse.com](http://datamuse.com/) for
         synonym, so internet connection is required for this backend's
         functionality.
 
@@ -155,16 +160,16 @@ g:tq_enabled_backends~
     this variable is offered by core query handler. It's a list of
     query_backends user want to enable, with the sequence of user prefered
     priority. Please be careful not to mis-spell when setting this variable.
-    available options: `woxikon_de`, `jeck_ru`, `thesaurus_com`,
-    `datamuse_com`, `mthesaur_txt`
+    available options: `openthesaurus_de`, `woxikon_de`, `jeck_ru`, `thesaurus_com`,
+    `datamuse_com`, `mthesaur_txt`, `cilin_txt`
     >
         let g:tq_enabled_backends = ["cilin_txt", \
-                                     "woxikon_de", \
+                                     "openthesaurus_de", \
                                      "yarn_synsets", \
                                      "jeck_ru", \
-                                     "thesaurus_com", \
                                      "openoffice_en", \
-                                     "mthesaur_txt"]
+                                     "mthesaur_txt", \
+                                     "datamuse_com"]
 <
 
 g:tq_online_backends_timeout~

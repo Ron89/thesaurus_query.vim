@@ -6,6 +6,11 @@ This is a plugin for user to **lookup** synonyms of any word under cursor or
 phrase covered in visual mode, and **replace it** with an user chosen synonym.
 It also accepts word/phrases from manual input for synonym checkup.
 
+**Notice:** The most popular English thesaurus source, thesaurus.com has
+changed its css, randomizing the output, making grepping its resource much more
+difficult than before. Before we can address this issue, we removed it from
+default activated backends.
+
 **Notice:** Currently this plugin Supports only English (en), Chinese (cn),
 Russian (ru) and German (de) thesaurus query. If you want to use the plugin for
 other languages, or if you're not satisfied with the performance of current
@@ -18,6 +23,15 @@ required**.
 ![](http://i.imgur.com/3QXxUp7.gif)
 
 ## What's new
+
+Added new German backend based on
+[openthesaurus.com](https://www.openthesaurus.de/about/api#json). This
+thesaurus backend is one of the German default backends. To activate it, add
+`de` to variable `g:tq_language`. Also, if you have manual specification for
+`g:tq_enabled_backends`, be sure to add `openthesaurus_de` to your backend
+list.
+
+-------
 
 Added new Russian backend based
 on [yarn-synsets.csv](http://russianword.net/yarn-synsets.csv). To use, add
@@ -165,6 +179,13 @@ backends is behaving properly.
   [woxikon.de](http://synonyme.woxikon.de/synonyme) for synonym resources. This
   website didn't provide standard API to use. Hence functionality of this
   backend depends on whether the website owner will change the webpage design.
+* **openthesaurus\_de** is a *German* thesaurus backend. It queries
+  [openthesaurus.com](https://www.openthesaurus.de/about/api#json) for synonym
+  resources. This thesaurus backend is one of the German default backends. To
+  activate it, add `de` to variable `g:tq_language`. Also, if you have manual
+  specification for `g:tq_enabled_backends`, be sure to add `openthesaurus_de`
+  to your backend
+  list.
 
 **By default, The sequence of query is thesaurus\_com -> openoffice\_en -> mthesaur\_txt**. Next
 query will be conducted only when the previous query return empty sysnonym list

@@ -4,10 +4,14 @@
   This log is kept according to the [[http://keepachangelog.com/][Keep a CHANGELOG]] manifesto
 
 ** V0.7                                                          :unreleased:
+*** Added
+    - added German synonym backend based on =openthesaurus.de=, backend
+      identifier =openthesaurus_de=
 *** Fixed
     - Ctrl-C escape of synonym selection window now do not throw exception in
       both Vim and NeoVim
 *** Changed
+    - Remove `woxikon_de` and `thesaurus_com` from default backends
     - Made `datamuse_com` into one of the default active backend again to
       alleviate the problem induced by thesaurus.com change in HTML format
 ** V0.6.2                                                         :released:

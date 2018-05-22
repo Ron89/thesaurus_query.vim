@@ -129,13 +129,12 @@ endif
 "       * Please be careful not to mis-spell when setting this variable.
 if !exists("g:tq_enabled_backends")
     let g:tq_enabled_backends=["cilin_txt",
-                \"woxikon_de",
+                \"openthesaurus_de",
                 \"yarn_synsets",
                 \"jeck_ru",
-                \"thesaurus_com",
-                \"datamuse_com",
                 \"openoffice_en",
-                \"mthesaur_txt"]
+                \"mthesaur_txt"
+                \"datamuse_com",]
 endif
 
 " }}}
