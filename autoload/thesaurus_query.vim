@@ -134,7 +134,7 @@ if !exists("g:tq_enabled_backends")
                 \"jeck_ru",
                 \"openoffice_en",
                 \"mthesaur_txt",
-                \"datamuse_com" ]
+                \"datamuse_com",]
 endif
 
 " }}}
