@@ -133,8 +133,8 @@ if !exists("g:tq_enabled_backends")
                 \"yarn_synsets",
                 \"jeck_ru",
                 \"openoffice_en",
-                \"mthesaur_txt"
-                \"datamuse_com",]
+                \"mthesaur_txt",
+                \"datamuse_com" ]
 endif
 
 " }}}
