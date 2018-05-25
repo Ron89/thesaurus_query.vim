@@ -372,12 +372,15 @@ def tq_generate_thesaurus_buffer(candidates):
     ''' generate a buffer in Vim to show all found synonyms from query '''
     if independent_session:     # this module don't work in Vim independent session
         return None
+    bufferWindowName='thesaurus:\\\\ " . l:word_fname . "\\\\ (press\\\\ q\\\\ to\\\\ close\\\\ this\\\\ split.)"'
     vim_command("silent! let l:thesaurus_window = bufwinnr('^thesaurus: ')")
     if int(vim.eval("l:thesaurus_window")) > -1:
         vim_command('exec l:thesaurus_window . "wincmd w"')
     else:
-        vim_command('exec ":silent keepalt belowright split thesaurus:\\\\ " . l:word_fname')
-    vim_command('exec ":silent file thesaurus:\\\\ " . l:word_fname . "\\\\ (press\\\\ q\\\\ to\\\\ close\\\\ this\\\\ split.)"')
+        vim_command(
+                'exec ":silent keepalt belowright split ' + bufferWindowName)
+    vim_command(
+            'exec ":silent file ' + bufferWindowName)
 
     vim_command('setlocal noswapfile nobuflisted nospell nowrap modifiable nonumber foldcolumn=0')
     if vim_eval('exists("+relativenumber")')=='1':
