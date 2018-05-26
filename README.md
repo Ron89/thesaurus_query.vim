@@ -132,7 +132,7 @@ backends is behaving properly.
   quality. But since `thesaurus.com` didn't actually provide official API. The
   functionality of this backend might fail when the website changes its
   design.</del>
-* [**openoffice\_en**] queries from local thesaurus database provided by
+* **openoffice\_en** queries from local thesaurus database provided by
   OpenOffice. It is an useful option when you don't have any internet access at
   all. If you are using Linux and has installed OpenOffice from official repo,
   you should have index file `th_en_US_v2.idx` and database
