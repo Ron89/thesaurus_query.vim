@@ -194,8 +194,8 @@ backends is behaving properly.
   to your backend
   list.
 
-** The thesaurus query plugin will go through the list `g:tq_enabled_backends`
-in sequence until a match is found. Unless user explicitly instruct, Next query
+The thesaurus query plugin will go through the list `g:tq_enabled_backends` in
+sequence until a match is found. Unless user explicitly instruct, Next query
 will be conducted only when the previous query return empty synonym list or
 failed to query. You may remove unwanted backend or lower their priority by
 removing them/putting them on latter position in variable
