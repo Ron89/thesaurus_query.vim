@@ -8,6 +8,8 @@
     - added German synonym backend based on =openthesaurus.de=, backend
       identifier =openthesaurus_de=
 *** Fixed
+    - Fix Issue #29 (=E95 Buffer with this name already exist=) on query word
+      displaying on separate buffer.
     - Ctrl-C escape of synonym selection window now do not throw exception in
       both Vim and NeoVim
 *** Changed
