@@ -6,10 +6,13 @@ This is a plugin for user to **lookup** synonyms of any word under cursor or
 phrase covered in visual mode, and **replace it** with an user chosen synonym.
 It also accepts word/phrases from manual input for synonym checkup.
 
-**Notice:** The most popular English thesaurus source, thesaurus.com has
-changed its css, randomizing the output, making grepping its resource much more
+**Notice:** The most popular English thesaurus source, thesaurus.com has changed
+its css, randomizing the output, making grepping its resource much more
 difficult than before. Before we can address this issue, we removed it from
-default activated backends.
+default activated backends. For now `datamuse_com` is used as its main English
+source. However, due to the relative low quality of `datamuse_com` result, I
+strongly recommend you to setup
+[`openoffice_en`](#description-for-backends-and-their-setup) backend.
 
 **Notice:** Currently this plugin Supports only English (en), Chinese (cn),
 Russian (ru) and German (de) thesaurus query. If you want to use the plugin for
@@ -123,27 +126,30 @@ uses multiple backends sequentially to query for a synonym. Backends function
 independently, hence the plugin will be functional as long as one of the these
 backends is behaving properly.
 
-* **thesaurus\_com** queries from [Thesaurus.com](http://thesaurus.com/) for
-  synonym, so internet connection is required for this backend's functionality.
-  The returned synonym list from this source has very high quality. But since
-  `thesaurus.com` didn't actually provide official API. The functionality of
-  this backend might fail when the website changes its design.
-* **openoffice\_en** queries from local thesaurus database provided by
+* <del>**thesaurus\_com** queries from [Thesaurus.com](http://thesaurus.com/)
+  for synonym, so internet connection is required for this backend's
+  functionality. The returned synonym list from this source has very high
+  quality. But since `thesaurus.com` didn't actually provide official API. The
+  functionality of this backend might fail when the website changes its
+  design.</del>
+* [**openoffice\_en**] queries from local thesaurus database provided by
   OpenOffice. It is an useful option when you don't have any internet access at
   all. If you are using Linux and has installed OpenOffice from official repo,
   you should have index file `th_en_US_v2.idx` and database
-  file`th_en_US_v2.dat` `/usr/share/myspell/dicts`, and this plugin should work
-  outright. But if not, you should manually indicate database on your machine
-  by setting variable `g:tq_openoffice_en_file`. Eg, if your indes and database
-  (2 files) are `~/Downloads/MyThes-1.0/th_en_US_new[.idx,.dat]` then you
-  should set your variable as `let
-  g:tq_openoffice_en_file="~/Downloads/MyThes-1.0/th_en_US_new"`
+  file`th_en_US_v2.dat` in `/usr/share/myspell/dicts`, and this plugin should
+  work outright. But if not, you can download the thesaurus data from [this
+  link](https://www.openoffice.org/lingucomponent/MyThes-1.zip). You may then
+  manually inform the plugin of the downloaded location on your machine by
+  setting variable `g:tq_openoffice_en_file`. Eg, if your indes and database (2
+  files) are `~/Downloads/MyThes-1.0/th_en_US_new[.idx,.dat]` then you should
+  set your variable as `let
+  g:tq_openoffice_en_file="~/Downloads/MyThes-1.0/th_en_US_new"`.
 * **mthesaur\_txt** queries from local `mthesaur.txt`. It is another useful
   option when you don't have any internet access at all. For this backend to
   work, be sure to download the file from
   [gutenberg.org](http://www.gutenberg.org/files/3202/files/) and place it
   under `"~/.vim/thesaurus"`. If you place the file elsewhere, change global
-  variable |g:tq_mthesaur_file| to point to the file you
+  variable `g:tq_mthesaur_file` to point to the file you
   downloaded, eg. put the following line `let
   g:tq_mthesaur_file="~/.config/nvim/thesaurus/mthesaur.txt"` into
   your `.vimrc` file if your `mthesaur.txt` is placed in folder
@@ -183,25 +189,32 @@ backends is behaving properly.
   [openthesaurus.com](https://www.openthesaurus.de/about/api#json) for synonym
   resources. This thesaurus backend is one of the German default backends. To
   activate it, add `de` to variable `g:tq_language`. Also, if you have manual
-  specification for `g:tq_enabled_backends`, be sure to add `openthesaurus_de`
+  specification for `g:tq_enabled_backends`, be sure to add `openthesaurus_de**
   to your backend
   list.
 
-**By default, The sequence of query is thesaurus\_com -> openoffice\_en -> mthesaur\_txt**. Next
-query will be conducted only when the previous query return empty sysnonym list
-or failed to query. You may remove unwanted backend or lower their priority by
+** The thesaurus query plugin will go through the list `g:tq_enabled_backends`
+in sequence until a match is found. Unless user explicitly instruct, Next query
+will be conducted only when the previous query return empty synonym list or
+failed to query. You may remove unwanted backend or lower their priority by
 removing them/putting them on latter position in variable
-`g:tq_enabled_backends`. Its default is
+`g:tq_enabled_backends` as following example:
 
 ```
-    g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","openoffice_en","mthesaur_txt"]
+    let g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","openoffice_en","mthesaur_txt"]
+    let g:tq_enabled_backends=["cilin_txt",
+                \"openthesaurus_de",
+                \"yarn_synsets",
+                \"openoffice_en",
+                \"mthesaur_txt",
+                \"datamuse_com",]
 ```
 
-Backend **woxikon\_de**, **jeck\_ru** are currently **not activated by
-default**, due to the default setting `g:tq_language='en'`. To enable Russian
-and German backend, add 'ru' and 'de' to the `tq_language` list:
+Non-Engligh backends are currently **not activated by
+default**, due to the default setting `g:tq_language='en'`. To enable Russian, German, 
+or Chinese backend, add 'ru', 'de' or 'cn' to the `tq_language` list:
 ```
-    g:tq_language=['en', 'ru', 'de']
+    g:tq_language=['en', 'ru', 'de', 'cn']
 ```
 Or if you want to use only German thesaurus engine in specific/current buffer
 ```
@@ -209,28 +222,12 @@ Or if you want to use only German thesaurus engine in specific/current buffer
 ```
 
 To ensure the best user experience, **the backend that reports error during
-query will have its priority automatically lowered.** If user want to restore
+query will have its priority automatically lowered**. If user want to restore
 originally defined priority, simply invoke command
 
 ```
     :ThesaurusQueryReset
 ```
-
-#### setup for mthesaur\_txt backend
-
-Online query backends will work straight out-of-the-box. However, they require
-internet connection. If user want to use `mthesaur.txt` for local thesaurus
-query independent from internet use, you will need to download
-`mthesaur.txt`(around 24MB) file from
-[gutenberg.org](http://www.gutenberg.org/files/3202/files/), and place it under
-folder `"~/.vim/thesaurus"`. If user place the file elsewhere, be sure to let
-this plugin know the location of your `mthesaur.txt` file by adding the line
-
-```
-    let g:tq_mthesaur_file="/directory/to/your/mthesaur.txt
-```
-
-into your `.vimrc`.
 
 #### Online Backends Timeout Mechanism
 
@@ -279,7 +276,7 @@ Synonyms are grouped by definitions. If there are too many groups to your
 liking, you may reduce the number of groups shown to `3` by setting
 
 ```
-    g:tq_truncation_on_definition_num = 3.
+    g:tq_truncation_on_definition_num = 3
 ```
 
 #### Synonym list truncate
