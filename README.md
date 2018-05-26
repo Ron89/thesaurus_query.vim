@@ -64,13 +64,13 @@ Use your plugin manager of choice.
 - [Pathogen](https://github.com/tpope/vim-pathogen)
   - `git clone https://github.com/ron89/thesaurus_query.vim ~/.vim/bundle/thesaurus_query.vim`
 - [Vundle](https://github.com/gmarik/vundle)
-  - Add `Bundle 'ron89/thesaurus_query.vim'` to .vimrc
+  - Add `Bundle 'ron89/thesaurus_query.vim'` to `.vimrc`
   - Run `:BundleInstall`
 - [NeoBundle](https://github.com/Shougo/neobundle.vim)
-  - Add `NeoBundle 'ron89/thesaurus_query.vim'` to .vimrc
+  - Add `NeoBundle 'ron89/thesaurus_query.vim'` to `.vimrc`
   - Run `:NeoBundleInstall`
 - [vim-plug](https://github.com/junegunn/vim-plug)
-  - Add `Plug 'ron89/thesaurus_query.vim'` to .vimrc
+  - Add `Plug 'ron89/thesaurus_query.vim'` to `.vimrc`
   - Run `:PlugInstall`
 
 
@@ -142,8 +142,9 @@ backends is behaving properly.
   manually inform the plugin of the downloaded location on your machine by
   setting variable `g:tq_openoffice_en_file`. Eg, if your indes and database (2
   files) are `~/Downloads/MyThes-1.0/th_en_US_new[.idx,.dat]` then you should
-  set your variable as `let
-  g:tq_openoffice_en_file="~/Downloads/MyThes-1.0/th_en_US_new"`.
+  set your variable by adding `let
+  g:tq_openoffice_en_file="~/Downloads/MyThes-1.0/th_en_US_new"` in your
+  `.vimrc`.
 * **mthesaur\_txt** queries from local `mthesaur.txt`. It is another useful
   option when you don't have any internet access at all. For this backend to
   work, be sure to download the file from
