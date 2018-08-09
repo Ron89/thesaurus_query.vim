@@ -36,9 +36,6 @@ from ..tq_common_lib import send_string_to_vim
 
 identifier="thesaurus_com"
 language="en"
-_header_length=11    # length of "Definition:", current header of definition
-_relavent_val_pos=9
-_syno_pos=11
 
 _timeout_period_default = 1.0
 
