@@ -25,7 +25,7 @@ except ImportError:
 try:
     from ..ext.thesaurus.thesaurus import Word
     dependencyMissing=False
-except ModuleNotFoundError:
+except (ImportError, ModuleNotFoundError) as e:
     dependencyMissing=True
 
 import re
