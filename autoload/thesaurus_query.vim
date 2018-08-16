@@ -132,6 +132,7 @@ if !exists("g:tq_enabled_backends")
                 \"openthesaurus_de",
                 \"yarn_synsets",
                 \"jeck_ru",
+                \"thesaurus_com",
                 \"openoffice_en",
                 \"mthesaur_txt",
                 \"datamuse_com",]

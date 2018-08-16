@@ -22,22 +22,21 @@ except ImportError:
     from urllib.error import URLError,HTTPError
     from io import StringIO
 
-try:
-    from ..ext.thesaurus.thesaurus import Word
-    dependencyMissing=False
-except (ImportError, ModuleNotFoundError) as e:
-    dependencyMissing=True
-
+import sys
+import subprocess
+import pkg_resources
+from pkg_resources import DistributionNotFound, VersionConflict
 import re
 import socket
 from ..tq_common_lib import decode_utf_8, fixurl, get_variable
-from ..tq_common_lib import send_string_to_vim
-#from online_thesaurus_lookup import online_thesaurus_lookup
+from ..tq_common_lib import send_string_to_vim, vim_command, vim_eval
 
 identifier="thesaurus_com"
 language="en"
 
-_timeout_period_default = 1.0
+_python_dependencies = [
+        'thesaurus>=0.2.2',
+        ]
 
 class _word_query_handler_thesaurus_lookup:
     '''
@@ -51,18 +50,43 @@ class _word_query_handler_thesaurus_lookup:
         def('str'): definition the synonyms belong to
         wordlist = [synonym_0, synonym_1, ...]: list of words belonging to a same definition
     '''
+    def _try_to_install_thesaurus(self):
+        if get_variable("tq_thesaurus_com_do_not_prompt_for_install", 0)==0:
+            userChoice = vim_eval("confirm(\"Please use '{} -m pip install thesaurus --user --upgrade' to install the latest package. Have you installed it now?\", \"&Yes\\n&Disable '{}' backend for this Vim session\")".format(
+                sys.executable, identifier, identifier))
+            if userChoice == "1":
+                return True
+            else:
+                self._backendDisabled=True
+                return False
+
+
+    def _confirm_installation_status_of_thesaurus(self):
+        """
+        If check again is needed, return True
+        """
+        try:
+            pkg_resources.require(_python_dependencies)
+            return False
+        except (DistributionNotFound, VersionConflict) as e:
+            return self._try_to_install_thesaurus()
 
     def __init__(self):
 #        self.query_source_cmd = os.path.dirname(os.path.realpath(__file__))+"/online_thesaurus_lookup.sh"
-        pass
+        self._backendDisabled=False
+        while self._confirm_installation_status_of_thesaurus():
+            continue
+        if not self._backendDisabled:
+            from thesaurus import Word
+            self._Word=Word
 
     def query_cmd_handler(self, word):
         self.syno_list=[]
-        if dependencyMissing is False:
-            self.query_result = Word(word)
+        if self._backendDisabled is False:
+            self.query_result = self._Word(word)
 
     def synonym_found(self):
-        if dependencyMissing:
+        if self._backendDisabled:
             return -1
         if self.query_result.data == []:
             return 1
