@@ -6,14 +6,6 @@ This is a plugin for user to **lookup** synonyms of any word under cursor or
 phrase covered in visual mode, and **replace it** with an user chosen synonym.
 It also accepts word/phrases from manual input for synonym checkup.
 
-**Notice:** The most popular English thesaurus source, thesaurus.com has changed
-its css, randomizing the output, making grepping its resource much more
-difficult than before. Before we can address this issue, we removed it from
-default activated backends. For now `datamuse_com` is used as its main English
-source. However, due to the relative low quality of `datamuse_com` result, I
-strongly recommend you to setup
-[`openoffice_en`](#description-for-backends-and-their-setup) backend.
-
 **Notice:** Currently this plugin Supports only English (en), Chinese (cn),
 Russian (ru) and German (de) thesaurus query. If you want to use the plugin for
 other languages, or if you're not satisfied with the performance of current
@@ -26,6 +18,19 @@ required**.
 ![](http://i.imgur.com/3QXxUp7.gif)
 
 ## What's new
+
+Backend `thesaurus_query.com` is now driven by Manwholikespie's
+[thesaurus](https://github.com/Manwholikespie/thesaurus), and it is now, once
+again, one of the default backends. Users who have not installed Python package
+`thesaurus` in their system is now prompted to install it in order to use the
+backend. If you do not want to install the backend and want the prompt to be
+permanantly silenced, add the following line to your configuration file:
+
+```
+    let g:tq_thesaurus_com_do_not_prompt_for_install=1
+```
+
+-------
 
 Added new German backend based on
 [openthesaurus.com](https://www.openthesaurus.de/about/api#json). This
@@ -41,7 +46,7 @@ on [yarn-synsets.csv](http://russianword.net/yarn-synsets.csv). To use, add
 `yarn_synsets` to Vim variable `g:tq_enabled_backends`, e.g.
 
 ```
-    g:tq_enabled_backends=["yarn_synsets", "openoffice_en", "mthesaur_txt"]
+    let g:tq_enabled_backends=["yarn_synsets", "openoffice_en", "mthesaur_txt"]
 ```
 
 also, add `ru` to variable `g:tq_language` and make sure that either
@@ -126,12 +131,13 @@ uses multiple backends sequentially to query for a synonym. Backends function
 independently, hence the plugin will be functional as long as one of the these
 backends is behaving properly.
 
-* <del>**thesaurus\_com** queries from [Thesaurus.com](http://thesaurus.com/)
-  for synonym, so internet connection is required for this backend's
-  functionality. The returned synonym list from this source has very high
-  quality. But since `thesaurus.com` didn't actually provide official API. The
-  functionality of this backend might fail when the website changes its
-  design.</del>
+* **thesaurus\_com** is a wrapper over Manwholikespie's Python module
+  [thesaurus](https://github.com/Manwholikespie/thesaurus). It queries from
+  [Thesaurus.com](http://thesaurus.com/) for synonym, so internet connection is
+  required for this backend's functionality. The returned synonym list from
+  this source has very high quality. But since `thesaurus.com` didn't actually
+  provide official API. The functionality of this backend might fail when the
+  website changes its design.
 * **openoffice\_en** queries from local thesaurus database provided by
   OpenOffice. It is an useful option when you don't have any internet access at
   all. If you are using Linux and has installed OpenOffice from official repo,
@@ -215,11 +221,11 @@ Non-Engligh backends are currently **not activated by
 default**, due to the default setting `g:tq_language='en'`. To enable Russian, German, 
 or Chinese backend, add 'ru', 'de' or 'cn' to the `tq_language` list:
 ```
-    g:tq_language=['en', 'ru', 'de', 'cn']
+    let g:tq_language=['en', 'ru', 'de', 'cn']
 ```
 Or if you want to use only German thesaurus engine in specific/current buffer
 ```
-    b:tq_language=['de']
+    let b:tq_language=['de']
 ```
 
 To ensure the best user experience, **the backend that reports error during
@@ -277,7 +283,7 @@ Synonyms are grouped by definitions. If there are too many groups to your
 liking, you may reduce the number of groups shown to `3` by setting
 
 ```
-    g:tq_truncation_on_definition_num = 3
+    let g:tq_truncation_on_definition_num = 3
 ```
 
 #### Synonym list truncate
@@ -286,7 +292,7 @@ case, to reduce the number of synonym shown in each group to no more than
 `200`, you can set
 
 ```
-    g:tq_truncation_on_syno_list_size = 200
+    let g:tq_truncation_on_syno_list_size = 200
 ```
 
 Know that if query result is truncated by your rule, and you want to browse
