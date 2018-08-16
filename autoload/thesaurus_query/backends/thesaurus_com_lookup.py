@@ -59,7 +59,9 @@ class _word_query_handler_thesaurus_lookup:
             else:
                 self._backendDisabled=True
                 return False
-
+        else:
+            self._backendDisabled=True
+            return False
 
     def _confirm_installation_status_of_thesaurus(self):
         """
