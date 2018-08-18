@@ -26,8 +26,8 @@ again, one of the default backends. Users who have not installed Python package
 backend. If you do not want to install the backend and want the prompt to be
 permanantly silenced, add the following line to your configuration file:
 
-```
-    let g:tq_thesaurus_com_do_not_prompt_for_install=1
+```vim
+let g:tq_thesaurus_com_do_not_prompt_for_install=1
 ```
 
 -------
@@ -45,8 +45,8 @@ Added new Russian backend based
 on [yarn-synsets.csv](http://russianword.net/yarn-synsets.csv). To use, add
 `yarn_synsets` to Vim variable `g:tq_enabled_backends`, e.g.
 
-```
-    let g:tq_enabled_backends=["yarn_synsets", "openoffice_en", "mthesaur_txt"]
+```vim
+let g:tq_enabled_backends=["yarn_synsets", "openoffice_en", "mthesaur_txt"]
 ```
 
 also, add `ru` to variable `g:tq_language` and make sure that either
@@ -57,8 +57,8 @@ also, add `ru` to variable `g:tq_language` and make sure that either
 
 A new variable is designed to force use certain version of Python, e.g.
 
-```
-    let g:tq_python_version = 2
+```vim
+let g:tq_python_version = 2
 ```
 will force Plugin to use Python2 no matter if Python3 is supported.
 
@@ -84,8 +84,8 @@ Use your plugin manager of choice.
 By default, command `:ThesaurusQueryReplaceCurrentWord` is mapped to
 `<Leader>cs`.
 
-```
-    nnoremap <Leader>cs :ThesaurusQueryReplaceCurrentWord<CR>
+```vim
+nnoremap <Leader>cs :ThesaurusQueryReplaceCurrentWord<CR>
 ```
 
 This routine check the synonyms of the word under cursor and replace it with
@@ -99,8 +99,8 @@ Another might-be-useful routine is the one to query synonym for and replace
 a multi-word phrase covered in visual mode, using the same key mapping
 `<Leader>cs`
 
-```
-    vnoremap <Leader>cs y:ThesaurusQueryReplace <C-r>"<CR>
+```vim
+vnoremap <Leader>cs y:ThesaurusQueryReplace <C-r>"<CR>
 ```
 
 The phrase covered in visual mode can be in a same line, or wrapped in two or
@@ -118,8 +118,8 @@ resources for matchings.
 Finally, this plugin support thesaurus checkup for manually input through
 command mode command `:Thesaurus`.
 
-```
-    :Thesaurus your phrase
+```vim
+:Thesaurus your phrase
 ```
 
 ## Configuration
@@ -207,33 +207,33 @@ failed to query. You may remove unwanted backend or lower their priority by
 removing them/putting them on latter position in variable
 `g:tq_enabled_backends` as following example:
 
-```
-    let g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","openoffice_en","mthesaur_txt"]
-    let g:tq_enabled_backends=["cilin_txt",
-                \"openthesaurus_de",
-                \"yarn_synsets",
-                \"openoffice_en",
-                \"mthesaur_txt",
-                \"datamuse_com",]
+```vim
+let g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","openoffice_en","mthesaur_txt"]
+let g:tq_enabled_backends=["cilin_txt",
+            \"openthesaurus_de",
+            \"yarn_synsets",
+            \"openoffice_en",
+            \"mthesaur_txt",
+            \"datamuse_com",]
 ```
 
 Non-Engligh backends are currently **not activated by
 default**, due to the default setting `g:tq_language='en'`. To enable Russian, German, 
 or Chinese backend, add 'ru', 'de' or 'cn' to the `tq_language` list:
-```
-    let g:tq_language=['en', 'ru', 'de', 'cn']
+```vim
+let g:tq_language=['en', 'ru', 'de', 'cn']
 ```
 Or if you want to use only German thesaurus engine in specific/current buffer
-```
-    let b:tq_language=['de']
+```vim
+let b:tq_language=['de']
 ```
 
 To ensure the best user experience, **the backend that reports error during
 query will have its priority automatically lowered**. If user want to restore
 originally defined priority, simply invoke command
 
-```
-    :ThesaurusQueryReset
+```vim
+:ThesaurusQueryReset
 ```
 
 #### Online Backends Timeout Mechanism
@@ -244,7 +244,7 @@ to all online query backends to reduce query time(in seconds). Default value is
 with certain backend servers could still has reliable performance.  For users
 with faster internet, you may want to lower the value (mine is `0.4`).
 
-   ```
+   ```vim
    let g:tq_online_backends_timeout = 0.4
    ```
 
@@ -282,8 +282,8 @@ candidate list when the number of synonym is too overwhelming.
 Synonyms are grouped by definitions. If there are too many groups to your
 liking, you may reduce the number of groups shown to `3` by setting
 
-```
-    let g:tq_truncation_on_definition_num = 3
+```vim
+let g:tq_truncation_on_definition_num = 3
 ```
 
 #### Synonym list truncate
@@ -291,8 +291,8 @@ Sometimes synonyms in a single group is also too long to choose from, in this
 case, to reduce the number of synonym shown in each group to no more than
 `200`, you can set
 
-```
-    let g:tq_truncation_on_syno_list_size = 200
+```vim
+let g:tq_truncation_on_syno_list_size = 200
 ```
 
 Know that if query result is truncated by your rule, and you want to browse
