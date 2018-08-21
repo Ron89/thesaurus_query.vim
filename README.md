@@ -19,7 +19,7 @@ required**.
 
 ## What's new
 
-Backend `thesaurus_query.com` is now driven by Manwholikespie's
+Backend `thesaurus_com` is now driven by Manwholikespie's
 [thesaurus](https://github.com/Manwholikespie/thesaurus), and it is now, once
 again, one of the default backends. Users who have not installed Python package
 `thesaurus` in their system is now prompted to install it in order to use the
