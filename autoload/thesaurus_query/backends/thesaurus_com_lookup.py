@@ -76,14 +76,18 @@ class _word_query_handler_thesaurus_lookup:
     def __init__(self):
 #        self.query_source_cmd = os.path.dirname(os.path.realpath(__file__))+"/online_thesaurus_lookup.sh"
         self._backendDisabled=False
-        while self._confirm_installation_status_of_thesaurus():
-            continue
-        if not self._backendDisabled:
-            from thesaurus import Word
-            self._Word=Word
+        self._loaded=False
 
     def query_cmd_handler(self, word):
         self.syno_list=[]
+        if not self._loaded and not self._backendDisabled:
+            while self._confirm_installation_status_of_thesaurus():
+                continue
+            if not self._loaded and not self._backendDisabled:
+                from thesaurus import Word
+                self._Word=Word
+                self._loaded=True
+
         if self._backendDisabled is False:
             self.query_result = self._Word(word)
 
