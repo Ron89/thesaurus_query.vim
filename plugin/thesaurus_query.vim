@@ -51,7 +51,7 @@ if g:tq_map_keys
 endif
 
 if g:tq_use_vim_autocomplete
-    set completefunc+=thesaurus_query#auto_complete_integrate
+    set completefunc=thesaurus_query#auto_complete_integrate
 endif
 
 let &cpo = s:save_cpo
