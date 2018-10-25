@@ -8,6 +8,8 @@
     - Added German synonym backend based on =openthesaurus.de=, backend
       identifier =openthesaurus_de=
 *** Fixed
+    - Fix `completefunc` issue when loaded after other plugin using 
+      `completefunc` is loaded
     - Fix `thesaurus_com` backend issue with `thesaurus` Python package
     - Fix Issue #29 (=E95 Buffer with this name already exist=) on query word
       displaying on separate buffer.
