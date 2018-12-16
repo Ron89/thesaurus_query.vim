@@ -25,6 +25,7 @@ except ImportError:
 import sys
 import subprocess
 import pkg_resources
+from collections import namedtuple
 from pkg_resources import DistributionNotFound, VersionConflict
 import re
 import socket
@@ -35,8 +36,11 @@ identifier="thesaurus_com"
 language="en"
 
 _python_dependencies = [
-        'thesaurus>=0.2.2',
+        'thesaurus>=0.2.3',
         ]
+
+# Used for handling exceptions where we can't fetch word data.
+EmptyWord = namedtuple('EmptyWord', ['data'])
 
 class _word_query_handler_thesaurus_lookup:
     '''
@@ -89,7 +93,10 @@ class _word_query_handler_thesaurus_lookup:
                 self._loaded=True
 
         if self._backendDisabled is False:
-            self.query_result = self._Word(word)
+            try:
+                self.query_result = self._Word(word)
+            except:
+                self.query_result = EmptyWord([])
 
     def synonym_found(self):
         if self._backendDisabled:
