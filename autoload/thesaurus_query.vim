@@ -9,8 +9,7 @@ if exists("g:loaded_thesaurus_query_autoload")
 endif
 let g:loaded_thesaurus_query_autoload = 1
 
-let s:save_cpo = &cpo
-set cpo&vim
+let s:cursor_pos = getpos(".")
 
 
 " legacy settings (depreciated, do NOT use) {{{
@@ -229,12 +228,17 @@ function! thesaurus_query#Thesaurus_Query_Lookup(word, replace) " {{{
 " a:replace     flag:
 "                       0 - don't replace word under cursor
 "                       1 - replace word under cursor
+    let l:cursor_pos = getpos(".")
+    " Workaround to keep cur pos after undo
+    " http://vim.wikia.com/wiki/Restore_the_cursor_position_after_undoing_text_change_made_by_a_script
+    normal ix
+    normal x
+
     let l:replace = a:replace
     let l:trimmed_word = s:Trim(a:word)
     let l:word = substitute(tolower(l:trimmed_word), '"', '', 'g')
     let l:word_fname = fnameescape(l:word)
     let l:syno_found = 1  " initialize the value
-    let l:cursor_pos = getpos(".")
 
 
 exec s:tq_python_env
@@ -258,10 +262,10 @@ while tq_continue_query>0:
 # if replace flag is on, prompt user to choose after populating candidate list
     elif vim.eval('l:replace') != '0':
         tq_continue_query = tq_interface.tq_replace_cursor_word_from_candidates(tq_synonym_result, tq_framework.good_backends[-1])
-        vim.command("call setpos('.', l:cursor_pos)")
     else:
         tq_continue_query = 0
         tq_framework.session_terminate()
+    vim.command("call setpos('.', l:cursor_pos)")
 
 del tq_continue_query
 del tq_next_query_direction
@@ -326,4 +330,4 @@ endfunction
 
 call thesaurus_query#Thesaurus_Query_Init()
 
-let &cpo = s:save_cpo
+call setpos('.', s:cursor_pos)
