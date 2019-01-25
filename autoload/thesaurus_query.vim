@@ -9,9 +9,7 @@ if exists("g:loaded_thesaurus_query_autoload")
 endif
 let g:loaded_thesaurus_query_autoload = 1
 
-let s:save_cpo = &cpo
-set cpo&vim
-
+let s:cursor_pos = getpos(".")
 
 " legacy settings (depreciated, do NOT use) {{{
 
@@ -324,4 +322,4 @@ endfunction
 
 call thesaurus_query#Thesaurus_Query_Init()
 
-let &cpo = s:save_cpo
+call setpos('.', s:cursor_pos)

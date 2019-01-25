@@ -9,8 +9,7 @@ if exists("g:loaded_thesaurus_query")
 endif
 let g:loaded_thesaurus_query = 1
 
-let s:save_cpo = &cpo
-set cpo&vim
+let s:cursor_pos = getpos(".")
 
 
 " --------------------------------
@@ -54,4 +53,4 @@ if g:tq_use_vim_autocomplete
     set completefunc=thesaurus_query#auto_complete_integrate
 endif
 
-let &cpo = s:save_cpo
+call setpos('.', s:cursor_pos)
