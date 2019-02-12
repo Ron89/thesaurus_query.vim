@@ -52,8 +52,12 @@ class _word_query_handler_thesaurus_lookup:
     '''
     def _try_to_install_thesaurus(self):
         if get_variable("tq_thesaurus_com_do_not_prompt_for_install", 0)==0:
+            if vim_eval("has('win32')") == "1":
+                python_binary = ':!python'
+            else:
+                python_binary = sys.executable
             userChoice = vim_eval("confirm(\"Please use '{} -m pip install thesaurus --user --upgrade' to install the latest package. Have you installed it now?\", \"&Yes\\n&Disable '{}' backend for this Vim session\")".format(
-                sys.executable, identifier, identifier))
+                python_binary, identifier, identifier))
             if userChoice == "1":
                 return True
             else:
