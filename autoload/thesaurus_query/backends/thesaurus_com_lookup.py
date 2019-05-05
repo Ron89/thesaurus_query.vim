@@ -34,5 +34,5 @@ from ..tq_common_lib import send_string_to_vim, vim_command, vim_eval
 identifier="thesaurus_com"
 language="en"
 
-def query(self,word):
+def query(word):
     return [-1, []]
