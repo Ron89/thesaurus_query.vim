@@ -19,16 +19,11 @@ required**.
 
 ## What's new
 
-Backend `thesaurus_com` is now driven by Manwholikespie's
-[thesaurus](https://github.com/Manwholikespie/thesaurus), and it is now, once
-again, one of the default backends. Users who have not installed Python package
-`thesaurus` in their system is now prompted to install it in order to use the
-backend. If you do not want to install the backend and want the prompt to be
-permanantly silenced, add the following line to your configuration file:
-
-```vim
-let g:tq_thesaurus_com_do_not_prompt_for_install=1
-```
+Deleted `thesaurus_com` backend due to the legal warning from Thesaurus.com on
+the upstream package [thesarus](https://github.com/Manwholikespie/thesaurus).
+For existing users that still have `thesaurus_com` explicitly enabled, the
+backend now always return exception. For English users, currently the highest
+quality source is either the OpenOffice Thesaurus source or mthesaur.txt. I am sorry for any inconvenience caused.
 
 -------
 
@@ -131,13 +126,6 @@ uses multiple backends sequentially to query for a synonym. Backends function
 independently, hence the plugin will be functional as long as one of the these
 backends is behaving properly.
 
-* **thesaurus\_com** is a wrapper over Manwholikespie's Python module
-  [thesaurus](https://github.com/Manwholikespie/thesaurus). It queries from
-  [Thesaurus.com](http://thesaurus.com/) for synonym, so internet connection is
-  required for this backend's functionality. The returned synonym list from
-  this source has very high quality. But since `thesaurus.com` didn't actually
-  provide official API. The functionality of this backend might fail when the
-  website changes its design.
 * **openoffice\_en** queries from local thesaurus database provided by
   OpenOffice. It is an useful option when you don't have any internet access at
   all. If you are using Linux and has installed OpenOffice from official repo,
@@ -208,7 +196,7 @@ removing them/putting them on latter position in variable
 `g:tq_enabled_backends` as following example:
 
 ```vim
-let g:tq_enabled_backends=["woxikon_de","jeck_ru","thesaurus_com","openoffice_en","mthesaur_txt"]
+let g:tq_enabled_backends=["woxikon_de","jeck_ru","openoffice_en","mthesaur_txt"]
 let g:tq_enabled_backends=["cilin_txt",
             \"openthesaurus_de",
             \"yarn_synsets",

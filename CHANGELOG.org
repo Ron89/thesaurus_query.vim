@@ -19,6 +19,8 @@
     - Remove `woxikon_de` from default backends
     - Made `datamuse_com` into one of the default active backend again to
       alleviate the problem induced by thesaurus.com change in HTML format
+*** Removed
+    - Remove `thesaurus_com` from default backend list
 ** V0.6.2                                                         :released:
 *** Added
     - added Russian synonym backend based on =yarn-synsets.csv=, backend

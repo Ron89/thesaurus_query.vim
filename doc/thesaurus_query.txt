@@ -38,11 +38,6 @@ is not activated by default.
 
 Multiple backends are used for this plugin, by default, four are enabled:
 
-    *   "thesaurus_com" Online backend querys from
-        [Thesaurus.com](http://thesaurus.com/) for
-        synonym, so internet connection is required for this backend's
-        functionality.
-
     *   "datamuse_com" Online backend querys from
         [datamuse.com](http://datamuse.com/) for
         synonym, so internet connection is required for this backend's
