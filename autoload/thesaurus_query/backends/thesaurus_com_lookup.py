@@ -13,24 +13,6 @@ synonym list = [def, list wordlist]
     wordlist = [synonym_0, synonym_1, ...]: list of words belonging to a same definition
 '''
 
-try:
-    from urllib2 import urlopen
-    from urllib2 import URLError,HTTPError
-    from StringIO import StringIO
-except ImportError:
-    from urllib.request import urlopen
-    from urllib.error import URLError,HTTPError
-    from io import StringIO
-
-import sys
-import subprocess
-import pkg_resources
-from pkg_resources import DistributionNotFound, VersionConflict
-import re
-import socket
-from ..tq_common_lib import decode_utf_8, fixurl, get_variable
-from ..tq_common_lib import send_string_to_vim, vim_command, vim_eval
-
 identifier="thesaurus_com"
 language="en"
 

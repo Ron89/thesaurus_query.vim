@@ -379,13 +379,13 @@ def tq_generate_thesaurus_buffer(candidates):
     else:
         vim_command(
                 'exec ":silent keepalt belowright split ' + bufferWindowName)
-    vim_command(
-            'exec ":silent file ' + bufferWindowName)
 
     vim_command('setlocal noswapfile nobuflisted nospell nowrap modifiable nonumber foldcolumn=0')
     if vim_eval('exists("+relativenumber")')=='1':
         vim_command('setlocal norelativenumber')
     vim_command('setlocal buftype=nofile')
+    vim_command(
+            'exec ":silent file ' + bufferWindowName)
 
 # obtain window dimension:
     win_width = int(vim_eval('winwidth(0)'))
