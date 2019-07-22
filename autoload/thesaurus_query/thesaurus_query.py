@@ -248,7 +248,6 @@ def tq_replace_cursor_word_from_candidates(candidate_list, source_backend=None):
 
     [candidate_num, thesaurus_wait_list, syno_result_IDed] = tq_candidate_list_populate(candidates)
 
-    vim_command("echon \"In line: ... \"|echohl Keyword|echon \"{0}\"|echohl None |echon \" ...\n\"".format(vim.current.line.replace('\\','\\\\').replace('"','\\"')))
     vim_command("echohl None| echon \"Candidates for \"| echohl WarningMSG | echon \"{0}\" | echohl None | echon \", found by backend: \" | echohl Keyword | echon \"{1}\n\"".format(
         vim.eval("l:trimmed_word").replace('\\','\\\\').replace('"','\\"'),
         source_backend
@@ -262,9 +261,9 @@ def tq_replace_cursor_word_from_candidates(candidate_list, source_backend=None):
         '''
         try:
             if trunc_flag==0:
-                thesaurus_user_choice=vim.eval("input(\"Type number and <Enter> (empty cancels; 'n': use next backend; 'p' use previous backend): \")")
+                thesaurus_user_choice=vim.eval("input(\"'': cancel; 'n': next backend; 'p' previous backend: \")")
             else:
-                thesaurus_user_choice = vim.eval("input('Type number and <Enter> (results truncated, Type `A<Enter>` to browse all resultsin split;\nempty cancels; 'n': use next backend; 'p' use previous backend): ')")
+                thesaurus_user_choice = vim.eval("input('Results truncated, Type `A<Enter>` to browse all results in split;\n'': cancel; 'n': next backend; 'p' previous backend: ')")
         except (KeyboardInterrupt if not neovimUsed else (KeyboardInterrupt, neovim.api.nvim.NvimError)):
             return None
         return thesaurus_user_choice
@@ -372,7 +371,7 @@ def tq_generate_thesaurus_buffer(candidates):
     ''' generate a buffer in Vim to show all found synonyms from query '''
     if independent_session:     # this module don't work in Vim independent session
         return None
-    bufferWindowName='thesaurus:\\\\ " . l:word_fname . "\\\\ (press\\\\ q\\\\ to\\\\ close\\\\ this\\\\ split.)"'
+    bufferWindowName='thesaurus:\\\\ " . l:word_fname'
     vim_command("silent! let l:thesaurus_window = bufwinnr('^thesaurus: ')")
     if int(vim.eval("l:thesaurus_window")) > -1:
         vim_command('exec l:thesaurus_window . "wincmd w"')
@@ -416,14 +415,11 @@ def tq_generate_thesaurus_buffer(candidates):
                 tq_thesaurus_buffer[-1]+= \
                     send_string_to_vim(word_curr[1])
 
-    tq_thesaurus_buffer[-1]="Result for word \"{0}\" (press \"q\" to close this split)".format(vim.eval('l:word'))
     for case in candidates:
-        tq_thesaurus_buffer.append([""])
         if not case[0]:
             candidate_list_printing(case[1])
             continue
-        tq_thesaurus_buffer.append([""])
-        tq_thesaurus_buffer[-1]='Found_as: {0}'.format(send_string_to_vim(case[0]))
+        tq_thesaurus_buffer[-1]='Found as: {0}'.format(send_string_to_vim(case[0]))
         candidate_list_printing(case[1])
     vim_command("setlocal bufhidden=")
     vim_command("exec 'resize ' . (line('$'))")
