@@ -3,7 +3,6 @@
 # python wrapper for word query from synonymo.fr
 # Author:       Eloi perdereau [[eloi@perdereau.eu][E-mail]]
 
-
 try:
     from urllib2 import urlopen
     from urllib2 import URLError, HTTPError
@@ -56,8 +55,8 @@ def get_html(url, time_out):
     return response.read()
 
 
-def get_synonyms(soup):
-    synonym_tds = soup.find_all('td', {'class': 'syno_format'})
+def get_class_tds(soup, clas):
+    synonym_tds = soup.find_all('td', {'class': clas})
     if not synonym_tds:
         return []
     else:
@@ -75,15 +74,19 @@ def _synonymo_fr_wrapper(target, query_method='synonym'):
     case_mapper={"synonym":u"synonymie",
                  "antonym":u"antonymie",
                 }
+    class_mapper={"synonym":u"syno_format",
+                  "antonym":u"anto_format"
+                }
     base_url = u'http://cnrtl.fr'
     html = get_html(base_url+'/{0}/{1}'.format(
                 case_mapper[query_method], target), time_out_choice)
 
     soup = BeautifulSoup.BeautifulSoup(html, features="html.parser")
-    if re.search('Erreur', soup.find(id="contentbox").get_text()):
+    if re.search('Erreur|Terme introuvable', soup.find(id="contentbox").get_text()):
         return 1
     targets_li = soup.find(id="vtoolbar").find_all('li')
-    synonym_lists = [ [targets_li[0].a.get_text(), get_synonyms(soup)] ]
+    synonym_lists = [ [targets_li[0].a.get_text(),
+                            get_class_tds(soup, class_mapper[query_method])] ]
 
     # get alternative found targers
     link_pattern = re.compile("sendRequest\(\d+,\s*'([^']*)'\)")
@@ -91,6 +94,7 @@ def _synonymo_fr_wrapper(target, query_method='synonym'):
         link = link_pattern.search(alt_li.a['onclick']).group(1)
         alt_html = get_html(base_url+link, time_out_choice)
         alt_soup = BeautifulSoup.BeautifulSoup(alt_html, features="html.parser")
-        synonym_lists.append([alt_li.a.get_text(), get_synonyms(alt_soup)])
+        synonym_lists.append([alt_li.a.get_text(),
+                            get_class_tds(alt_soup, class_mapper[query_method])])
     return [ 0, synonym_lists ]
 
