@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# python wrapper for word query from synonymo.fr
+# python wrapper for word query from cnrtl.fr
 # Author:       Eloi perdereau [[eloi@perdereau.eu][E-mail]]
 
 try:
@@ -46,13 +46,13 @@ nested list = [PoS, list wordlist]
     if _backendDisabled:
         return [-1,[]]
     target=target.replace(u" ", u"+")
-    result_lists =  _synonymo_fr_wrapper(target, query_method=query_method)
-    if result_lists == -1:
+    result_list= _cnrtl_fr_wrapper(target, query_method=query_method)
+    if result_list == -1:
         return [-1,[]]
-    elif result_lists == 1:
+    elif result_list == 1:
         return [1, []]
     else:
-        return result_lists
+        return result_list
 
 
 def get_html(url, time_out):
@@ -78,7 +78,7 @@ def get_class_tds(soup, clas):
         return synonyms
 
 
-def _synonymo_fr_wrapper(target, query_method='synonym'):
+def _cnrtl_fr_wrapper(target, query_method='synonym'):
     '''
     query_method:
         synonym anyonym

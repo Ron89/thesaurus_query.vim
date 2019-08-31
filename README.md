@@ -27,9 +27,9 @@ quality source is either the OpenOffice Thesaurus source or mthesaur.txt. I am s
 
 -------
 
-Added new French backend based on [synonymo.fr](http://www.synonymo.fr/). To
-activate it, add `fr` to variable `g:tq_language` and `synonymo_fr` to
-`g:tq_enabled_backends`.
+Added two new French backend based on [synonymo.fr](http://www.synonymo.fr/)
+and [cnrtl.fr](https://cnrtl.fr/). To activate them, add `fr` to variable
+`g:tq_language` and `synonymo_fr` and/or `cnrtl_fr` to `g:tq_enabled_backends`.
 
 -------
 
