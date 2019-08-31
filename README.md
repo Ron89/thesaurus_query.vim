@@ -34,7 +34,7 @@ and [cnrtl.fr](https://cnrtl.fr/). To activate them, add `fr` to variable
 -------
 
 Added new German backend based on
-[openthesaurus.com](https://www.openthesaurus.de/about/api#json). This
+[openthesaurus.de](https://www.openthesaurus.de/about/api#json). This
 thesaurus backend is one of the German default backends. To activate it, add
 `de` to variable `g:tq_language`. Also, if you have manual specification for
 `g:tq_enabled_backends`, be sure to add `openthesaurus_de` to your backend
@@ -187,12 +187,21 @@ backends is behaving properly.
   website didn't provide standard API to use. Hence functionality of this
   backend depends on whether the website owner will change the webpage design.
 * **openthesaurus\_de** is a *German* thesaurus backend. It queries
-  [openthesaurus.com](https://www.openthesaurus.de/about/api#json) for synonym
+  [openthesaurus.de](https://www.openthesaurus.de/about/api#json) for synonym
   resources. This thesaurus backend is one of the German default backends. To
   activate it, add `de` to variable `g:tq_language`. Also, if you have manual
-  specification for `g:tq_enabled_backends`, be sure to add `openthesaurus_de**
-  to your backend
-  list.
+  specification for `g:tq_enabled_backends`, be sure to add `openthesaurus_de`
+  to your backend list.
+* **cnrtl\_fr** is a *French* thesaurus backend. It queries
+  [cnrtl.fr](https://cnrtl.fr/) for synonym resources. This
+  website didn't provide standard API to use. Hence functionality of this
+  backend depends on whether the website owner will change the webpage design.
+  This backend requires `bs4` *BeautifulSoup* dependency.
+* **synonymo\_fr** is a *French* thesaurus backend. It queries
+  [synonymo.fr](http://www.synonymo.fr/) for synonym resources. This
+  website didn't provide standard API to use. Hence functionality of this
+  backend depends on whether the website owner will change the webpage design.
+  This backend requires `bs4` *BeautifulSoup* dependency.
 
 The thesaurus query plugin will go through the list `g:tq_enabled_backends` in
 sequence until a match is found. Unless user explicitly instruct, Next query
