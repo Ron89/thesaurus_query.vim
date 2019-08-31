@@ -10,14 +10,26 @@ try:
 except ImportError:
     from urllib.request import urlopen
     from urllib.error import URLError, HTTPError
+import sys
 import socket
-import bs4 as BeautifulSoup
-from ..tq_common_lib import fixurl, decode_utf_8, get_variable
+
+
+from ..tq_common_lib import fixurl, decode_utf_8, get_variable, vim_eval
 
 identifier="synonymo_fr"
 language="fr"
 
-_timeout_period_default = 10.0
+_timeout_period_default = 1.0
+_backendDisabled = False
+
+try:
+    import bs4 as BeautifulSoup
+except ImportError:
+    userChoice = vim_eval("confirm(\"Required package bs4 can not be imported. Please use '{} -m pip install bs4 --user --upgrade' to install the latest bs4. Do you want to try to import it again?\", \"&Yes\\n&Disable '{}' backend for this Vim session\")".format(sys.executable, identifier, identifier))
+    if userChoice == "1":
+        import bs4 as BeautifulSoup
+    else:
+        _backendDisabled = True
 
 def query(target, query_method="synonym"):
     ''' return result as list. relavance from high to low in each PoS.
@@ -31,6 +43,8 @@ nested list = [PoS, list wordlist]
     Classifier('str'): Identifier to classify the resulting wordlist suits.
     wordlist = [word_0, word_1, ...]: list of words belonging to a same definition
     '''
+    if _backendDisabled:
+        return [-1,[]]
     target=target.replace(u" ", u"+")
     result_list=_synonymo_fr_wrapper(target, query_method=query_method)
     if result_list == -1:
