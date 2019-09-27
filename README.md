@@ -6,11 +6,11 @@ This is a plugin for user to **lookup** synonyms of any word under cursor or
 phrase covered in visual mode, and **replace it** with an user chosen synonym.
 It also accepts word/phrases from manual input for synonym checkup.
 
-**Notice:** Currently this plugin Supports only English (en), Chinese (cn),
-Russian (ru) and German (de) thesaurus query. If you want to use the plugin for
-other languages, or if you're not satisfied with the performance of current
-backends and know of some online synonym services that I can integrate into the
-plugin, please come and post an issue with your suggestion.
+**Notice:** Currently this plugin Supports only English (en), Chinese (cn), 
+French (fr), Russian (ru) and German (de) thesaurus query. If you want to use the 
+plugin for other languages, or if you're not satisfied with the performance of 
+current backends and know of some online synonym services that I can integrate 
+into the plugin, please come and post an issue with your suggestion.
 
 This plugin is written in Python. So **+Python or +Python3 version of Vim is
 required**.
