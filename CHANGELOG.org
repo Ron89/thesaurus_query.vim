@@ -8,6 +8,8 @@
     - Added German synonym backend based on =openthesaurus.de=, backend
       identifier =openthesaurus_de=
 *** Fixed
+    - Disabled the BeautifulSoup4 dependency check if bs4 required backend is
+      not in use
     - Fix `completefunc` issue when loaded after other plugin using 
       `completefunc` is loaded
     - Fix `thesaurus_com` backend issue with `thesaurus` Python package
