@@ -22,15 +22,6 @@ language="fr"
 _timeout_period_default = 1.0
 _backendDisabled = False
 
-try:
-    import bs4 as BeautifulSoup
-except ImportError:
-    userChoice = vim_eval("confirm(\"Required package bs4 can not be imported. Please use '{} -m pip install bs4 --user --upgrade' to install the latest bs4. Do you want to try to import it again?\", \"&Yes\\n&Disable '{}' backend for this Vim session\")".format(sys.executable, identifier, identifier))
-    if userChoice == "1":
-        import bs4 as BeautifulSoup
-    else:
-        _backendDisabled = True
-
 def query(target, query_method="synonym"):
     ''' return result as list. relavance from high to low in each PoS.
 Lookup routine for openthesaurus.de. When query_from_source is called, return:
@@ -82,6 +73,21 @@ def _synonymo_fr_wrapper(target, query_method='synonym'):
     return response.read()
 
 def _parser(target_list):
+
+    global _backendDisabled
+    # try to load BeautifulSoup
+    try:
+        import bs4 as BeautifulSoup
+    except ImportError:
+        userChoice = vim_eval("confirm(\"Required package bs4 can not be imported. Please use '{} -m pip install bs4 --user --upgrade' to install the latest bs4. Do you want to try to import it again?\", \"&Yes\\n&Disable '{}' backend for this Vim session\")".format(sys.executable, identifier, identifier))
+        if userChoice == "1":
+            try: import bs4 as BeautifulSoup
+            except ImportError:
+                return -1
+        else:
+            _backendDisabled = True
+            return -1
+
     soup = BeautifulSoup.BeautifulSoup(target_list, features="html.parser")
     fiche = soup.find_all('div', {'class': 'fiche'})[0]
     if "Aucun résultat" in fiche.h1:
