@@ -5,6 +5,7 @@
 
 ** V0.7                                                          :released:
 *** Added
+    - Added French Backends using online source =cnrtl.fr= and =synonymo.fr=
     - Added German synonym backend based on =openthesaurus.de=, backend
       identifier =openthesaurus_de=
 *** Fixed
@@ -12,16 +13,16 @@
       not in use
     - Fix `completefunc` issue when loaded after other plugin using 
       `completefunc` is loaded
-    - Fix `thesaurus_com` backend issue with `thesaurus` Python package
+    - +Fix `thesaurus_com` backend issue with `thesaurus` Python package+
     - Fix Issue #29 (=E95 Buffer with this name already exist=) on query word
       displaying on separate buffer.
     - Ctrl-C escape of synonym selection window now do not throw exception in
       both Vim and NeoVim
 *** Changed
-    - Remove `woxikon_de` from default backends
     - Made `datamuse_com` into one of the default active backend again to
       alleviate the problem induced by thesaurus.com change in HTML format
 *** Removed
+    - Remove `woxikon_de` from default backends
     - Remove `thesaurus_com` from default backend list
 ** V0.6.2                                                         :released:
 *** Added
