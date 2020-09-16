@@ -83,9 +83,9 @@ def _parser(result):
     rel_lists = [d[u'rel_list'] for d in flattened if d[u'rel_list']]
     nears = [d[u'wd'] for arr in near_lists for c in arr for d in c if d[u'wd']]
     rels = [d[u'wd'] for arr in rel_lists for c in arr for d in c if d[u'wd']]
-    return [0,
+    return [0, [
         [ 'Synonyms', syns],
         [ 'Related', rels],
         [ 'Near', nears],
         [ 'Antonyms', ants]
-    ]
+    ]]
