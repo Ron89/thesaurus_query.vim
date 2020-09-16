@@ -1,6 +1,7 @@
 # python wrapper for word query from dictionaryapi.com
 # Author:       Aaron Hayman [[ahayman@gmail.com][E-mail]]
 
+
 try:
     from urllib2 import urlopen
     from urllib2 import URLError, HTTPError
@@ -12,6 +13,7 @@ import socket
 import codecs
 from ..tq_common_lib import fixurl, decode_utf_8, get_variable
 
+query_result_trunc=100
 identifier="dictionary_api_com"
 language="en"
 
