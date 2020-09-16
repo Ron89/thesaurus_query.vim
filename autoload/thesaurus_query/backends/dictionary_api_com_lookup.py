@@ -11,7 +11,8 @@ except ImportError:
 import json
 import socket
 import codecs
-from ..tq_common_lib import fixurl, decode_utf_8, get_variable
+import ssl
+from ..tq_common_lib import fixurl, get_variable
 
 query_result_trunc=100
 identifier="dictionary_api_com"
@@ -54,17 +55,15 @@ def _dictionary_api_wrapper(target, query_method, max_return=query_result_trunc)
                  "left_content":u"words?lc="
                 }
     try:
-        response = urlopen(fixurl(
-            u'https://www.dictionaryapi.com/api/v3/references/thesaurus/json/{0}?{1}'.format(
-                target, api_key
-                )).decode('utf-8'), timeout = time_out_choice)
-        result_list = json.load(response)
-        response.close()
+        url = fixurl(u'https://www.dictionaryapi.com/api/v3/references/thesaurus/json/{0}?key={1}'.format(target, api_key)).decode('ASCII') 
+        response = urlopen(url, context=ssl.SSLContext(), timeout = time_out_choice).read()
+        result_list = json.loads(response.decode('utf-8'))
     except HTTPError:
         return 1
     except URLError as err:
         if isinstance(err.reason, socket.timeout):
             return 1
+        print(err)
 #        print(u"Internet Error. The word \"{0}\" has not been found on datamuse!\n".format(target))
         return -1
     except socket.timeout:  # timeout only means underperforming
