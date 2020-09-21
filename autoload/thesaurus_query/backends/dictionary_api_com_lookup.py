@@ -77,13 +77,7 @@ def _parser(result):
     if not result_dict:
         return [1, []]
     if isinstance(result_dict, str):
-        return [0, [
-            ['Unknown word (did you mean):', [result_dict]]
-        ]]
-    if isinstance(result_dict, list):
-        return [0, [
-            ['Unknown word (did you mean):', result_dict]
-        ]]
+        return [1, [['Unknown word (did you mean):', result]]]
     syns = [syn for arr in result_dict.get(u'meta', {}).get(u'syns', []) for syn in arr]
     ants = [ant for arr in result_dict.get(u'meta', {}).get(u'ants', []) for ant in arr]
     sseqs = [d.get(u'sseq', []) for d in result_dict.get(u'def', [])]
