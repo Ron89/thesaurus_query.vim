@@ -27,6 +27,30 @@ quality source is either the OpenOffice Thesaurus source or mthesaur.txt. I am s
 
 -------
 
+Added new English back end: [dictionary_api_com](https://dictionaryapi.com/). This is the Merriam-Webster API and 
+as such is a very high-quality back end. However, it does require registration on their website as a developer in order to 
+gain access to the API Keys. They do explicitly state that it is free for non-commercial use up to 1,000 queries a day, which 
+should be sufficient for most needs. Make sure you select the `Thesaurus` api key, as that is what you will need in order for this
+backend to work.
+
+In order to use this backend, add `dictionary_api_com` to `g:tq_enabled_backend` and set your api key to `g:tq_dictionary_api_key`, ex: 
+```
+let g:tq_dictionary_api_key='cxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxa'
+```
+**This backend cannot work without an API key.**
+
+The DictionaryApi.com backend returns several categories of information in this order:
+ - Synonyms: The most relevant synonyms.
+ - Related: Words that are no exactly synonyms, but can be considered related to the word in question.
+ - Near: Words that are neither synonyms or antonyms, but are near by words.
+ - Antonyms: The most relevant antonyms
+ - Definitions: Short definitions. You _can_ replace your word with these, but they're mostly there for information purposes.
+
+Also, if the word cannot be found, the API may sometimes return a list of word suggestions.  These will be returned as `Unknown word` 
+and allow you to choose a replacement from the list.
+
+-------
+
 Added two new French backend based on [synonymo.fr](http://www.synonymo.fr/)
 and [cnrtl.fr](https://cnrtl.fr/). To activate them, add `fr` to variable
 `g:tq_language` and `synonymo_fr` and/or `cnrtl_fr` to `g:tq_enabled_backends`.
