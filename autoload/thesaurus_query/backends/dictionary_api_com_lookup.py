@@ -34,7 +34,7 @@ nested list = [PoS, list wordlist]
     '''
     target=target.replace(u" ", u"+")
     result_list=_dictionary_api_wrapper(target, query_method=query_method)
-    format = get_variable('tq_dictionary_api_format', None)
+    format = get_variable('tq_dictionary_api_format', 'by_def')
     if result_list == -1:
         return [-1,[]]
     elif result_list == 1:
@@ -81,7 +81,7 @@ def _parser(result, format = None):
         return [0, [['Unknown word (did you mean):', result]]]
     defs = result_dict.get(u'shortdef', [])
 
-    if format == 'by_def':
+    if format != 'by_type':
         syns_list = result_dict.get(u'meta', {}).get(u'syns', [])
         length = min(len(defs), len(syns_list))
         return [0,  
