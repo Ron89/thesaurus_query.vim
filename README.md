@@ -39,12 +39,16 @@ let g:tq_dictionary_api_key='cxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxa'
 ```
 **This backend cannot work without an API key.**
 
-The DictionaryApi.com backend returns several categories of information in this order:
+The Back end can return data in two formats:
+
+By default, the DictionaryApi.com backend returns several categories of information in this order:
  - Synonyms: The most relevant synonyms.
- - Related: Words that are no exactly synonyms, but can be considered related to the word in question.
+ - Related: Words that are not exactly synonyms, but can be considered related to the word in question.
  - Near: Words that are neither synonyms or antonyms, but are near by words.
  - Antonyms: The most relevant antonyms
  - Definitions: Short definitions. You _can_ replace your word with these, but they're mostly there for information purposes.
+
+Or, it can break up the synonyms by their short definitions. To do this, set `g:tq_dictionary_api_format='by_def'`
 
 Also, if the word cannot be found, the API may sometimes return a list of word suggestions.  These will be returned as `Unknown word` 
 and allow you to choose a replacement from the list.

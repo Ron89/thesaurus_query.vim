@@ -34,12 +34,13 @@ nested list = [PoS, list wordlist]
     '''
     target=target.replace(u" ", u"+")
     result_list=_dictionary_api_wrapper(target, query_method=query_method)
+    format = get_variable('tq_dictionary_api_format', None)
     if result_list == -1:
         return [-1,[]]
     elif result_list == 1:
         return [1, []]
     else:
-        return _parser(result_list)
+        return _parser(result_list, format)
 
 
 def _dictionary_api_wrapper(target, query_method, max_return=query_result_trunc):
@@ -70,7 +71,7 @@ def _dictionary_api_wrapper(target, query_method, max_return=query_result_trunc)
         return 1
     return result_list
 
-def _parser(result):
+def _parser(result, format = None):
     if result is None or len(result) == 0:
         return [1, []]
     result_dict = result[0]
@@ -78,6 +79,14 @@ def _parser(result):
         return [1, []]
     if isinstance(result_dict, str):
         return [0, [['Unknown word (did you mean):', result]]]
+    defs = result_dict.get(u'shortdef', [])
+
+    if format == 'by_def':
+        syns_list = result_dict.get(u'meta', {}).get(u'syns', [])
+        length = min(len(defs), len(syns_list))
+        return [0, [ 
+            [ [ defs[idx], syns_list[idx] ] for idx in range(length)]
+        ]]
     syns = [syn for arr in result_dict.get(u'meta', {}).get(u'syns', []) for syn in arr]
     ants = [ant for arr in result_dict.get(u'meta', {}).get(u'ants', []) for ant in arr]
     sseqs = [d.get(u'sseq', []) for d in result_dict.get(u'def', [])]
@@ -86,7 +95,6 @@ def _parser(result):
     rel_lists = [d.get(u'rel_list', []) for d in flattened]
     nears = [d.get(u'wd', []) for arr in near_lists for c in arr for d in c]
     rels = [d.get(u'wd', []) for arr in rel_lists for c in arr for d in c]
-    defs = result_dict.get(u'shortdef', [])
     return [0, [
         [ 'Synonyms', syns],
         [ 'Related', rels],
