@@ -84,9 +84,9 @@ def _parser(result, format = None):
     if format == 'by_def':
         syns_list = result_dict.get(u'meta', {}).get(u'syns', [])
         length = min(len(defs), len(syns_list))
-        return [0, [ 
-            [ [ defs[idx], syns_list[idx] ] for idx in range(length)]
-        ]]
+        return [0,  
+            [ [ defs[idx], syns_list[idx] ] for idx in range(length) ]
+        ]
     syns = [syn for arr in result_dict.get(u'meta', {}).get(u'syns', []) for syn in arr]
     ants = [ant for arr in result_dict.get(u'meta', {}).get(u'ants', []) for ant in arr]
     sseqs = [d.get(u'sseq', []) for d in result_dict.get(u'def', [])]
