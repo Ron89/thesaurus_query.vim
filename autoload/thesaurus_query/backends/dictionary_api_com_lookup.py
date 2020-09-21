@@ -72,20 +72,24 @@ def _dictionary_api_wrapper(target, query_method, max_return=query_result_trunc)
 
 
 def _parser(result):
+    if result is None or len(result) == 0:
+        return [1, []]
     result_dict = result[0]
     if not result_dict:
         return [1, []]
-    syns = [syn for arr in result_dict[u'meta'][u'syns'] for syn in arr]
-    ants = [ant for arr in result_dict[u'meta'][u'ants']for ant in arr]
-    sseqs = [d[u'sseq'] for d in result_dict[u'def'] if d[u'sseq']]
+    syns = [syn for arr in result_dict.get(u'meta', {}).get(u'syns', []) for syn in arr]
+    ants = [ant for arr in result_dict.get(u'meta', {}).get(u'ants', []) for ant in arr]
+    sseqs = [d.get(u'sseq', []) for d in result_dict.get(u'def', [])]
     flattened = [d for a in sseqs for b in a for c in b for d in c if isinstance(d,dict)]
-    near_lists = [d[u'near_list'] for d in flattened if d[u'near_list']]
-    rel_lists = [d[u'rel_list'] for d in flattened if d[u'rel_list']]
-    nears = [d[u'wd'] for arr in near_lists for c in arr for d in c if d[u'wd']]
-    rels = [d[u'wd'] for arr in rel_lists for c in arr for d in c if d[u'wd']]
+    near_lists = [d.get(u'near_list', []) for d in flattened]
+    rel_lists = [d.get(u'rel_list', []) for d in flattened]
+    nears = [d.get(u'wd', []) for arr in near_lists for c in arr for d in c]
+    rels = [d.get(u'wd', []) for arr in rel_lists for c in arr for d in c]
+    defs = result_dict.get(u'shortdef', [])
     return [0, [
         [ 'Synonyms', syns],
         [ 'Related', rels],
         [ 'Near', nears],
-        [ 'Antonyms', ants]
+        [ 'Antonyms', ants],
+        [ 'Definitions', defs]
     ]]
