@@ -70,13 +70,16 @@ def _dictionary_api_wrapper(target, query_method, max_return=query_result_trunc)
         return 1
     return result_list
 
-
 def _parser(result):
     if result is None or len(result) == 0:
         return [1, []]
     result_dict = result[0]
     if not result_dict:
         return [1, []]
+    if isinstance(result_dict, str):
+        return [1, [['Unknown word (did you mean):', [result_dict]]]]
+    if isinstance(result_dict, list):
+        return [1, [['Unknown word (did you mean):', result_dict]]]
     syns = [syn for arr in result_dict.get(u'meta', {}).get(u'syns', []) for syn in arr]
     ants = [ant for arr in result_dict.get(u'meta', {}).get(u'ants', []) for ant in arr]
     sseqs = [d.get(u'sseq', []) for d in result_dict.get(u'def', [])]
