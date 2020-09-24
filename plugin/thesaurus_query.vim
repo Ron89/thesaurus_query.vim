@@ -30,20 +30,20 @@ endif
 "  Expose our commands to the user
 " --------------------------------
 "
-command! ThesaurusQueryReplaceCurrentWord :call thesaurus_query#Thesaurus_Query_Lookup(expand('<cword>'), 1, 'synonym')
-command! ThesaurusQueryLookupCurrentWord :call thesaurus_query#Thesaurus_Query_Lookup(expand('<cword>'), 0, 'synonym')
+command! ThesaurusQueryReplaceCurrentWord :call thesaurus_query#Thesaurus_Query_Lookup(expand('<cword>'), 1, 0)
+command! ThesaurusQueryLookupCurrentWord :call thesaurus_query#Thesaurus_Query_Lookup(expand('<cword>'), 0, 0)
 command! ThesaurusQueryReset :call thesaurus_query#Thesaurus_Query_Restore_Handler()
 
-command! -nargs=1 Thesaurus :call thesaurus_query#Thesaurus_Query_Lookup(<q-args>, 0, 'synonym')
+command! -nargs=1 Thesaurus :call thesaurus_query#Thesaurus_Query_Lookup(<q-args>, 0, 0)
 
-command! -nargs=1 ThesaurusQueryReplace :call thesaurus_query#Thesaurus_Query_Lookup(<q-args>, 1, 'synonym')
+command! -nargs=1 ThesaurusQueryReplace :call thesaurus_query#Thesaurus_Query_Lookup(<q-args>, 1, 0)
 
-command! ThesaurusQueryReplaceCurrentWordAntonym :call thesaurus_query#Thesaurus_Query_Lookup(expand('<cword>'), 1, 'antonym')
-command! ThesaurusQueryLookupCurrentWordAntonym :call thesaurus_query#Thesaurus_Query_Lookup(expand('<cword>'), 0, 'antonym')
+command! ThesaurusQueryReplaceCurrentWordAntonym :call thesaurus_query#Thesaurus_Query_Lookup(expand('<cword>'), 1, 1)
+command! ThesaurusQueryLookupCurrentWordAntonym :call thesaurus_query#Thesaurus_Query_Lookup(expand('<cword>'), 0, 1)
 
-command! -nargs=1 ThesaurusAntonym :call thesaurus_query#Thesaurus_Query_Lookup(<q-args>, 0, 'antonym')
+command! -nargs=1 ThesaurusAntonym :call thesaurus_query#Thesaurus_Query_Lookup(<q-args>, 0, 1)
 
-command! -nargs=1 ThesaurusQueryReplaceAntonym :call thesaurus_query#(<q-args>, 1, 'antonym')
+command! -nargs=1 ThesaurusQueryReplaceAntonym :call thesaurus_query#(<q-args>, 1, 1)
 
 " --------------------------------
 "  Map keys
