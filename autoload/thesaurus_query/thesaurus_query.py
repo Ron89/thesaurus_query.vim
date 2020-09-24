@@ -76,10 +76,10 @@ class Thesaurus_Query_Handler:
         error_encountered = 0
 
         # Check cache first
-        if use_cache:
-            for cache_result in cache:
-                if cache_result[0] == word:
-                    return cache_result[1] if query_type == 0 else cache_result[2]
+        # if use_cache:
+        #     for cache_result in cache:
+        #         if cache_result[0] == word:
+        #             return cache_result[1] if query_type == 0 else cache_result[2]
 # use session-wise backend management to prepare for current query
         if next:
             to_use_list = self.backend_in_line[:]
@@ -113,7 +113,7 @@ class Thesaurus_Query_Handler:
                     self.query_backends[query_backend_curr].identifier)
                 continue
             if state == 0:
-                cache.append([word, synonym_list or [], antonym_list or []])
+                # cache.append([word, synonym_list or [], antonym_list or []])
                 found = True
                 if next:
                     success_list.append(
@@ -145,7 +145,7 @@ class Thesaurus_Query_Handler:
             self.last_valid_synonyms=synonym_list
             self.last_valid_antonyms=antonym_list
 
-        return synonym_list if query_type == 0 else antonym_list
+        return antonym_list #synonym_list if query_type == 0 else antonym_list
 
     def restore_thesaurus_query_handler(self):
         self.query_backend_priority = get_variable(
