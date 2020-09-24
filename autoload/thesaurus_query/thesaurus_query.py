@@ -145,7 +145,7 @@ class Thesaurus_Query_Handler:
             self.last_valid_synonyms=synonym_list
             self.last_valid_antonyms=antonym_list
 
-        return antonym_list #synonym_list if query_type == 0 else antonym_list
+        return synonym_list if query_type == 0 else antonym_list
 
     def restore_thesaurus_query_handler(self):
         self.query_backend_priority = get_variable(
@@ -417,7 +417,7 @@ def tq_generate_thesaurus_buffer(candidates, candidate_type):
             [ word1, word2, word3, ... ]
         """
         tq_thesaurus_buffer.append([""])
-        tq_thesaurus_buffer[-1]= 'Synonyms:' if type == 0 else 'Antonyms:'
+        tq_thesaurus_buffer[-1]= 'Synonyms:' if candidate_type == 0 else 'Antonyms:'
         column_curr = 10
         word_list_size = len(word_list)
 
