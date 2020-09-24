@@ -248,7 +248,7 @@ tq_continue_query = 1
 while tq_continue_query>0:
     vim.command("redraw")
     tq_next_query_direction = True if tq_continue_query==1 else False
-    tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")), tq_next_query_direction, 1)
+    tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")), tq_next_query_direction, 0 if query_type=='synonym' else 1)
 # Use Python environment for handling candidate displaying {{{
 # mark for exit function if no candidate is found
     if not tq_synonym_result:
