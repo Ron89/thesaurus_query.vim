@@ -107,13 +107,13 @@ class Thesaurus_Query_Handler:
                 if query_type == 1:
                     state = 1
                 antonym_list = []
-            cache.append([word, synonym_list, antonym_list])
             if state == -1:
                 error_encountered = 1
                 local_bad_backends.append(
                     self.query_backends[query_backend_curr].identifier)
                 continue
             if state == 0:
+                cache.append([word, synonym_list or [], antonym_list or []])
                 found = True
                 if next:
                     success_list.append(
