@@ -249,7 +249,7 @@ tq_continue_query = 1
 while tq_continue_query>0:
     vim.command("redraw")
     tq_next_query_direction = True if tq_continue_query==1 else False
-    tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")), tq_next_query_direction, 0 if vim.eval('l:replace') == '0' else 1)
+    tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")), tq_next_query_direction, 0 if vim.eval('l:query_type') == '0' else 1)
 # Use Python environment for handling candidate displaying {{{
 # mark for exit function if no candidate is found
     if not tq_synonym_result:
@@ -259,7 +259,7 @@ while tq_continue_query>0:
         tq_continue_query = 0
 # if replace flag is on, prompt user to choose after populating candidate list
     elif vim.eval('l:replace') != '0':
-        tq_continue_query = tq_interface.tq_replace_cursor_word_from_candidates(tq_synonym_result, tq_framework.good_backends[-1], 0 if vim.eval('l:replace') == '0' else 1)
+        tq_continue_query = tq_interface.tq_replace_cursor_word_from_candidates(tq_synonym_result, tq_framework.good_backends[-1], 0 if vim.eval('l:query_type') == '0' else 1)
     else:
         tq_continue_query = 0
         tq_framework.session_terminate()
