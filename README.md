@@ -39,24 +39,18 @@ let g:tq_dictionary_api_key='cxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxa'
 ```
 **This backend cannot work without an API key.**
 
-The Back end can return data in two formats:
+This particular backend can also return antonyms using a different command:
+```
+:ThesaurusQueryReplaceCurrentWordAntonym
+```
 
-*by_def* (default):
-`g:tq_dictionary_api_format='by_def'`
+By default, this is bound to: 
 
-By default, the synonyms grouped by the short definition of the word.
+```vim
+nnoremap <Leader>ca :ThesaurusQueryReplaceCurrentWord<CR>
+```
 
-*by_type*:
-`g:tq_dictionary_api_format='by_type'`
-
-The DictionaryApi.com backend as much data as it can, grouped into several categories of information in this order:
- - Synonyms: The most relevant synonyms.
- - Related: Words that are not exactly synonyms, but can be considered related to the word in question.
- - Near: Words that are neither synonyms or antonyms, but are near by words.
- - Antonyms: The most relevant antonyms
- - Definitions: Short definitions. You _can_ replace your word with these, but they're mostly there for information purposes.
-
-Note: While *by_type* returns the most data, it is not grouped by the word definitions.
+See **Usage** below for changing the bindings.
 
 Also, if the word cannot be found, the API may sometimes return a list of word suggestions.  These will be returned as `Unknown word` 
 and allow you to choose a replacement from the list.
