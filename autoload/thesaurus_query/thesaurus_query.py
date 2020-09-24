@@ -76,10 +76,10 @@ class Thesaurus_Query_Handler:
         error_encountered = 0
 
         # Check cache first
-        # if use_cache:
-        #     for cache_result in cache:
-        #         if cache_result[0] == word:
-        #             return cache_result[1] if query_type == 0 else cache_result[2]
+        if use_cache:
+            for cache_result in cache:
+                if cache_result[0] == word:
+                    return cache_result[1] if query_type == 0 else cache_result[2]
 # use session-wise backend management to prepare for current query
         if next:
             to_use_list = self.backend_in_line[:]
