@@ -249,7 +249,7 @@ def tq_replace_cursor_word_from_candidates(candidate_list, source_backend=None, 
         for case in result_IDed:
             if case[0] != u"":
                 vim_command('call thesaurus_query#echo_HL("Keyword|Found as: |Directory|{0}|None|\\n")'.format(send_string_to_vim(case[0])))
-            vim_command('call thesaurus_query#echo_HL("Keyword|Synonyms: |None|")')
+            vim_command(f'call thesaurus_query#echo_HL("Keyword|Antonyms: |None|")')
             col_count = 10
             col_count_max = int(vim.eval("&columns"))
             for synonym_i in case[1]:
