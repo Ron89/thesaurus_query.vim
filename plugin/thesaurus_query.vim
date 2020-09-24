@@ -43,7 +43,7 @@ command! ThesaurusQueryLookupCurrentWordAntonym :call thesaurus_query#Thesaurus_
 
 command! -nargs=1 ThesaurusAntonym :call thesaurus_query#Thesaurus_Query_Lookup(<q-args>, 0, 1)
 
-command! -nargs=1 ThesaurusQueryReplaceAntonym :call thesaurus_query#Thesaurus_Query_Lookup(<q-args>, 1, 1)
+command! -nargs=1 ThesaurusQueryReplaceAntonym :call thesaurus_query#(<q-args>, 1, 1)
 
 " --------------------------------
 "  Map keys
