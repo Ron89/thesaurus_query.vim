@@ -232,6 +232,7 @@ function! thesaurus_query#Thesaurus_Query_Lookup(word, replace, query_type) " {{
 "                       0 - synonyms
 "                       1 - antonyms
     let l:replace = a:replace
+    let l:query_type = a:query_type
     let l:trimmed_word = s:Trim(a:word)
     let l:word = substitute(tolower(l:trimmed_word), '"', '', 'g')
     let l:word_fname = fnameescape(l:word)
@@ -258,7 +259,7 @@ while tq_continue_query>0:
         tq_continue_query = 0
 # if replace flag is on, prompt user to choose after populating candidate list
     elif vim.eval('l:replace') != '0':
-        tq_continue_query = tq_interface.tq_replace_cursor_word_from_candidates(tq_synonym_result, tq_framework.good_backends[-1], 1)
+        tq_continue_query = tq_interface.tq_replace_cursor_word_from_candidates(tq_synonym_result, tq_framework.good_backends[-1], 0 if query_type=='synonym' else 1)
     else:
         tq_continue_query = 0
         tq_framework.session_terminate()
