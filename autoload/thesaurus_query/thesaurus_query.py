@@ -417,7 +417,7 @@ def tq_generate_thesaurus_buffer(candidates, candidate_type):
             [ word1, word2, word3, ... ]
         """
         tq_thesaurus_buffer.append([""])
-        tq_thesaurus_buffer[-1]='Synonyms:' if candidate_type == 0 else 'Antonyms:'
+        tq_thesaurus_buffer[-1]= 'Antonyms:'
         column_curr = 10
         word_list_size = len(word_list)
 
