@@ -20,6 +20,7 @@ from .tq_common_lib import decode_utf_8, encode_utf_8, send_string_to_vim, get_v
 
 _double_width_type = ["Lo"]
 query_session=list()
+cache=list()
 
 class Thesaurus_Query_Handler:
     ''' Handler for thesaurus_query
@@ -41,7 +42,8 @@ class Thesaurus_Query_Handler:
         self.good_backends = []
         self.bad_backends = []
         self.backend_in_line = self.query_backend_priority[:]
-        self.last_valid_result = []
+        self.last_valid_synonyms = []
+        self.last_valid_antonyms = []
         self._session_inited = True
 
     def session_terminate(self):
@@ -62,7 +64,7 @@ class Thesaurus_Query_Handler:
         del self.backend_in_line
         self._session_inited = False
 
-    def query(self, word, next=True, use_cache=True):
+    def query(self, word, next=True, type=0, use_cache=True):
         """ Query from enabled backend one by one until synonym found
         return:
             synonym_list
@@ -72,17 +74,23 @@ class Thesaurus_Query_Handler:
             self.session_init()  # start a session if not started
         # word not found, start searching
         error_encountered = 0
+
+        # Check cache first
+        if use_cache:
+            for cache_result in cache:
+                if cache_result[0] == word:
+                    return cache_result[1] if type == 0 else cache_result[2]
 # use session-wise backend management to prepare for current query
         if next:
             to_use_list = self.backend_in_line[:]
             success_list = self.good_backends[:]
             if len(to_use_list)==0:
-                return self.last_valid_result
+                return self.last_valid_synonyms if type == 0 else self.last_valid_antonyms
         else:
             to_use_list = self.good_backends[::-1]
             success_list = self.backend_in_line[::-1]
             if len(to_use_list)<=1:
-                return self.last_valid_result
+                return self.last_valid_synonyms if type == 0 else self.last_valid_antonyms
             success_list.append(to_use_list.pop(0))
         local_bad_backends=[]
         for query_backend_curr in to_use_list:  # query each of the backend list till found
@@ -91,7 +99,15 @@ class Thesaurus_Query_Handler:
                     (self.query_backends[query_backend_curr].language not in \
                         specified_language):
                 continue
-            [state, synonym_list]=self.query_backends[query_backend_curr].query(word)
+            query_result = self.query_backends[query_backend_curr].query(word)
+            if (len(query_result) >= 3):
+                [state, synonym_list, antonym_list] = query_result
+            else:
+                [state, synonym_list] = query_result
+                if type == 1:
+                    state = 1
+                antonym_list = []
+            cache.append([word, synonym_list, antonym_list])
             if state == -1:
                 error_encountered = 1
                 local_bad_backends.append(
@@ -120,15 +136,16 @@ class Thesaurus_Query_Handler:
             self.good_backends = to_use_list[::-1]
             self.backend_in_line = success_list[::-1]
         if 'state' not in locals():
-            if not self.last_valid_result:
+            if (type == 0 and not self.last_valid_synonyms) or not self.last_valid_antonyms:
                 vim_command('echohl WarningMSG | echon "WARNING: " | echohl None | echon "No thesaurus source is used. Please check on your configuration on g:tq_enabled_backends and g:tq_language or b:tq_language.\n"')
-            return self.last_valid_result
+            return self.last_valid_synonyms if type == 0 else self.last_valid_antonyms
         if not synonym_list:    # update last valid result if positive result is found
-            return self.last_valid_result
+            return self.last_valid_synonyms if type == 0 else self.last_valid_antonyms
         else:
-            self.last_valid_result=synonym_list
+            self.last_valid_synonyms=synonym_list
+            self.last_valid_antonyms=antonym_list
 
-        return synonym_list
+        return synonym_list if type == 0 else antonym_list
 
     def restore_thesaurus_query_handler(self):
         self.query_backend_priority = get_variable(
@@ -208,7 +225,7 @@ def _double_width_char_count(word):
             dw_count += 1
     return dw_count
 
-def tq_replace_cursor_word_from_candidates(candidate_list, source_backend=None):
+def tq_replace_cursor_word_from_candidates(candidate_list, source_backend=None, type=0):
     ''' populate candidate list, replace target word/phrase with candidate
     Description:
         Using vim's color message box to populate a candidate list from found

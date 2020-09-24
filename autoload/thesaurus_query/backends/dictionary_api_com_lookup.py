@@ -21,26 +21,18 @@ language="en"
 _timeout_period_default = 1.0
 
 def query(target, query_method="synonym"):
-    ''' return result as list. relavance from high to low in each PoS.
-Lookup routine for datamuse.com. When query_from_source is called, return:
-   [status, [[PoS, [word_0, word_1, ...]],  [PoS, [word_0, word_1, ...]], ...]]
-status:
-    0: normal,  result found, list will be returned as a nested list
-    1: normal, result not found, return empty list
-    -1: unexpected result from query, return empty list
-nested list = [PoS, list wordlist]
+    ''' 
     Classifier('str'): Identifier to classify the resulting wordlist suits.
     wordlist = [word_0, word_1, ...]: list of words belonging to a same definition
     '''
     target=target.replace(u" ", u"+")
     result_list=_dictionary_api_wrapper(target, query_method=query_method)
-    format = get_variable('tq_dictionary_api_format', 'by_def')
     if result_list == -1:
-        return [-1,[]]
+        return [-1, [], []]
     elif result_list == 1:
-        return [1, []]
+        return [1, [], []]
     else:
-        return _parser(result_list, format)
+        return _parser(result_list)
 
 
 def _dictionary_api_wrapper(target, query_method, max_return=query_result_trunc):
@@ -71,34 +63,27 @@ def _dictionary_api_wrapper(target, query_method, max_return=query_result_trunc)
         return 1
     return result_list
 
-def _parseResultDict(result_dict, parse_by = None):
+def _parseAntonyms(result_dict):
     defs = result_dict.get(u'shortdef', [])
-    if parse_by == 'by_def':
-        syns_list = result_dict.get(u'meta', {}).get(u'syns', [])
-        length = min(len(defs), len(syns_list))
-        return [ [ defs[idx]+' ('+ result_dict.get(u'fl', '') +')', syns_list[idx] ] for idx in range(length) ]
-    syns = [syn for arr in result_dict.get(u'meta', {}).get(u'syns', []) for syn in arr]
-    ants = [ant for arr in result_dict.get(u'meta', {}).get(u'ants', []) for ant in arr]
-    sseqs = [d.get(u'sseq', []) for d in result_dict.get(u'def', [])]
-    flattened = [d for a in sseqs for b in a for c in b for d in c if isinstance(d,dict)]
-    near_lists = [d.get(u'near_list', []) for d in flattened]
-    rel_lists = [d.get(u'rel_list', []) for d in flattened]
-    nears = [d.get(u'wd', []) for arr in near_lists for c in arr for d in c]
-    rels = [d.get(u'wd', []) for arr in rel_lists for c in arr for d in c]
-    return [
-        [ 'Synonyms', syns],
-        [ 'Related', rels],
-        [ 'Near', nears],
-        [ 'Antonyms', ants],
-        [ 'Definitions', defs]
-    ]
+    ants_list = result_dict.get(u'meta', {}).get(u'ants', [])
+    length = min(len(defs), len(ants_list))
+    return [ [ defs[idx]+' ('+ result_dict.get(u'fl', '') +')', ants_list[idx] ] for idx in range(length) if len(ants_list) > 0 ]
 
-def _parser(result, parse_by = None):
+def _parseSynonyms(result_dict):
+    defs = result_dict.get(u'shortdef', [])
+    syns_list = result_dict.get(u'meta', {}).get(u'syns', [])
+    length = min(len(defs), len(syns_list))
+    return [ [ defs[idx]+' ('+ result_dict.get(u'fl', '') +')', syns_list[idx] ] for idx in range(length) if len(syns_list) > 0 ]
+
+def _parser(result):
     if result is None or len(result) == 0:
-        return [1, []]
+        return [1, [], []]
     result_dict = result[0]
     if not result_dict:
-        return [1, []]
+        return [1, [], []]
     if isinstance(result_dict, str):
-        return [0, [['Unknown word (did you mean):', result]]]
-    return [ 0, [ pair for r_dict in result for pair in _parseResultDict(r_dict, parse_by) ] ]
+        return [0, [['Unknown word (did you mean):', result]], [['Unknown word (did you mean):', result]]]
+    return [ 0, 
+             [pair for r_dict in result for pair in _parseSynonyms(r_dict)],
+             [pair for r_dict in result for pair in _parseAntonyms(r_dict)]
+           ]

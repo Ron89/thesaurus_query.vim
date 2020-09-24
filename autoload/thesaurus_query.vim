@@ -223,11 +223,14 @@ function! thesaurus_query#Thesaurus_Query_Restore_Handler()
     exec s:tq_use_python.'tq_framework.restore_thesaurus_query_handler()'
 endfunction
 
-function! thesaurus_query#Thesaurus_Query_Lookup(word, replace) " {{{
+function! thesaurus_query#Thesaurus_Query_Lookup(word, replace, type) " {{{
 " a:word        word to be looked up
 " a:replace     flag:
 "                       0 - don't replace word under cursor
 "                       1 - replace word under cursor
+" a:type        flag:
+"                       0 - synonyms
+"                       1 - antonyms
     let l:replace = a:replace
     let l:trimmed_word = s:Trim(a:word)
     let l:word = substitute(tolower(l:trimmed_word), '"', '', 'g')
@@ -255,7 +258,7 @@ while tq_continue_query>0:
         tq_continue_query = 0
 # if replace flag is on, prompt user to choose after populating candidate list
     elif vim.eval('l:replace') != '0':
-        tq_continue_query = tq_interface.tq_replace_cursor_word_from_candidates(tq_synonym_result, tq_framework.good_backends[-1])
+        tq_continue_query = tq_interface.tq_replace_cursor_word_from_candidates(tq_synonym_result, tq_framework.good_backends[-1], type)
     else:
         tq_continue_query = 0
         tq_framework.session_terminate()
