@@ -123,6 +123,14 @@ if !exists("g:tq_raise_backend_priority_if_synonym_found")
     let g:tq_raise_backend_priority_if_synonym_found=0
 endif
 
+" this variable sets whether the results will be cached
+"       -1:     Results will not be cached
+"       0:      All results will be cached with no limit
+"       >=1:    X results will be cached (Fifo logic)
+if !exists("g:tq_cache_results")
+    let g:tq_cache_results=-1
+endif
+
 " this variable is offered by core query handler. It's a list of
 " query_backends user want to enable, with the sequence of user prefered
 " priority.
@@ -253,7 +261,7 @@ while tq_continue_query>0:
 # Use Python environment for handling candidate displaying {{{
 # mark for exit function if no candidate is found
     if not tq_synonym_result:
-        vim.command("echom \"No synonym found for \\\"{0}\\\".\"".format(vim.eval("l:trimmed_word").replace('\\','\\\\').replace('"','\\"')))
+        vim.command("echom \"No results found for \\\"{0}\\\".\"".format(vim.eval("l:trimmed_word").replace('\\','\\\\').replace('"','\\"')))
         vim.command("let l:syno_found=0")
         tq_framework.session_terminate()
         tq_continue_query = 0

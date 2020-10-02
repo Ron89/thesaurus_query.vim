@@ -19,28 +19,20 @@ required**.
 
 ## What's new
 
-Deleted `thesaurus_com` backend due to the legal warning from Thesaurus.com on
-the upstream package [thesarus](https://github.com/Manwholikespie/thesaurus).
-For existing users that still have `thesaurus_com` explicitly enabled, the
-backend now always return exception. For English users, currently the highest
-quality source is either the OpenOffice Thesaurus source or mthesaur.txt. I am sorry for any inconvenience caused.
-
--------
-
-Added new English back end: [dictionary_api_com](https://dictionaryapi.com/). This is the Merriam-Webster API and 
+Added new English back end: [merriam_webster](https://dictionaryapi.com/). This is the Merriam-Webster API and 
 as such is a very high-quality back end. However, it does require registration on their website as a developer in order to 
 gain access to the API Keys. They do explicitly state that it is free for non-commercial use up to 1,000 queries a day, which 
 should be sufficient for most needs. Make sure you select the `Thesaurus` api key, as that is what you will need in order for this
 backend to work.
 
-In order to use this backend, add `dictionary_api_com` to `g:tq_enabled_backend` and set your api key to `g:tq_dictionary_api_key`, ex: 
+In order to use this backend, add `merriam_webster` to `g:tq_enabled_backend` and set your api key to `g:tq_merriam_webster_api_key`, ex: 
 
 ```
-let g:tq_dictionary_api_key='cxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxa'
+let g:tq_merriam_webster_api_key='cxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxa'
 ```
 **This backend cannot work without an API key.**
 
-This particular backend can also return antonyms using a different command:
+The backend also returns antonyms using a different command:
 ```
 :ThesaurusQueryReplaceCurrentWordAntonym
 ```
@@ -53,8 +45,16 @@ nnoremap <Leader>ca :ThesaurusQueryReplaceCurrentWord<CR>
 
 See **Usage** below for changing the bindings.
 
-Also, if the word cannot be found, the API may sometimes return a list of word suggestions.  These will be returned as `Unknown word` 
+If the word cannot be found, the API may sometimes return a list of word suggestions.  These will be returned as `Unknown word` 
 and allow you to choose a replacement from the list.
+
+-------
+
+Deleted `thesaurus_com` backend due to the legal warning from Thesaurus.com on
+the upstream package [thesarus](https://github.com/Manwholikespie/thesaurus).
+For existing users that still have `thesaurus_com` explicitly enabled, the
+backend now always return exception. For English users, currently the highest
+quality source is either the OpenOffice Thesaurus source or mthesaur.txt. I am sorry for any inconvenience caused.
 
 -------
 
@@ -233,6 +233,13 @@ backends is behaving properly.
   website didn't provide standard API to use. Hence functionality of this
   backend depends on whether the website owner will change the webpage design.
   This backend requires `bs4` *BeautifulSoup* dependency.
+* **merriam\_webster** is an *English* thesaurus backend. It queries
+  [dictionaryapi.com](https://dictionaryapi.com/) for both synonym and antonym resources. 
+  The api requires an api key that can be obtained by registering on their [website](https://dictionaryapi.com/).
+  Registration is free, but limits requests to 1,000 queries a day, which should be fine
+  for most users. When registering, make sure to select the "Thesaurus" api key. You will need
+  to assign that api key to `g:tq_merriam_webster_api_key` and manually add the 
+  backend to `g:tq_enabled_backends` in your vimrc file. 
 
 The thesaurus query plugin will go through the list `g:tq_enabled_backends` in
 sequence until a match is found. Unless user explicitly instruct, Next query
@@ -269,6 +276,22 @@ originally defined priority, simply invoke command
 ```vim
 :ThesaurusQueryReset
 ```
+
+#### Caching
+
+In order to speed up results and avoid hitting the backend for repeated requests, the results
+of a query can be cached. This is off by default.
+
+To enable caching, set the `tq_cache_results` value to some number.
+
+- `let g:tq_cache_results=-1`: (_Default_) Query results are not cached.
+- `let g:tq_cache_results=0`: Query results are cached without limit. 
+- `let g:tq_cache_results=10`: The last 10 results are cached. You can set this to any positive number.
+
+Note: Separate caches are maintained for synonyms and antonyms (if the back end supports it). The cache setting
+will apply to each cache separately. So if you specify `let g:tq_cache_results=10`, then the last 10 synonym and
+antonym requests will be stored. Also, some back ends (Merriam-Webster, for example) always return both and will thus
+be cached.
 
 #### Online Backends Timeout Mechanism
 

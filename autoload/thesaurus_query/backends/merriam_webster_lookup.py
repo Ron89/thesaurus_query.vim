@@ -10,23 +10,31 @@ except ImportError:
     from urllib.error import URLError, HTTPError
 import json
 import socket
-import codecs
 import ssl
 from ..tq_common_lib import fixurl, get_variable
 
 query_result_trunc=100
-identifier="dictionary_api_com"
+identifier="merriam_webster"
 language="en"
 
 _timeout_period_default = 1.0
+time_out_choice = float(get_variable('tq_online_backends_timeout', _timeout_period_default))
+api_key = get_variable('tq_merriam_webster_api_key', '')
 
-def query(target, query_method="synonym"):
+def query(target):
     ''' 
-    Classifier('str'): Identifier to classify the resulting wordlist suits.
-    wordlist = [word_0, word_1, ...]: list of words belonging to a same definition
+    Queries the Merriam Webster API to retrieve thesaurus results for the target word.
+    Requires the `tq_merriam_webster_api_key` to be set to an appropriate value.
+    Returns Status code and two lists: synonyms and antonyms. Both lists are broken up into their
+    appropriate word definitions.
+
+    Note: If no word matches the target, the API may return substitute words. If this happens, both
+    synonyms and antonyms will list those words under the "Unknown Word" heading.
     '''
+    if not target or target == '':
+        return [1, [], []]
     target=target.replace(u" ", u"+")
-    result_list=_dictionary_api_wrapper(target, query_method=query_method)
+    result_list=_dictionary_api_wrapper(target)
     if result_list == -1:
         return [-1, [], []]
     elif result_list == 1:
@@ -35,18 +43,9 @@ def query(target, query_method="synonym"):
         return _parser(result_list)
 
 
-def _dictionary_api_wrapper(target, query_method, max_return=query_result_trunc):
-    api_key = get_variable('tq_dictionary_api_key', '')
+def _dictionary_api_wrapper(target):
     if api_key == '':
         return [-1, []]
-    time_out_choice = float(get_variable(
-        'tq_online_backends_timeout', _timeout_period_default))
-    case_mapper={"synonym":u"words?rel_syn=",
-                 "suggest":u"sug?s=",
-                 "antonym":u"words?rel_ant=",
-                 "right_content":u"words?rc=",
-                 "left_content":u"words?lc="
-                }
     try:
         url = fixurl(u'https://www.dictionaryapi.com/api/v3/references/thesaurus/json/{0}?key={1}'.format(target, api_key)).decode('ASCII') 
         response = urlopen(url, context=ssl.SSLContext(), timeout = time_out_choice).read()
@@ -57,7 +56,6 @@ def _dictionary_api_wrapper(target, query_method, max_return=query_result_trunc)
         if isinstance(err.reason, socket.timeout):
             return 1
         print(err)
-#        print(u"Internet Error. The word \"{0}\" has not been found on datamuse!\n".format(target))
         return -1
     except socket.timeout:  # timeout only means underperforming
         return 1
