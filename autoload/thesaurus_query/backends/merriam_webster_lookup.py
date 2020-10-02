@@ -9,6 +9,7 @@ except ImportError:
     from urllib.request import urlopen
     from urllib.error import URLError, HTTPError
 import json
+from json.decoder import JSONDecodeError
 import socket
 import ssl
 from ..tq_common_lib import fixurl, get_variable
@@ -45,7 +46,7 @@ def query(target):
 
 def _dictionary_api_wrapper(target):
     if api_key == '':
-        return [-1, []]
+        return -1
     try:
         url = fixurl(u'https://www.dictionaryapi.com/api/v3/references/thesaurus/json/{0}?key={1}'.format(target, api_key)).decode('ASCII') 
         response = urlopen(url, context=ssl.SSLContext(), timeout = time_out_choice).read()
@@ -59,6 +60,8 @@ def _dictionary_api_wrapper(target):
         return -1
     except socket.timeout:  # timeout only means underperforming
         return 1
+    except JSONDecodeError:
+        return -1
     return result_list
 
 def _parseAntonyms(result_dict):
