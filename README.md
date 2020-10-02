@@ -34,6 +34,7 @@ should be sufficient for most needs. Make sure you select the `Thesaurus` api ke
 backend to work.
 
 In order to use this backend, add `dictionary_api_com` to `g:tq_enabled_backend` and set your api key to `g:tq_dictionary_api_key`, ex: 
+
 ```
 let g:tq_dictionary_api_key='cxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxa'
 ```
