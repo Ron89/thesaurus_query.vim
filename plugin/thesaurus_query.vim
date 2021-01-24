@@ -30,14 +30,20 @@ endif
 "  Expose our commands to the user
 " --------------------------------
 "
-command! ThesaurusQueryReplaceCurrentWord :call thesaurus_query#Thesaurus_Query_Lookup(expand('<cword>'), 1)
-command! ThesaurusQueryLookupCurrentWord :call thesaurus_query#Thesaurus_Query_Lookup(expand('<cword>'), 0)
+command! ThesaurusQueryReplaceCurrentWord :call thesaurus_query#Thesaurus_Query_Lookup(expand('<cword>'), 1, 0)
+command! ThesaurusQueryLookupCurrentWord :call thesaurus_query#Thesaurus_Query_Lookup(expand('<cword>'), 0, 0)
 command! ThesaurusQueryReset :call thesaurus_query#Thesaurus_Query_Restore_Handler()
 
-command! -nargs=1 Thesaurus :call thesaurus_query#Thesaurus_Query_Lookup(<q-args>, 0)
+command! -nargs=1 Thesaurus :call thesaurus_query#Thesaurus_Query_Lookup(<q-args>, 0, 0)
 
-command! -nargs=1 ThesaurusQueryReplace :call thesaurus_query#Thesaurus_Query_Lookup(<q-args>, 1)
+command! -nargs=1 ThesaurusQueryReplace :call thesaurus_query#Thesaurus_Query_Lookup(<q-args>, 1, 0)
 
+command! ThesaurusQueryReplaceCurrentWordAntonym :call thesaurus_query#Thesaurus_Query_Lookup(expand('<cword>'), 1, 1)
+command! ThesaurusQueryLookupCurrentWordAntonym :call thesaurus_query#Thesaurus_Query_Lookup(expand('<cword>'), 0, 1)
+
+command! -nargs=1 ThesaurusAntonym :call thesaurus_query#Thesaurus_Query_Lookup(<q-args>, 0, 1)
+
+command! -nargs=1 ThesaurusQueryReplaceAntonym :call thesaurus_query#(<q-args>, 1, 1)
 
 " --------------------------------
 "  Map keys
@@ -48,6 +54,11 @@ if g:tq_map_keys
     vnoremap <unique><silent> <Leader>cs "ky:ThesaurusQueryReplace <C-r>k<CR>
     nnoremap <silent> <LocalLeader>cs :ThesaurusQueryReplaceCurrentWord<CR>
     vnoremap <silent> <LocalLeader>cs "ky:ThesaurusQueryReplace <C-r>k<CR>
+
+    nnoremap <unique><silent> <Leader>ca :ThesaurusQueryReplaceCurrentWordAntonym<CR>
+    vnoremap <unique><silent> <Leader>ca "ky:ThesaurusQueryReplaceAntonym <C-r>k<CR>
+    nnoremap <silent> <LocalLeader>ca :ThesaurusQueryReplaceCurrentWordAntonym<CR>
+    vnoremap <silent> <LocalLeader>ca "ky:ThesaurusQueryReplaceAntonym <C-r>k<CR>
 endif
 
 if g:tq_use_vim_autocomplete

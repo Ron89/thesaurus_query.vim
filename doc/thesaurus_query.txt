@@ -23,6 +23,7 @@ CONTENTS                                                  *thesaurus_query.vim*
         `g:tq_truncation_on_relavance`
         `g:tq_truncation_on_definition_num`
         `g:tq_truncation_on_syno_list_size`
+        `g:tq_cache_results`
     4.2 Make Your Own Backend ........................... |tq-backend-format|
     5. Licence.................................................. |tq-licence|
 ===============================================================================
@@ -156,7 +157,7 @@ g:tq_enabled_backends~
     query_backends user want to enable, with the sequence of user prefered
     priority. Please be careful not to mis-spell when setting this variable.
     available options: `openthesaurus_de`, `woxikon_de`, `jeck_ru`, `thesaurus_com`,
-    `datamuse_com`, `mthesaur_txt`, `cilin_txt`
+    `datamuse_com`, `mthesaur_txt`, `cilin_txt`, `merriam_webster`
     >
         let g:tq_enabled_backends = ["cilin_txt", \
                                      "openthesaurus_de", \
@@ -266,6 +267,15 @@ g:tq_truncation_on_syno_list_size~
     Note that this truncation will only affect the replacing candidate
     interface, thesaurus split will NOT be truncated. >
          let g:tq_truncation_on_syno_list_size = -1
+<
+g:tq_cache_results~
+    This defined the behavior for caching query results. If value is
+        -1:     results are not cached
+        0:      All results are cached
+        n>0:    Only the last n results are cached  
+    Note that caching limits apply to antonym and synonym results 
+    separately.
+        let g:tq_cache_results = -1
 <
 -------------------------------------------------------------------------------
 
