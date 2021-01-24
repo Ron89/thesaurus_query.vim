@@ -44,7 +44,7 @@ def query(target):
 
 def _dictionary_api_wrapper(target):
     if api_key == '':
-        return -1
+        return [-1, []]
     try:
         url = fixurl(u'https://www.dictionaryapi.com/api/v3/references/thesaurus/json/{0}?key={1}'.format(target, api_key)).decode('ASCII') 
         response = urlopen(url, timeout = time_out_choice).read()
