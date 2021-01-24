@@ -9,6 +9,7 @@ except ImportError:
     from urllib.request import urlopen
     from urllib.error import URLError, HTTPError
 import json
+import ssl
 import socket
 from ..tq_common_lib import fixurl, get_variable
 
