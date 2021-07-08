@@ -12,7 +12,7 @@ CONTENTS                                                  *thesaurus_query.vim*
         `g:tq_python_version`
         `g:tq_display_list_all_time`
         `g:tq_map_keys`
-        `g:tq_use_vim_autocompletefunc`
+        `g:tq_use_vim_autocomplete`
         `g:tq_enabled_backends`
         `g:tq_online_backends_timeout`
         `b/g:tq_language`
@@ -145,10 +145,10 @@ g:tq_map_keys~
         let g:tq_map_keys = 1
 <
 
-g:tq_use_vim_autocompletefunc~
+g:tq_use_vim_autocomplete~
     Decide if use Vim's built-in `comletefunc` for insert-mode synonym
     replacement. Note, `ctrl-xctrl-u` in insert mode invoke completefunc. >
-        let g:tq_use_vim_autocompletefunc=1
+        let g:tq_use_vim_autocomplete=1
 <
 
 g:tq_enabled_backends~
