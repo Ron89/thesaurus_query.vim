@@ -199,11 +199,12 @@ endfunction
 " Import Python libs {{{
 
 exec s:tq_python_env
-import sys, os, vim
-
+import sys, os, vim, glob
+ 
 for p in vim.eval("&runtimepath").split(','):
-    dname = os.path.join(p, "autoload")
-    if os.path.exists(os.path.join(dname, "thesaurus_query")):
+    globRes = glob.glob(os.path.join(p, "autoload", "thesaurus_query"))
+    if len(globRes)==1:
+        dname = os.path.dirname(globRes[0])
         if dname not in sys.path:
             sys.path.append(dname)
             break
