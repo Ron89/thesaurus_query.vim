@@ -9,7 +9,6 @@ except ImportError:
     from urllib.request import urlopen
     from urllib.error import URLError, HTTPError
 import json
-import ssl
 import socket
 from ..tq_common_lib import fixurl, get_variable
 
@@ -48,7 +47,7 @@ def _dictionary_api_wrapper(target):
         return [-1, []]
     try:
         url = fixurl(u'https://www.dictionaryapi.com/api/v3/references/thesaurus/json/{0}?key={1}'.format(target, api_key)).decode('ASCII') 
-        response = urlopen(url, context=ssl.SSLContext(), timeout = time_out_choice).read()
+        response = urlopen(url, timeout = time_out_choice).read()
         result_list = json.loads(response.decode('utf-8'))
     except HTTPError:
         return 1
