@@ -123,6 +123,14 @@ if !exists("g:tq_raise_backend_priority_if_synonym_found")
     let g:tq_raise_backend_priority_if_synonym_found=0
 endif
 
+" this variable sets whether the results will be cached
+"       -1:     Results will not be cached
+"       0:      All results will be cached with no limit
+"       >=1:    X results will be cached (Fifo logic)
+if !exists("g:tq_cache_results")
+    let g:tq_cache_results=-1
+endif
+
 " this variable is offered by core query handler. It's a list of
 " query_backends user want to enable, with the sequence of user prefered
 " priority.
@@ -223,11 +231,15 @@ function! thesaurus_query#Thesaurus_Query_Restore_Handler()
     exec s:tq_use_python.'tq_framework.restore_thesaurus_query_handler()'
 endfunction
 
-function! thesaurus_query#Thesaurus_Query_Lookup(word, replace) " {{{
+function! thesaurus_query#Thesaurus_Query_Lookup(word, replace, query_type) " {{{
 " a:word        word to be looked up
 " a:replace     flag:
 "                       0 - don't replace word under cursor
 "                       1 - replace word under cursor
+" a:query_type        flag:
+"                       0 - synonyms
+"                       1 - antonyms
+    let l:query_type = a:query_type
     let l:replace = a:replace
     let l:trimmed_word = s:Trim(a:word)
     let l:word = substitute(tolower(l:trimmed_word), '"', '', 'g')
@@ -245,17 +257,17 @@ tq_continue_query = 1
 while tq_continue_query>0:
     vim.command("redraw")
     tq_next_query_direction = True if tq_continue_query==1 else False
-    tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")), tq_next_query_direction)
+    tq_synonym_result = tq_framework.query(decode_utf_8(vim.eval("l:word")), tq_next_query_direction, 0 if vim.eval('l:query_type') == '0' else 1)
 # Use Python environment for handling candidate displaying {{{
 # mark for exit function if no candidate is found
     if not tq_synonym_result:
-        vim.command("echom \"No synonym found for \\\"{0}\\\".\"".format(vim.eval("l:trimmed_word").replace('\\','\\\\').replace('"','\\"')))
+        vim.command("echom \"No results found for \\\"{0}\\\".\"".format(vim.eval("l:trimmed_word").replace('\\','\\\\').replace('"','\\"')))
         vim.command("let l:syno_found=0")
         tq_framework.session_terminate()
         tq_continue_query = 0
 # if replace flag is on, prompt user to choose after populating candidate list
     elif vim.eval('l:replace') != '0':
-        tq_continue_query = tq_interface.tq_replace_cursor_word_from_candidates(tq_synonym_result, tq_framework.good_backends[-1])
+        tq_continue_query = tq_interface.tq_replace_cursor_word_from_candidates(tq_synonym_result, tq_framework.good_backends[-1], 0 if vim.eval('l:query_type') == '0' else 1)
     else:
         tq_continue_query = 0
         tq_framework.session_terminate()
