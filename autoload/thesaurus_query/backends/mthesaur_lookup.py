@@ -24,20 +24,19 @@ def query(word):
     if not _mthesaur_verified:
         return [-1, []]
     match_found = 0
-    thesaur_file = open(os.path.expanduser(_mthesaur_file), 'r')
-    while True:
-        line_curr=decode_utf_8(thesaur_file.readline())
-        if not line_curr:
-            break
-        synonym_list = line_curr.rstrip(u"\r\n").split(u',')
-        if word in synonym_list:
-            match_found = 1
-            synonym_list.remove(word)
-            break
+    returnedList=[]
+    with open(os.path.expanduser(_mthesaur_file), 'r') as thesaur_file:
+        for line_curr in thesaur_file:
+            line_curr=decode_utf_8(line_curr)
+            synonym_list = line_curr.rstrip(u"\r\n").split(u',')
+            if word in synonym_list:
+                match_found = 1
+                synonym_list.remove(word)
+                returnedList.append([u"", synonym_list])
 
     if match_found:
-        return [0, [[u"", synonym_list]]]
-    return [1, []]
+        return [0, returnedList]
+    return [1, returnedList]
 
 def _mthesaur_file_locate():
     verified_file = get_variable(
