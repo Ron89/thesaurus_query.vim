@@ -264,7 +264,7 @@ def tq_replace_cursor_word_from_candidates(candidate_list, source_backend=None):
             if trunc_flag==0:
                 thesaurus_user_choice=vim.eval("input(\"Type number and <Enter> (empty cancels; 'n': use next backend; 'p' use previous backend): \")")
             else:
-                thesaurus_user_choice = vim.eval("input('Type number and <Enter> (results truncated, Type `A<Enter>` to browse all resultsin split;\nempty cancels; 'n': use next backend; 'p' use previous backend): ')")
+                thesaurus_user_choice = vim.eval("input(\"Type number and <Enter> (results truncated, Type \`A<Enter>\` to browse all resultsin split;\nempty cancels; 'n': use next backend; 'p' use previous backend): \")")
         except (KeyboardInterrupt if not neovimUsed else (KeyboardInterrupt, neovim.api.nvim.NvimError)):
             return None
         return thesaurus_user_choice
