@@ -154,7 +154,11 @@ backends is behaving properly.
   downloaded, eg. put the following line `let
   g:tq_mthesaur_file="~/.config/nvim/thesaurus/mthesaur.txt"` into
   your `.vimrc` file if your `mthesaur.txt` is placed in folder
-  `"~/.config/nvim/thesaurus/"`.
+  `"~/.config/nvim/thesaurus/"`. NOTE that `mthesaur.txt` tend to return a lot
+  more results than we can process. The global parameter
+  `g:tq_truncation_on_definition_num` and `g:tq_truncation_on_syno_list_size`
+  may be helpful in reduce the returned size. But some meaningful results may
+  be lost.
 * **datamuse\_com** queries from [datamuse.com](http://www.datamuse.com) using
   its officially provided API. The returned synonym list is usually quite
   relavant with reasonable quality. But the synonyms list tend to be short, so
